@@ -16,7 +16,10 @@ header{background:linear-gradient(150deg,#0f2a4a,#0e7490 65%,#14b8a6);color:#fff
 header h1{color:#fff;font-size:clamp(1.4rem,5vw,2.1rem);margin:10px 0 4px}
 header p{margin:0;opacity:.92;font-size:.95rem}
 .pill{display:inline-block;background:var(--orange);border-radius:30px;padding:3px 14px;font-weight:800;font-size:.75rem;letter-spacing:1px}
-.back{display:inline-block;color:#fff;opacity:.9;text-decoration:none;font-size:.88rem;margin-bottom:8px}
+.topnav{position:sticky;top:0;z-index:20;background:var(--navy);display:flex;align-items:center;gap:12px;padding:8px 16px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.topnav a{color:#fff;text-decoration:none;font-weight:700;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 16px;min-height:36px;display:inline-flex;align-items:center}
+.topnav a:hover{background:rgba(255,255,255,.25)}
+.topnav span{color:#cbd5e1;font-weight:600;font-size:.92rem}
 main{max-width:1100px;margin:-40px auto 24px;padding:0 16px;display:flex;flex-direction:column;gap:14px}
 .card{background:var(--card);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(15,42,74,.08)}
 .card h2{font-size:1.05rem;margin-bottom:10px}
@@ -65,8 +68,8 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
 </style>
 </head>
 <body>
+<nav class="topnav"><a id="kembali" href="./">🏠 Beranda</a><span>✅ Cek Tugas</span></nav>
 <header>
-  <a class="back" href="./">← Kembali ke materi</a><br>
   <span class="pill" id="pill">INFORMATIKA</span>
   <h1>Cek Pengumpulan Tugas</h1>
   <p>Semester Ganjil &amp; Genap · Tahun Pelajaran 2026/2027<br>Pilih kelasmu, lalu cari namamu. Tanda ✅ berarti tugasmu sudah tercatat.</p>
@@ -119,7 +122,8 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
 <script>
 (function () {
   var URL_DATA = 'https://script.google.com/macros/s/AKfycbzBbtwe7QrZdlLFYXYidgnu2KwIAlJ97VE1RipnB6fsm_IdybXEH_WQlu60rIDhUZnZ/exec';
-  var TG = /informatika8|infor8|kelas8/i.test(location.href) || /[?&]tingkat=(8|viii)\b/i.test(location.search) ? 'VIII' : 'VII';
+  // Kelas 8: alamat memuat informatika8, ?tingkat=8, atau dibuka dari subfolder ganjil/genap web kelas 8 (?dari=…).
+  var TG = /informatika8|infor8|kelas8/i.test(location.href) || /[?&](tingkat=(8|viii)|dari=(ganjil|genap))\b/i.test(location.search) ? 'VIII' : 'VII';
   if (/[?&]tingkat=(7|vii)\b/i.test(location.search)) TG = 'VII';
   var ANGKA = TG === 'VII' ? '7' : '8', KEY = 'cekTugas' + ANGKA;
   var SEMUA_KELAS = ['A', 'B', 'C', 'D', 'E', 'F'].map(function (h) { return ANGKA + h; });
@@ -138,6 +142,10 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
   var namaTugas = function (t) { return String(t.label).replace(/ · P(\d+)$/, ' · Tugas ke-$1'); };
   var pct = function (x) { return (Math.round(x * 10) / 10).toString().replace('.', ',') + '%'; };
 
+  // Navigasi kembali: kelas 8 dibuka dari ganjil/ atau genap/ (?dari=…), kelas 7 dari beranda di folder yang sama.
+  var DARI = (location.search.match(/[?&]dari=(ganjil|genap)\b/) || [])[1];
+  var SEM = (location.search.match(/[?&]sem=([12])\b/) || [])[1];
+  $('kembali').href = DARI ? DARI + '/' : './';
   $('pill').textContent = 'INFORMATIKA KELAS ' + TG;
   document.title = 'Cek Tugas · Informatika Kelas ' + TG + ' · SMP Negeri 6 Mengwi';
   try { var pref = JSON.parse(ambil(KEY + 'Pilihan') || '{}'); S.kelas = pref.kelas || ''; } catch (e) {}
@@ -181,8 +189,11 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
     }).join('');
     var per = d.periode.filter(function (p) { return p[TG]; });
     if (!per.some(function (p) { return p.key === S.bulan; })) {
-      var pilih = per.length ? per[0].key : '';
-      per.forEach(function (p) { if (p.mulai && p.mulai <= HARI) pilih = p.key; });
+      // Dibuka dari card semester (?sem=1/2): pilih laporan di semester itu; jika tidak, laporan terakhir yang sudah dimulai.
+      var semPer = per.filter(function (p) { return !SEM || (Number(p.key.slice(5, 7)) >= 7 ? '1' : '2') === SEM; });
+      if (!semPer.length) semPer = per;
+      var pilih = semPer.length ? semPer[0].key : '';
+      semPer.forEach(function (p) { if (p.mulai && p.mulai <= HARI) pilih = p.key; });
       S.bulan = pilih;
     }
     // Satu tahun pelajaran: Juli–Desember = Semester Ganjil, Januari–Juni = Semester Genap.
