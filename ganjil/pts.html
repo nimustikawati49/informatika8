@@ -314,7 +314,12 @@ body{background:radial-gradient(circle at 10% 0%,#e0f2fe 0,transparent 40%),radi
 .hero{background:var(--hg,linear-gradient(150deg,#0f2a4a 0%,#0e7490 65%,#14b8a6 100%))}
 .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08)}
 .hero::before{content:"";position:absolute;right:60px;bottom:-80px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
-.books{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin:16px 0}
+.books{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:16px 0}
+.books>.bk{flex:0 0 calc((100% - (var(--cols,4) - 1) * 16px) / var(--cols,4));max-width:360px}
+@media (max-width:900px){.books>.bk{flex-basis:calc((100% - 16px) / 2)}}
+@media (max-width:560px){.books>.bk{flex-basis:100%;max-width:none}}
+.bk.cek{text-decoration:none;color:inherit;cursor:pointer}
+.cek-tag{align-self:flex-start;margin-top:auto;background:var(--green-l);border:1.5px solid #86efac;color:#166534;border-radius:20px;padding:2px 12px;font-weight:700;font-size:.8rem}
 .bk{position:relative;background:#fff;border:none;border-radius:22px;padding:0;text-align:left;overflow:hidden;box-shadow:0 6px 20px rgba(15,42,74,.10);display:flex;flex-direction:column;transition:transform .15s, box-shadow .15s}
 .bk:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(15,42,74,.16)}
 .bk .band{padding:18px 18px 14px;color:#fff;background:var(--hg)}
@@ -1694,9 +1699,20 @@ function semOf(b){ return b.sem || 1; }
 function bookCard(b, i){ var sc = bScore(b); return '<button class="bk" data-b="' + i + '" style="--hg:' + b.grad + '"><div class="band"><div class="e">' + b.e + '</div><div class="n">' + b.label + '</div><h3>' + b.title + '</h3></div><div class="bd"><small>' + b.P.length + ' ' + unit(b).toLowerCase() + ' · ' + b.sub + '</small><div class="pb"><i style="width:' + sc.pct + '%"></i></div><small>⭐ Rata-rata nilai: ' + sc.pct + '/100</small></div></button>'; }
 function soonCard(s){ return '<div class="bk soon" style="--hg:' + s.grad + '"><div class="band"><div class="e">' + s.e + '</div><div class="n">' + s.label + '</div><h3>' + s.title + '</h3></div><div class="bd"><small>' + s.sub + '</small><span class="soon-tag">⏳ Segera hadir</span></div></div>'; }
 function semSection(n, name, icon){
-  var books = BOOKS.map(function(b, i){ return semOf(b) === n ? bookCard(b, i) : ''; }).join('');
-  var soon = SOON.filter(function(s){ return s.sem === n && !BOOKS.some(function(b){ return b.label === s.label; }); }).map(soonCard).join('');
-  return '<div class="sem-h"><span>' + icon + '</span><div><h3>' + name + '</h3><small>Tahun Ajaran 2026/2027</small></div></div><div class="books">' + books + soon + '</div>';
+  var cards = BOOKS.map(function(b, i){ return semOf(b) === n ? bookCard(b, i) : ''; }).filter(Boolean)
+    .concat(SOON.filter(function(s){ return s.sem === n && !BOOKS.some(function(b){ return b.label === s.label; }); }).map(soonCard))
+    .concat([cekCard(n)]).filter(Boolean);
+  // Kolom seimbang: maks. 4 per baris, jumlah baris sesedikit mungkin, isi baris dibagi rata (5 → 3+2, 6 → 3+3, 7 → 4+3); baris terakhir di tengah.
+  var rows = Math.ceil(cards.length / 4) || 1, cols = Math.ceil(cards.length / rows) || 1;
+  return '<div class="sem-h"><span>' + icon + '</span><div><h3>' + name + '</h3><small>Tahun Ajaran 2026/2027</small></div></div><div class="books" style="--cols:' + cols + '">' + cards.join('') + '</div>';
+}
+/* Card Cek Tugas di tiap semester → cek-tugas.html di akar situs (kelas 8: web berada di subfolder ganjil/ atau genap/). Hanya saat dibuka dari internet. */
+function cekCard(n){
+  if (!/^https?:$/.test(location.protocol)) return '';
+  var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1];
+  var href = (sub ? '../' : '') + 'cek-tugas.html?sem=' + n + (sub ? '&dari=' + sub : '');
+  return '<a class="bk cek" href="' + href + '" style="--hg:linear-gradient(150deg,#14532d 0%,#16a34a 58%,#84cc16 100%)"><div class="band"><div class="e">✅</div><div class="n">CEK TUGAS</div><h3>Cek Pengumpulan Tugas</h3></div>' +
+    '<div class="bd"><small>Lihat siapa saja di kelasmu yang sudah mengumpulkan tugas semester ' + (n === 2 ? 'genap' : 'ganjil') + ', per bab dan tugas ke-</small><span class="cek-tag">Buka →</span></div></a>';
 }
 function renderHome(){
   cleanup(); curB = null; cur = null; setTheme(null); document.title = 'Informatika VIII · TA 2026/2027';
@@ -1704,7 +1720,7 @@ function renderHome(){
     '<main><div class="wrap">' +
     '<section class="hero home-hero"><span class="pill">INFORMATIKA KELAS VII · TA 2026/2027</span><h1>Media Belajar Interaktif<br>Informatika Kelas VIII</h1><div class="sub">Semester Ganjil &amp; Semester Genap · materi, permainan, kuis, dan pegangan siswa (PDF) setiap pertemuan</div><div class="art">🧠📊🔍🏆🌱</div>' +
     '<div class="meta"><b>SMP Negeri 6 Mengwi</b> · Tahun Ajaran 2026/2027<br>Guru: <b>Ni Nyoman Dwi Mustikawati, S.Kom.</b></div></section>' +
-    nameBox() + lastBtn() + cekTugasBtn() +
+    nameBox() + lastBtn() +
     semSection(1, 'Semester Ganjil', '📘') + semSection(2, 'Semester Genap', '📗') +
     '<div class="row" style="justify-content:center;margin:20px 0"><button class="btn ghost" data-info>ℹ️ Petunjuk Penggunaan</button><button class="btn ghost" id="reset">🗑️ Hapus progres di perangkat ini</button></div>' +
     '</div></main><button class="restore" data-restore>☰ Menu</button>';
@@ -1714,12 +1730,6 @@ function renderHome(){
   window.scrollTo(0, 0);
 }
 function keepName(){ readProf(); }
-/* Tombol ke halaman Cek Tugas (cek-tugas.html di akar situs; kelas 8 berada di subfolder ganjil/ atau genap/). Hanya saat dibuka dari internet. */
-function cekTugasBtn(){
-  if (!/^https?:$/.test(location.protocol)) return '';
-  var href = /\/(ganjil|genap)\/[^\/]*$/.test(location.pathname) ? '../cek-tugas.html' : 'cek-tugas.html';
-  return '<a class="btn gr" href="' + href + '" style="display:flex;justify-content:center;margin:14px auto 0;max-width:420px;text-decoration:none">✅ Cek Tugas · lihat siapa yang sudah mengumpulkan</a>';
-}
 function bindRestore(){ var r = $('[data-restore]'); if (r) r.onclick = function(){ document.body.classList.remove('mini'); }; }
 
 /* ---------- HALAMAN BAB ---------- */
