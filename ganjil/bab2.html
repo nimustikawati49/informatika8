@@ -540,7 +540,7 @@ function two(lt, lh, rt, rh){ return '<div class="g2">' + box('orange', lt, lh) 
 var BOOKS = [];
 var SEND_URL = 'https://script.google.com/macros/s/AKfycbw_RUaSPKjJkSaVYWlKdCkPn-ISuedMh5Ud1MnF9v5op48Rchsh39B2FYNcQ8YUa5ua/exec';
 function addBook(o, fn){ o.P = fn(); o.P.forEach(function(p){ p.key = o.id + '-' + p.key; }); BOOKS.push(o); }
-addBook({id:'bab2', send:'TUGASBAB2-8', pdf:['Bab2_Pertemuan1_Fungsi','Bab2_Pertemuan2_Himpunan_dan_Sistem_Bilangan','Bab2_Pertemuan3_Konversi_Sistem_Bilangan','Bab2_Pertemuan4_Struktur_Data','Bab2_Pertemuan5_Rangkuman_dan_Pembahasan_LKS'], label:'Bab 2', short:'Bab2', title:'Berpikir Komputasional', sub:'Fungsi, himpunan, sistem bilangan &amp; konversi, struktur data', e:'🧠', art:'➡️⭕🔢🗂️', grad:'linear-gradient(150deg,#3b0764 0%,#7c3aed 58%,#c084fc 100%)', dark:'#3b0764'}, function(){
+addBook({id:'bab2', send:'TUGAS8-1', pdf:['Bab2_Pertemuan1_Fungsi','Bab2_Pertemuan2_Himpunan_dan_Sistem_Bilangan','Bab2_Pertemuan3_Konversi_Sistem_Bilangan','Bab2_Pertemuan4_Struktur_Data','Bab2_Pertemuan5_Rangkuman_dan_Pembahasan_LKS'], label:'Bab 2', short:'Bab2', title:'Berpikir Komputasional', sub:'Fungsi, himpunan, sistem bilangan &amp; konversi, struktur data', e:'🧠', art:'➡️⭕🔢🗂️', grad:'linear-gradient(150deg,#3b0764 0%,#7c3aed 58%,#c084fc 100%)', dark:'#3b0764'}, function(){
 var P = [];
 function code(t){ return '<div class="code">' + t + '</div>'; }
 function mono(t){ return '<code class="fml">' + t + '</code>'; }
@@ -1813,7 +1813,7 @@ function renderHome(){
     '<main><div class="wrap">' +
     '<section class="hero home-hero"><span class="pill">INFORMATIKA KELAS VII · TA 2026/2027</span><h1>Media Belajar Interaktif<br>Informatika Kelas VIII</h1><div class="sub">Semester Ganjil &amp; Semester Genap · materi, permainan, kuis, dan pegangan siswa (PDF) setiap pertemuan</div><div class="art">🧠📊🔍🏆🌱</div>' +
     '<div class="meta"><b>SMP Negeri 6 Mengwi</b> · Tahun Ajaran 2026/2027<br>Guru: <b>Ni Nyoman Dwi Mustikawati, S.Kom.</b></div></section>' +
-    nameBox() + lastBtn() +
+    nameBox() + lastBtn() + cekTugasBtn() +
     semSection(1, 'Semester Ganjil', '📘') + semSection(2, 'Semester Genap', '📗') +
     '<div class="row" style="justify-content:center;margin:20px 0"><button class="btn ghost" data-info>ℹ️ Petunjuk Penggunaan</button><button class="btn ghost" id="reset">🗑️ Hapus progres di perangkat ini</button></div>' +
     '</div></main><button class="restore" data-restore>☰ Menu</button>';
@@ -1823,6 +1823,12 @@ function renderHome(){
   window.scrollTo(0, 0);
 }
 function keepName(){ readProf(); }
+/* Tombol ke halaman Cek Tugas (cek-tugas.html di akar situs; kelas 8 berada di subfolder ganjil/ atau genap/). Hanya saat dibuka dari internet. */
+function cekTugasBtn(){
+  if (!/^https?:$/.test(location.protocol)) return '';
+  var href = /\/(ganjil|genap)\/[^\/]*$/.test(location.pathname) ? '../cek-tugas.html' : 'cek-tugas.html';
+  return '<a class="btn gr" href="' + href + '" style="display:flex;justify-content:center;margin:14px auto 0;max-width:420px;text-decoration:none">✅ Cek Tugas · lihat siapa yang sudah mengumpulkan</a>';
+}
 function bindRestore(){ var r = $('[data-restore]'); if (r) r.onclick = function(){ document.body.classList.remove('mini'); }; }
 
 /* ---------- HALAMAN BAB ---------- */
@@ -2099,7 +2105,7 @@ function kirimNilai(p){
   if (!SEND_URL){ toast('Alamat penerima nilai belum dipasang guru'); return; }
   if (!profOk()){ profModal(function(){ sendInfo(p); kirimNilai(p); }); return; }
   var b = B(), sc = pScore(p), lk = lkpdData(p), st = $('#sendSt');
-  var d = {sheet: String(b.send).replace(/\{kelas\}/g, S.prof.kelas).replace(/\{sem\}/g, String(semOf(b))), nama: S.prof.nama, kelas: S.prof.kelas, absen: S.prof.absen, bab: b.label, pertemuan: p.no, judul: p.title.replace(/<[^>]+>/g, ''), nilai: sc.pct, nilaiPertama: pScoreFirst(p), nilaiLkpd: lk.n, jawabanLkpd: lk.t, perangkat: S.dev};
+  var d = {sheet: String(b.send).replace(/\{kelas\}/g, S.prof.kelas).replace(/\{sem\}/g, String(semOf(b))), nama: S.prof.nama, kelas: S.prof.kelas, absen: S.prof.absen, bab: b.label, pertemuan: p.no, judul: p.title.replace(/<[^>]+>/g, ''), nilai: sc.pct, nilaiPertama: pScoreFirst(p), nilaiLkpd: lk.n, jawabanLkpd: lk.t, perangkat: S.dev, semester: semOf(b)};
   if (st) st.textContent = '⏳ Mengirim…';
   postNilai(d).then(function(j){ if (st) st.innerHTML = '✅ Terkirim ' + new Date().toLocaleString('id-ID') + ' (kiriman ke-' + j.jumlah + ')'; beep(true); toast('✅ Nilai terkirim ke guru'); }).catch(function(){
     S.outbox = S.outbox.filter(function(x){ return !(x.sheet === d.sheet && x.pertemuan === d.pertemuan); }); S.outbox.push(d); save();
