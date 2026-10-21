@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f2a4a">
+<title>Cek Tugas · Informatika · SMP Negeri 6 Mengwi</title>
+<style>
+:root{--navy:#0f2a4a;--teal:#0e7490;--teal-l:#e0f4f8;--orange:#f97316;--green:#16a34a;--green-l:#e8f7ee;--red:#dc2626;--red-l:#fdecec;
+--yellow-l:#fef9e3;--ink:#1e293b;--muted:#64748b;--line:#dbe3ec;--bg:#f2f7fb;--card:#fff;--c7:#2563eb;--c8:#f59e0b}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-tap-highlight-color:transparent}
+button,select,input{font:inherit;color:inherit}
+h1,h2,h3{margin:0;line-height:1.3;color:var(--navy)}
+header{background:linear-gradient(150deg,#0f2a4a,#0e7490 65%,#14b8a6);color:#fff;padding:22px 16px 58px;text-align:center}
+header h1{color:#fff;font-size:clamp(1.4rem,5vw,2.1rem);margin:10px 0 4px}
+header p{margin:0;opacity:.92;font-size:.95rem}
+.pill{display:inline-block;background:var(--orange);border-radius:30px;padding:3px 14px;font-weight:800;font-size:.75rem;letter-spacing:1px}
+.back{display:inline-block;color:#fff;opacity:.9;text-decoration:none;font-size:.88rem;margin-bottom:8px}
+main{max-width:1100px;margin:-40px auto 24px;padding:0 16px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(15,42,74,.08)}
+.card h2{font-size:1.05rem;margin-bottom:10px}
+.lbl{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:0 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--line);background:#fff;border-radius:30px;padding:7px 16px;font-weight:700;cursor:pointer;min-width:58px}
+.chip[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}
+.row>div{flex:1 1 220px}
+select,input[type=search]{width:100%;border:2px solid var(--line);border-radius:12px;padding:9px 12px;background:#fff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{border-radius:16px;padding:14px;background:var(--teal-l)}
+.stat b{display:block;font-size:1.7rem;color:var(--navy);line-height:1.2}
+.stat span{font-size:.88rem;color:var(--muted)}
+.stat.g{background:var(--green-l)}.stat.y{background:var(--yellow-l)}
+.bars{display:flex;align-items:flex-end;gap:14px;height:210px;padding:8px 4px 0;border-bottom:2px solid var(--line);overflow-x:auto}
+.bar{flex:1 0 56px;max-width:110px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.bar i{display:block;width:100%;border-radius:10px 10px 0 0;background:var(--c7);min-height:3px;transition:height .4s}
+.bar em{font-style:normal;font-weight:800;font-size:.9rem;margin-bottom:4px;color:var(--navy)}
+.bar.sel i{outline:3px solid var(--orange);outline-offset:2px}
+.bar.lap i{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.25) 0 6px,transparent 6px 12px)}
+.xl{display:flex;gap:14px;padding:6px 4px 0}
+.xl span{flex:1 0 56px;max-width:110px;text-align:center;font-size:.8rem;color:var(--muted);font-weight:600}
+.note{font-size:.82rem;color:var(--muted);margin:8px 0 0}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted);margin:8px 0}
+.tw{overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.9rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap;background:#fff}
+th{position:sticky;top:0;z-index:2;background:#eef4fa;color:var(--navy);font-size:.8rem;vertical-align:bottom;white-space:normal;min-width:74px}
+th small{display:block;font-weight:400;color:var(--muted);font-size:.72rem}
+td.nm,th.nm{position:sticky;left:0;z-index:1;text-align:left;min-width:190px;white-space:normal}
+th.nm{z-index:3}
+td.no,th.no{min-width:40px;color:var(--muted)}
+tr.hit td{background:#fff7ed}
+tr.done td.nm{font-weight:700}
+.ok{color:var(--green);font-weight:800}.no-{color:#cbd5e1}
+.st{display:inline-block;border-radius:20px;padding:2px 10px;font-size:.78rem;font-weight:800}
+.st.l{background:var(--green-l);color:var(--green)}.st.k{background:var(--red-l);color:var(--red)}
+.msg{text-align:center;padding:28px 12px;color:var(--muted)}
+.spin{width:34px;height:34px;border:4px solid var(--line);border-top-color:var(--teal);border-radius:50%;margin:0 auto 10px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.warn{background:var(--yellow-l);border-radius:12px;padding:10px 12px;font-size:.88rem}
+ul.asing{margin:6px 0 0;padding-left:20px}ul.asing li{margin:4px 0}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="./">← Kembali ke materi</a><br>
+  <span class="pill" id="pill">INFORMATIKA</span>
+  <h1>Cek Pengumpulan Tugas</h1>
+  <p>Semester Ganjil &amp; Genap · Tahun Pelajaran 2026/2027<br>Pilih kelasmu, lalu cari namamu. Tanda ✅ berarti tugasmu sudah tercatat.</p>
+</header>
+<main>
+  <section class="card">
+    <p class="lbl">Kelas</p>
+    <div class="chips" id="kelas"></div>
+    <div class="row" style="margin-top:14px">
+      <div><p class="lbl">Laporan bulan</p><select id="bulan"></select></div>
+      <div><p class="lbl">Cari nama</p><input type="search" id="cari" placeholder="Ketik namamu…" autocomplete="off"></div>
+    </div>
+  </section>
+
+  <div id="loading" class="card msg"><div class="spin"></div>Memuat data tugas…</div>
+  <div id="error" class="card msg hide"></div>
+
+  <div id="isi" class="hide" style="display:flex;flex-direction:column;gap:14px">
+    <section class="stats" id="stats"></section>
+
+    <section class="card">
+      <h2 id="judulGrafik">Perkembangan pengumpulan tugas</h2>
+      <div class="bars" id="bars"></div><div class="xl" id="xl"></div>
+      <p class="note" id="noteGrafik"></p>
+    </section>
+
+    <section class="card">
+      <h2 id="judulKelasBar">Per kelas</h2>
+      <div class="bars" id="bars2" style="height:170px"></div><div class="xl" id="xl2"></div>
+      <p class="note">Jumlah siswa tiap kelas yang sudah mengirim minimal satu tugas pada laporan bulan ini (tercatat di sistem).</p>
+    </section>
+
+    <section class="card">
+      <h2 id="judulTabel">Siswa yang sudah mengumpulkan</h2>
+      <div class="legend"><span>✅ sudah tercatat</span><span>▫️ belum tercatat</span><span><span class="st l">Lengkap</span> semua tugas bulan ini</span></div>
+      <div class="tw"><table id="tabel"></table></div>
+      <p class="note">Nama ditampilkan seperti yang kamu ketik saat mengirim tugas, tanpa nilai. Jika namamu belum ada padahal sudah mengirim,
+        atau kamu salah memilih kelas, beri tahu guru lewat WhatsApp.</p>
+    </section>
+  </div>
+</main>
+<footer><span id="waktu"></span><br>Guru: <b>Ni Nyoman Dwi Mustikawati, S.Kom.</b> · Jika tandamu belum sesuai, hubungi guru lewat WhatsApp.</footer>
+
+<script>
+(function () {
+  var URL_DATA = 'https://script.google.com/macros/s/AKfycbzBbtwe7QrZdlLFYXYidgnu2KwIAlJ97VE1RipnB6fsm_IdybXEH_WQlu60rIDhUZnZ/exec';
+  var TG = /informatika8|infor8|kelas8/i.test(location.href) || /[?&]tingkat=(8|viii)\b/i.test(location.search) ? 'VIII' : 'VII';
+  if (/[?&]tingkat=(7|vii)\b/i.test(location.search)) TG = 'VII';
+  var ANGKA = TG === 'VII' ? '7' : '8', KEY = 'cekTugas' + ANGKA;
+  var SEMUA_KELAS = ['A', 'B', 'C', 'D', 'E', 'F'].map(function (h) { return ANGKA + h; });
+  var HARI = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  var berjalan = function (p) { return !p.selesai || p.selesai >= HARI; };
+  var D = null, S = {kelas: '', bulan: '', cari: ''};
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]; }); };
+  var simpan = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
+  var ambil = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  // "Bab 3 · P1" (dari server) ditampilkan sebagai "Bab 3 · Tugas ke-1".
+  var namaTugas = function (t) { return String(t.label).replace(/ · P(\d+)$/, ' · Tugas ke-$1'); };
+  var pct = function (x) { return (Math.round(x * 10) / 10).toString().replace('.', ',') + '%'; };
+
+  $('pill').textContent = 'INFORMATIKA KELAS ' + TG;
+  document.title = 'Cek Tugas · Informatika Kelas ' + TG + ' · SMP Negeri 6 Mengwi';
+  try { var pref = JSON.parse(ambil(KEY + 'Pilihan') || '{}'); S.kelas = pref.kelas || ''; } catch (e) {}
+  var qk = (location.search.match(/[?&]kelas=([78][A-Fa-f])/) || [])[1];
+  if (qk) S.kelas = qk.toUpperCase();
+
+  function gagal(pesan, adaCadangan) {
+    $('loading').classList.add('hide');
+    if (adaCadangan) return;
+    $('error').classList.remove('hide');
+    $('error').innerHTML = '😕 ' + esc(pesan) + '<br><br><button class="chip" id="ulang">Coba lagi</button>';
+    $('ulang').onclick = function () { location.reload(); };
+  }
+
+  function muat() {
+    var cad = ambil(KEY + 'Data');
+    if (cad) { try { pakai(JSON.parse(cad), true); } catch (e) {} }
+    if (/^__URL/.test(URL_DATA)) return gagal('Alamat data belum diatur oleh guru.', !!cad);
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var tm = setTimeout(function () { if (ctrl) ctrl.abort(); }, 25000);
+    fetch(URL_DATA, ctrl ? {signal: ctrl.signal} : {}).then(function (r) { return r.json(); }).then(function (d) {
+      clearTimeout(tm);
+      if (!d || !d.ok) throw new Error(d && d.pesan || 'Data tidak lengkap');
+      simpan(KEY + 'Data', JSON.stringify(d));
+      pakai(d, false);
+    }).catch(function () {
+      clearTimeout(tm);
+      gagal('Data belum bisa dimuat. Periksa koneksi internet lalu coba lagi.', !!cad);
+      if (cad) $('waktu').textContent += ' · (tampilan tersimpan, belum diperbarui)';
+    });
+  }
+
+  function pakai(d, cadangan) {
+    D = d;
+    $('loading').classList.add('hide'); $('error').classList.add('hide'); $('isi').classList.remove('hide');
+    $('waktu').textContent = 'Data diperbarui: ' + d.waktu + (cadangan ? ' · memuat data terbaru…' : '');
+    var kelas = SEMUA_KELAS.concat(Object.keys(d.kelas)).filter(function (k, i, a) { return k.charAt(0) === ANGKA && a.indexOf(k) === i; }).sort();
+    if (kelas.indexOf(S.kelas) < 0) S.kelas = kelas[0] || '';
+    $('kelas').innerHTML = kelas.map(function (k) { return '<button class="chip" data-k="' + k + '" aria-pressed="' + (k === S.kelas) + '">' + k + '</button>'; }).join('');
+    var per = d.periode.filter(function (p) { return p[TG]; });
+    if (!per.some(function (p) { return p.key === S.bulan; })) {
+      var pilih = per.length ? per[0].key : '';
+      per.forEach(function (p) { if (p.mulai && p.mulai <= HARI) pilih = p.key; });
+      S.bulan = pilih;
+    }
+    // Satu tahun pelajaran: Juli–Desember = Semester Ganjil, Januari–Juni = Semester Genap.
+    var grup = {};
+    per.forEach(function (p) { var g = Number(p.key.slice(5, 7)) >= 7 ? 'Semester Ganjil' : 'Semester Genap'; (grup[g] = grup[g] || []).push(p); });
+    $('bulan').innerHTML = ['Semester Ganjil', 'Semester Genap'].filter(function (g) { return grup[g]; }).map(function (g) {
+      return '<optgroup label="' + g + '">' + grup[g].map(function (p) {
+        return '<option value="' + p.key + '"' + (p.key === S.bulan ? ' selected' : '') + '>Laporan ' + esc(p.nama) + (berjalan(p) ? ' (sedang berjalan)' : '') + '</option>';
+      }).join('') + '</optgroup>';
+    }).join('');
+    tampil();
+  }
+
+  function tampil() {
+    if (!D) return;
+    simpan(KEY + 'Pilihan', JSON.stringify({kelas: S.kelas}));
+    var per = D.periode.filter(function (p) { return p[TG]; }), P = per.filter(function (p) { return p.key === S.bulan; })[0];
+    var tugas = D.tugas[TG] || [];
+    var idxBulan = []; tugas.forEach(function (t, i) { if (t.periode === S.bulan) idxBulan.push(i); });
+    // Siswa yang mengirim tugas laporan ini (tugas milik periode ini, atau kiriman bertanggal di periode ini).
+    var siswa = (D.kelas[S.kelas] || []).filter(function (s) {
+      return s.p.indexOf(S.bulan) >= 0 || idxBulan.some(function (i) { return s.t.indexOf(i) >= 0; });
+    });
+    var kirim = siswa.length;
+    var namaBulan = P ? P.nama : '';
+
+    // Kartu ringkasan
+    $('stats').innerHTML =
+      '<div class="stat g"><span>Kelas ' + S.kelas + ' · Laporan ' + esc(namaBulan) + '</span><b>' + kirim + ' siswa</b><span>sudah mengirim tugas</span></div>' +
+      (P && P[TG] && P[TG].pct != null ? '<div class="stat"><span>Seluruh kelas ' + TG + ' · Laporan ' + esc(namaBulan) + '</span><b>' + pct(P[TG].pct) + '</b><span>' +
+        P[TG].jumlah + ' dari ' + P[TG].siswa + ' siswa mengumpulkan' + (P[TG].sumber === 'laporan' ? ' (termasuk LKPD di kelas)' : '') + '</span></div>' : '') +
+      '<div class="stat y"><span>Tugas pada laporan ini</span><b>' + idxBulan.length + '</b><span>' + (idxBulan.length ? esc(idxBulan.map(function (i) { return namaTugas(tugas[i]); }).join(', ')) : 'belum ada') + '</span></div>';
+
+    // Grafik tingkat per laporan bulan
+    $('judulGrafik').textContent = 'Perkembangan pengumpulan tugas Kelas ' + TG + ' per laporan bulan · TA 2026/2027';
+    var warna = TG === 'VII' ? 'var(--c7)' : 'var(--c8)';
+    $('bars').innerHTML = per.map(function (p) {
+      var v = p[TG].pct == null ? 0 : p[TG].pct;
+      return '<div class="bar' + (p.key === S.bulan ? ' sel' : '') + (p[TG].sumber === 'laporan' ? ' lap' : '') + '"><em>' + (p[TG].pct == null ? '–' : pct(v)) +
+        '</em><i style="height:' + Math.max(1, v) + '%;background-color:' + warna + '"></i></div>';
+    }).join('');
+    $('xl').innerHTML = per.map(function (p) { return '<span>' + esc(p.label) + '</span>'; }).join('');
+    var naik = '';
+    var i0 = per.map(function (p) { return p.key; }).indexOf(S.bulan);
+    if (i0 >= 0 && berjalan(per[i0])) naik = ' Laporan ' + per[i0].nama + ' masih berjalan, jadi angkanya terus bertambah. Ayo kumpulkan tugasmu!';
+    else if (i0 > 0 && per[i0][TG].pct != null && per[i0 - 1][TG].pct != null) {
+      var b = Math.round((per[i0][TG].pct - per[i0 - 1][TG].pct) * 10) / 10;
+      naik = b > 0 ? ' Dibanding laporan sebelumnya: naik ' + pct(b).replace('%', '') + ' poin 🎉' : b < 0 ? ' Dibanding laporan sebelumnya: turun ' + pct(-b).replace('%', '') + ' poin. Ayo kumpulkan tugasmu!' : ' Sama dengan laporan sebelumnya.';
+    }
+    $('noteGrafik').textContent = 'Batang bergaris = angka dari laporan guru (termasuk tugas/LKPD yang dikumpulkan di kelas). Batang polos = dihitung otomatis dari tugas yang dikirim lewat web.' + naik;
+
+    // Grafik per kelas (bulan terpilih)
+    $('judulKelasBar').textContent = 'Per kelas · Laporan ' + namaBulan;
+    var kls = SEMUA_KELAS.concat(Object.keys(D.kelas)).filter(function (k, i, a) { return k.charAt(0) === ANGKA && a.indexOf(k) === i; }).sort();
+    var jml = kls.map(function (k) {
+      return (D.kelas[k] || []).filter(function (s) { return s.p.indexOf(S.bulan) >= 0 || idxBulan.some(function (i) { return s.t.indexOf(i) >= 0; }); }).length;
+    });
+    var maks = Math.max.apply(null, jml.concat([32]));
+    $('bars2').innerHTML = kls.map(function (k, i) {
+      return '<div class="bar' + (k === S.kelas ? ' sel' : '') + '"><em>' + jml[i] + '</em><i style="height:' + Math.max(1, jml[i] / maks * 100) + '%;background-color:' + warna + '"></i></div>';
+    }).join('');
+    $('xl2').innerHTML = kls.map(function (k) { return '<span>' + k + '</span>'; }).join('');
+
+    // Tabel siswa
+    $('judulTabel').textContent = 'Siswa ' + S.kelas + ' yang sudah mengumpulkan · Laporan ' + namaBulan;
+    var q = S.cari.toLowerCase().replace(/\s+/g, ' ').trim();
+    var head = '<tr><th class="no">No</th><th class="nm">Nama</th>' + idxBulan.map(function (i) {
+      return '<th>' + esc(namaTugas(tugas[i])) + (tugas[i].judul ? '<small>' + esc(tugas[i].judul) + '</small>' : '') + '</th>';
+    }).join('') + '<th>Status</th></tr>';
+    var body = siswa.map(function (s, n) {
+      var sudah = idxBulan.filter(function (i) { return s.t.indexOf(i) >= 0; }).length, kurang = idxBulan.length - sudah;
+      var cocok = q && s.nama.toLowerCase().replace(/\s+/g, ' ').indexOf(q) >= 0;
+      if (q && !cocok) return '';
+      var st = !idxBulan.length ? '–' : kurang === 0 ? '<span class="st l">Lengkap</span>' : '<span class="st k">Kurang ' + kurang + '</span>';
+      return '<tr class="' + (cocok ? 'hit ' : '') + (idxBulan.length && !kurang ? 'done' : '') + '"><td class="no">' + (n + 1) + '</td><td class="nm">' + esc(s.nama) + '</td>' +
+        idxBulan.map(function (i) { return s.t.indexOf(i) >= 0 ? '<td class="ok">✅</td>' : '<td class="no-">▫️</td>'; }).join('') + '<td>' + st + '</td></tr>';
+    }).join('');
+    $('tabel').innerHTML = head + (body || '<tr><td colspan="' + (idxBulan.length + 3) + '" class="msg">' +
+      (q ? 'Nama "' + esc(S.cari) + '" belum ada di daftar kelas ' + S.kelas + '. Coba ketik sebagian nama saja, atau periksa pilihan kelas.'
+         : 'Belum ada siswa kelas ' + S.kelas + ' yang tercatat mengirim tugas pada laporan ini.') + '</td></tr>');
+  }
+
+  $('kelas').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-k]'); if (!b) return;
+    S.kelas = b.getAttribute('data-k');
+    [].forEach.call(this.children, function (c) { c.setAttribute('aria-pressed', c === b); });
+    tampil();
+  });
+  $('bulan').addEventListener('change', function () { S.bulan = this.value; tampil(); });
+  $('cari').addEventListener('input', function () { S.cari = this.value; tampil(); });
+  muat();
+})();
+</script>
+</body>
+</html>
