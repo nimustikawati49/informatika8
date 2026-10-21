@@ -46,7 +46,7 @@ select,input[type=search]{width:100%;border:2px solid var(--line);border-radius:
 table{border-collapse:separate;border-spacing:0;width:100%;font-size:.9rem}
 th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap;background:#fff}
 th{position:sticky;top:0;z-index:2;background:#eef4fa;color:var(--navy);font-size:.8rem;vertical-align:bottom;white-space:normal;min-width:74px}
-th small{display:block;font-weight:400;color:var(--muted);font-size:.72rem}
+th small,td small{display:block;font-weight:400;color:var(--muted);font-size:.72rem}
 td.nm,th.nm{position:sticky;left:0;z-index:1;text-align:left;min-width:190px;white-space:normal}
 th.nm{z-index:3}
 td.no,th.no{min-width:40px;color:var(--muted)}
@@ -100,6 +100,12 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
     </section>
 
     <section class="card">
+      <h2 id="judulRekap">Rekap pengumpulan tugas per kelas</h2>
+      <div class="tw"><table id="rekap"></table></div>
+      <p class="note" id="noteRekap"></p>
+    </section>
+
+    <section class="card">
       <h2 id="judulTabel">Siswa yang sudah mengumpulkan</h2>
       <div class="legend"><span>✅ sudah tercatat</span><span>▫️ belum tercatat</span><span><span class="st l">Lengkap</span> semua tugas bulan ini</span></div>
       <div class="tw"><table id="tabel"></table></div>
@@ -117,6 +123,10 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
   if (/[?&]tingkat=(7|vii)\b/i.test(location.search)) TG = 'VII';
   var ANGKA = TG === 'VII' ? '7' : '8', KEY = 'cekTugas' + ANGKA;
   var SEMUA_KELAS = ['A', 'B', 'C', 'D', 'E', 'F'].map(function (h) { return ANGKA + h; });
+  // Jumlah siswa kelas yang diampu guru (sama dengan rekap di spreadsheet). Kelas lain (8E/8F) hanya ditampilkan jumlah kirimannya.
+  var JUMLAH = {'7A': 31, '7B': 32, '7C': 32, '7D': 32, '7E': 22, '7F': 21, '8A': 32, '8B': 32, '8C': 32, '8D': 32};
+  var SEMUA = 'SEMUA';
+  var namaKelas = function (k) { return k === SEMUA ? 'semua kelas ' + TG : 'kelas ' + k; };
   var HARI = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   var berjalan = function (p) { return !p.selesai || p.selesai >= HARI; };
   var D = null, S = {kelas: '', bulan: '', cari: ''};
@@ -131,7 +141,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
   $('pill').textContent = 'INFORMATIKA KELAS ' + TG;
   document.title = 'Cek Tugas · Informatika Kelas ' + TG + ' · SMP Negeri 6 Mengwi';
   try { var pref = JSON.parse(ambil(KEY + 'Pilihan') || '{}'); S.kelas = pref.kelas || ''; } catch (e) {}
-  var qk = (location.search.match(/[?&]kelas=([78][A-Fa-f])/) || [])[1];
+  var qk = (location.search.match(/[?&]kelas=([78][A-Fa-f]|semua)/i) || [])[1];
   if (qk) S.kelas = qk.toUpperCase();
 
   function gagal(pesan, adaCadangan) {
@@ -164,9 +174,11 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
     D = d;
     $('loading').classList.add('hide'); $('error').classList.add('hide'); $('isi').classList.remove('hide');
     $('waktu').textContent = 'Data diperbarui: ' + d.waktu + (cadangan ? ' · memuat data terbaru…' : '');
-    var kelas = SEMUA_KELAS.concat(Object.keys(d.kelas)).filter(function (k, i, a) { return k.charAt(0) === ANGKA && a.indexOf(k) === i; }).sort();
-    if (kelas.indexOf(S.kelas) < 0) S.kelas = kelas[0] || '';
-    $('kelas').innerHTML = kelas.map(function (k) { return '<button class="chip" data-k="' + k + '" aria-pressed="' + (k === S.kelas) + '">' + k + '</button>'; }).join('');
+    var kelas = [SEMUA].concat(SEMUA_KELAS.concat(Object.keys(d.kelas)).filter(function (k, i, a) { return k.charAt(0) === ANGKA && a.indexOf(k) === i; }).sort());
+    if (kelas.indexOf(S.kelas) < 0) S.kelas = SEMUA;
+    $('kelas').innerHTML = kelas.map(function (k) {
+      return '<button class="chip" data-k="' + k + '" aria-pressed="' + (k === S.kelas) + '">' + (k === SEMUA ? 'Semua kelas' : k) + '</button>';
+    }).join('');
     var per = d.periode.filter(function (p) { return p[TG]; });
     if (!per.some(function (p) { return p.key === S.bulan; })) {
       var pilih = per.length ? per[0].key : '';
@@ -191,15 +203,19 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
     var tugas = D.tugas[TG] || [];
     var idxBulan = []; tugas.forEach(function (t, i) { if (t.periode === S.bulan) idxBulan.push(i); });
     // Siswa yang mengirim tugas laporan ini (tugas milik periode ini, atau kiriman bertanggal di periode ini).
-    var siswa = (D.kelas[S.kelas] || []).filter(function (s) {
-      return s.p.indexOf(S.bulan) >= 0 || idxBulan.some(function (i) { return s.t.indexOf(i) >= 0; });
+    var ikut = function (s) { return s.p.indexOf(S.bulan) >= 0 || idxBulan.some(function (i) { return s.t.indexOf(i) >= 0; }); };
+    var kls = SEMUA_KELAS.concat(Object.keys(D.kelas)).filter(function (k, i, a) { return k.charAt(0) === ANGKA && a.indexOf(k) === i; }).sort();
+    var siswa = [];
+    kls.forEach(function (k) {
+      if (S.kelas !== SEMUA && S.kelas !== k) return;
+      (D.kelas[k] || []).forEach(function (s) { if (ikut(s)) siswa.push({kelas: k, nama: s.nama, t: s.t, p: s.p}); });
     });
-    var kirim = siswa.length;
+    var semua = S.kelas === SEMUA, kirim = siswa.length;
     var namaBulan = P ? P.nama : '';
 
     // Kartu ringkasan
     $('stats').innerHTML =
-      '<div class="stat g"><span>Kelas ' + S.kelas + ' · Laporan ' + esc(namaBulan) + '</span><b>' + kirim + ' siswa</b><span>sudah mengirim tugas</span></div>' +
+      '<div class="stat g"><span>' + (semua ? 'Semua kelas ' + TG : 'Kelas ' + S.kelas) + ' · Laporan ' + esc(namaBulan) + '</span><b>' + kirim + ' siswa</b><span>sudah mengirim tugas</span></div>' +
       (P && P[TG] && P[TG].pct != null ? '<div class="stat"><span>Seluruh kelas ' + TG + ' · Laporan ' + esc(namaBulan) + '</span><b>' + pct(P[TG].pct) + '</b><span>' +
         P[TG].jumlah + ' dari ' + P[TG].siswa + ' siswa mengumpulkan' + (P[TG].sumber === 'laporan' ? ' (termasuk LKPD di kelas)' : '') + '</span></div>' : '') +
       '<div class="stat y"><span>Tugas pada laporan ini</span><b>' + idxBulan.length + '</b><span>' + (idxBulan.length ? esc(idxBulan.map(function (i) { return namaTugas(tugas[i]); }).join(', ')) : 'belum ada') + '</span></div>';
@@ -224,20 +240,38 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
 
     // Grafik per kelas (bulan terpilih)
     $('judulKelasBar').textContent = 'Per kelas · Laporan ' + namaBulan;
-    var kls = SEMUA_KELAS.concat(Object.keys(D.kelas)).filter(function (k, i, a) { return k.charAt(0) === ANGKA && a.indexOf(k) === i; }).sort();
-    var jml = kls.map(function (k) {
-      return (D.kelas[k] || []).filter(function (s) { return s.p.indexOf(S.bulan) >= 0 || idxBulan.some(function (i) { return s.t.indexOf(i) >= 0; }); }).length;
-    });
+    var jml = kls.map(function (k) { return (D.kelas[k] || []).filter(ikut).length; });
     var maks = Math.max.apply(null, jml.concat([32]));
     $('bars2').innerHTML = kls.map(function (k, i) {
       return '<div class="bar' + (k === S.kelas ? ' sel' : '') + '"><em>' + jml[i] + '</em><i style="height:' + Math.max(1, jml[i] / maks * 100) + '%;background-color:' + warna + '"></i></div>';
     }).join('');
     $('xl2').innerHTML = kls.map(function (k) { return '<span>' + k + '</span>'; }).join('');
 
+    // Rekap per kelas × tugas (laporan terpilih)
+    $('judulRekap').textContent = 'Rekap pengumpulan tugas per kelas · Laporan ' + namaBulan;
+    var sel = function (c, n) { return n ? c + '/' + n + '<small>' + pct(c / n * 100) + '</small>' : String(c); };
+    var tot = {n: 0, siswa: 0, t: {}};
+    var baris = kls.map(function (k) {
+      var ss = D.kelas[k] || [], n = JUMLAH[k] || 0, ik = ss.filter(ikut).length;
+      if (n) { tot.n += n; tot.siswa += ik; }
+      return '<tr' + (k === S.kelas ? ' class="hit"' : '') + '><td class="nm"><b>' + k + '</b>' + (n ? '' : '<small style="display:block;color:var(--muted)">tidak diampu</small>') + '</td>' +
+        idxBulan.map(function (i) {
+          var c = ss.filter(function (s) { return s.t.indexOf(i) >= 0; }).length;
+          if (n) tot.t[i] = (tot.t[i] || 0) + c;
+          return '<td>' + sel(c, n) + '</td>';
+        }).join('') + '<td><b>' + sel(ik, n) + '</b></td></tr>';
+    }).join('');
+    $('rekap').innerHTML = '<tr><th class="nm">Kelas</th>' + idxBulan.map(function (i) { return '<th>' + esc(namaTugas(tugas[i])) + '</th>'; }).join('') +
+      '<th>Siswa mengumpulkan</th></tr>' + baris +
+      '<tr class="done"><td class="nm"><b>Semua kelas ' + TG + '</b></td>' + idxBulan.map(function (i) { return '<td><b>' + sel(tot.t[i] || 0, tot.n) + '</b></td>'; }).join('') +
+      '<td><b>' + sel(tot.siswa, tot.n) + '</b></td></tr>';
+    $('noteRekap').textContent = 'Angka = siswa yang sudah mengumpulkan / jumlah siswa kelas (persentase di bawahnya). "Siswa mengumpulkan" = siswa yang mengirim minimal satu tugas pada laporan ini.' +
+      (ANGKA === '8' ? ' Kelas 8E dan 8F tidak diampu, jadi hanya ditampilkan jumlah kirimannya dan tidak ikut baris "Semua kelas".' : '');
+
     // Tabel siswa
-    $('judulTabel').textContent = 'Siswa ' + S.kelas + ' yang sudah mengumpulkan · Laporan ' + namaBulan;
+    $('judulTabel').textContent = (semua ? 'Semua siswa kelas ' + TG : 'Siswa ' + S.kelas) + ' yang sudah mengumpulkan · Laporan ' + namaBulan;
     var q = S.cari.toLowerCase().replace(/\s+/g, ' ').trim();
-    var head = '<tr><th class="no">No</th><th class="nm">Nama</th>' + idxBulan.map(function (i) {
+    var head = '<tr><th class="no">No</th><th class="nm">Nama</th>' + (semua ? '<th>Kelas</th>' : '') + idxBulan.map(function (i) {
       return '<th>' + esc(namaTugas(tugas[i])) + (tugas[i].judul ? '<small>' + esc(tugas[i].judul) + '</small>' : '') + '</th>';
     }).join('') + '<th>Status</th></tr>';
     var body = siswa.map(function (s, n) {
@@ -245,12 +279,12 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
       var cocok = q && s.nama.toLowerCase().replace(/\s+/g, ' ').indexOf(q) >= 0;
       if (q && !cocok) return '';
       var st = !idxBulan.length ? '–' : kurang === 0 ? '<span class="st l">Lengkap</span>' : '<span class="st k">Kurang ' + kurang + '</span>';
-      return '<tr class="' + (cocok ? 'hit ' : '') + (idxBulan.length && !kurang ? 'done' : '') + '"><td class="no">' + (n + 1) + '</td><td class="nm">' + esc(s.nama) + '</td>' +
+      return '<tr class="' + (cocok ? 'hit ' : '') + (idxBulan.length && !kurang ? 'done' : '') + '"><td class="no">' + (n + 1) + '</td><td class="nm">' + esc(s.nama) + '</td>' + (semua ? '<td>' + s.kelas + '</td>' : '') +
         idxBulan.map(function (i) { return s.t.indexOf(i) >= 0 ? '<td class="ok">✅</td>' : '<td class="no-">▫️</td>'; }).join('') + '<td>' + st + '</td></tr>';
     }).join('');
-    $('tabel').innerHTML = head + (body || '<tr><td colspan="' + (idxBulan.length + 3) + '" class="msg">' +
-      (q ? 'Nama "' + esc(S.cari) + '" belum ada di daftar kelas ' + S.kelas + '. Coba ketik sebagian nama saja, atau periksa pilihan kelas.'
-         : 'Belum ada siswa kelas ' + S.kelas + ' yang tercatat mengirim tugas pada laporan ini.') + '</td></tr>');
+    $('tabel').innerHTML = head + (body || '<tr><td colspan="' + (idxBulan.length + (semua ? 4 : 3)) + '" class="msg">' +
+      (q ? 'Nama "' + esc(S.cari) + '" belum ada di daftar ' + namaKelas(S.kelas) + '. Coba ketik sebagian nama saja, atau periksa pilihan kelas.'
+         : 'Belum ada siswa ' + namaKelas(S.kelas) + ' yang tercatat mengirim tugas pada laporan ini.') + '</td></tr>');
   }
 
   $('kelas').addEventListener('click', function (e) {
