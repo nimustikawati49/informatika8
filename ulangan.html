@@ -91,7 +91,9 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
 .blank select{min-height:40px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
 .chip{background:var(--yellow-l);border:1px dashed var(--yellow);border-radius:20px;padding:3px 12px;font-weight:600;font-size:.9rem}
-.qnav{display:flex;align-items:center;gap:10px;margin-top:16px}
+.qnav{display:flex;align-items:center;gap:10px;margin-top:16px;position:sticky;bottom:0;z-index:5;background:var(--bg,#eef3fa);padding:10px 0 calc(10px + env(safe-area-inset-bottom))}
+.sv{margin-left:auto;font-size:.78rem;font-weight:700;color:var(--green)}
+.hapus{border:0;background:none;color:var(--muted);font-size:.85rem;text-decoration:underline;padding:8px 0;margin-top:6px}
 .qnav .sp{flex:1}
 .ragu{display:flex;align-items:center;gap:8px;background:var(--yellow-l);border:2px solid var(--yellow);border-radius:12px;padding:8px 12px;font-weight:700;color:#92400e;min-height:44px;cursor:pointer}
 .ragu input{width:20px;height:20px;accent-color:var(--yellow)}
@@ -397,7 +399,7 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
   function gbr(src) { return src ? '<img class="qimg" src="' + src + '" alt="Gambar soal">' : ''; }
   function soal() {
     var q = S.p.soal[S.i], n = q.n, j = S.j[n], h = '';
-    h += '<div class="qhead"><span class="qno">Soal ' + n + '</span><span class="qtype">' + JENIS[q.jenis] + '</span></div>';
+    h += '<div class="qhead"><span class="qno">Soal ' + n + '</span><span class="qtype">' + JENIS[q.jenis] + '</span><span class="sv" id="sv">' + (terisi(j) ? '💾 Jawaban tersimpan' : '') + '</span></div>';
     if (q.jenis !== 'LENGKAPI') h += '<div class="qtext">' + teksHtml(q.teks) + '</div>';
     h += gbr(q.gambar);
     if (q.jenis === 'PG' || q.jenis === 'PGK') {
@@ -406,6 +408,7 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
       h += '<div class="opts">' + q.opsi.map(function (o, k) {
         return '<button class="opt' + (multi ? ' multi' : '') + (pilih.indexOf(o.id) >= 0 ? ' sel' : '') + '" data-o="' + o.id + '"><span class="L">' + 'ABCDE'.charAt(k) + '</span><span class="T">' + br(o.teks) + (o.gambar ? '<img src="' + o.gambar + '" alt="">' : '') + '</span></button>';
       }).join('') + '</div>';
+      if (terisi(j)) h += '<button class="hapus" id="hp">✖ Hapus jawaban soal ini</button>';
     } else if (q.jenis === 'ISIAN') {
       h += '<input class="inp" id="isi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ketik jawabanmu di sini…" value="' + esc(j || '') + '">' +
         '<p class="hint" style="margin-top:8px">Huruf besar/kecil tidak berpengaruh. Tulis jawaban singkat saja.</p>';
@@ -431,21 +434,29 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
     $$('[data-o]', box).forEach(function (b) {
       b.onclick = function () {
         var id = b.getAttribute('data-o');
-        if (q.jenis === 'PG') S.j[n] = S.j[n] === id ? '' : id;
+        /* PG: mengetuk pilihan yang sama TIDAK menghapus jawaban (cegah salah ketuk); hapus hanya lewat tombol "Hapus jawaban" */
+        if (q.jenis === 'PG') { if (S.j[n] === id) return; S.j[n] = id; }
         else { var a = (S.j[n] || []).slice(), k = a.indexOf(id); if (k >= 0) a.splice(k, 1); else a.push(id); S.j[n] = a; }
         simpan(); soal(); grid();
       };
     });
+    var hp = $('#hp', box);
+    if (hp) hp.onclick = function () { S.j[n] = q.jenis === 'PG' ? '' : []; simpan(); soal(); grid(); };
     var isi = $('#isi', box);
     if (isi) isi.oninput = function () { S.j[n] = isi.value; simpanNanti(); };
-    $$('[data-j]', box).forEach(function (s) { s.onchange = function () { var o = S.j[n] || {}; o[s.getAttribute('data-j')] = s.value; S.j[n] = o; s.parentNode.classList.toggle('done', !!s.value); simpan(); grid(); }; });
+    $$('[data-j]', box).forEach(function (s) { s.onchange = function () { var o = S.j[n] || {}; o[s.getAttribute('data-j')] = s.value; S.j[n] = o; s.parentNode.classList.toggle('done', !!s.value); simpan(); grid(); s.blur(); }; });
     $$('[data-b]', box).forEach(function (f) {
       var up = function () { var a = (S.j[n] || []).slice(); a[+f.getAttribute('data-b')] = f.value; S.j[n] = a; };
-      if (f.tagName === 'SELECT') f.onchange = function () { up(); simpan(); grid(); };
+      if (f.tagName === 'SELECT') f.onchange = function () { up(); simpan(); grid(); f.blur(); };
       else f.oninput = function () { up(); simpanNanti(); };
     });
   }
-  function simpan() { if (S) put(KS, S); }
+  /* Jawaban disimpan ke perangkat setiap kali berubah dan setiap pindah soal; pindah soal tidak pernah mengubah jawaban */
+  function simpan() {
+    if (!S) return; put(KS, S);
+    var sv = $('#sv'), q = S.p && S.p.soal && S.p.soal[S.i];
+    if (sv && q) sv.textContent = terisi(S.j[q.n]) ? '💾 Jawaban tersimpan' : '';
+  }
   function simpanNanti() { clearTimeout(saveT); saveT = setTimeout(function () { simpan(); if ($('#gr')) grid(); }, 400); }
 
   /* ---------- WAKTU ---------- */
