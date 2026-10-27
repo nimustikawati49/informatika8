@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f2a4a">
+<title>Ulangan Online · Informatika · SMP Negeri 6 Mengwi</title>
+<style>
+:root{--navy:#0f2a4a;--blue:#1d4ed8;--blue-l:#e0ecff;--teal:#0e7490;--orange:#f97316;--green:#16a34a;--green-l:#e8f7ee;--red:#dc2626;--red-l:#fdecec;
+--yellow:#f59e0b;--yellow-l:#fef6dc;--ink:#1e293b;--muted:#64748b;--line:#dbe3ec;--bg:#f2f7fb;--card:#fff}
+*{box-sizing:border-box}
+html{font-size:16px}
+@media (min-width:1600px){html{font-size:19px}}
+@media (min-width:2200px){html{font-size:23px}}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-tap-highlight-color:transparent}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3,h4{margin:0;line-height:1.3;color:var(--navy)}
+.hide{display:none!important}
+.btn{border:0;border-radius:12px;padding:10px 18px;font-weight:700;background:var(--blue);color:#fff;min-height:44px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.or{background:var(--orange)}.btn.gr{background:var(--green)}.btn.rd{background:var(--red)}
+.btn.gh{background:#fff;color:var(--navy);border:2px solid var(--line)}
+.topnav{position:sticky;top:0;z-index:20;background:var(--navy);display:flex;align-items:center;gap:12px;padding:8px 16px}
+.topnav a{color:#fff;text-decoration:none;font-weight:700;background:rgba(255,255,255,.15);border-radius:20px;padding:6px 16px;min-height:36px;display:inline-flex;align-items:center}
+.topnav span{color:#cbd5e1;font-weight:600;font-size:.92rem}
+header.hero{background:linear-gradient(150deg,#0f2a4a,#1d4ed8 60%,#f97316 140%);color:#fff;padding:22px 16px 58px;text-align:center}
+header.hero h1{color:#fff;font-size:clamp(1.4rem,5vw,2.1rem);margin:10px 0 4px}
+header.hero p{margin:0;opacity:.92;font-size:.95rem}
+.pill{display:inline-block;background:var(--orange);border-radius:30px;padding:3px 14px;font-weight:800;font-size:.75rem;letter-spacing:1px}
+.page{max-width:980px;margin:-40px auto 24px;padding:0 16px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--card);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(15,42,74,.08)}
+.card h2{font-size:1.05rem;margin-bottom:10px}
+.lbl{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:0 0 4px}
+.prof{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.prof>div{flex:1 1 150px}.prof>div.nm{flex:3 1 240px}
+.prof input,.prof select,.inp{width:100%;border:2px solid var(--line);border-radius:12px;padding:9px 12px;background:#fff;min-height:44px}
+.inp:focus,.prof input:focus,.prof select:focus{outline:none;border-color:var(--blue)}
+.muted{color:var(--muted);font-size:.88rem}
+.ulist{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.uc{border:2px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;background:#fff}
+.uc h3{font-size:1.05rem}
+.uc .meta{font-size:.85rem;color:var(--muted)}
+.badge{display:inline-block;border-radius:20px;padding:3px 12px;font-size:.8rem;font-weight:800;align-self:flex-start}
+.badge.ok{background:var(--green-l);color:var(--green)}.badge.rm{background:var(--red-l);color:var(--red)}
+.badge.on{background:var(--yellow-l);color:#b45309}.badge.nw{background:var(--blue-l);color:var(--blue)}
+.msg{text-align:center;padding:24px 12px;color:var(--muted)}
+.spin{width:34px;height:34px;border:4px solid var(--line);border-top-color:var(--blue);border-radius:50%;margin:0 auto 10px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px}
+
+/* ---------- UJIAN ---------- */
+body.exam{background:#eef3f9;user-select:none;-webkit-user-select:none}
+body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
+.exbar{position:sticky;top:0;z-index:30;background:var(--navy);color:#fff;display:flex;align-items:center;gap:10px;padding:8px 12px;min-height:54px}
+.exbar .ttl{flex:1;min-width:0}
+.exbar .ttl b{display:block;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exbar .ttl small{display:block;color:#cbd5e1;font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.navbtn{background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:20px;padding:6px 12px;font-weight:700;font-size:.85rem;min-height:36px}
+.timer{background:#fff;color:var(--navy);border-radius:20px;padding:4px 12px;font-weight:800;font-size:.9rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.timer.warn{background:var(--red);color:#fff}
+.timer.crit{background:var(--red);color:#fff;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.55}}
+.exbody{display:flex;gap:16px;max-width:1280px;margin:0 auto;padding:14px 12px 24px;align-items:flex-start}
+.qwrap{flex:1;min-width:0}
+.qcard{background:#fff;border-radius:18px;padding:18px;box-shadow:0 6px 18px rgba(15,42,74,.08)}
+.qhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.qno{background:var(--navy);color:#fff;border-radius:10px;padding:4px 12px;font-weight:800}
+.qtype{background:var(--blue-l);color:var(--blue);border-radius:20px;padding:3px 12px;font-size:.8rem;font-weight:700}
+.qtext{font-size:1.08rem;margin:0 0 12px;overflow-wrap:anywhere}
+.qimg{display:block;max-width:100%;max-height:45vh;margin:6px 0 14px;border-radius:10px;border:1px solid var(--line);cursor:zoom-in}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px 12px;min-height:52px;width:100%}
+.opt .L{flex:0 0 34px;height:34px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--muted)}
+.opt.multi .L{border-radius:8px}
+.opt .T{flex:1;overflow-wrap:anywhere}
+.opt .T img{display:block;max-width:100%;max-height:30vh;margin-top:6px;border-radius:8px}
+.opt:hover{border-color:#9db4d6}
+.opt.sel{border-color:var(--blue);background:var(--blue-l)}
+.opt.sel .L{background:var(--blue);border-color:var(--blue);color:#fff}
+.hint{font-size:.85rem;color:var(--muted);margin:0 0 10px}
+.jodoh{display:flex;flex-direction:column;gap:10px}
+.jrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:10px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:10px}
+.jrow b{overflow-wrap:anywhere}
+.jrow select,.blank select{border:2px solid var(--line);border-radius:10px;padding:8px;background:#fff;min-height:44px;width:100%}
+.jrow.done{border-color:var(--blue);background:var(--blue-l)}
+@media (max-width:520px){.jrow{grid-template-columns:1fr}}
+.lengkap{font-size:1.08rem;line-height:2.4}
+.blank{display:inline-block;vertical-align:middle;min-width:130px;max-width:100%}
+.blank input{border:0;border-bottom:3px solid var(--blue);background:var(--blue-l);border-radius:8px 8px 0 0;padding:4px 8px;width:100%;min-height:40px;text-align:center}
+.blank select{min-height:40px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.chip{background:var(--yellow-l);border:1px dashed var(--yellow);border-radius:20px;padding:3px 12px;font-weight:600;font-size:.9rem}
+.qnav{display:flex;align-items:center;gap:10px;margin-top:16px}
+.qnav .sp{flex:1}
+.ragu{display:flex;align-items:center;gap:8px;background:var(--yellow-l);border:2px solid var(--yellow);border-radius:12px;padding:8px 12px;font-weight:700;color:#92400e;min-height:44px;cursor:pointer}
+.ragu input{width:20px;height:20px;accent-color:var(--yellow)}
+.side{flex:0 0 280px;background:#fff;border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(15,42,74,.08);position:sticky;top:70px;max-height:calc(100vh - 86px);overflow:auto}
+.side h4{margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.grid button{border:2px solid var(--line);background:#fff;border-radius:10px;min-height:40px;font-weight:700;padding:0}
+.grid button.ans{background:var(--green);border-color:var(--green);color:#fff}
+.grid button.rg{background:var(--yellow);border-color:var(--yellow);color:#fff}
+.grid button.cur{outline:3px solid var(--navy);outline-offset:1px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.78rem;color:var(--muted);margin:10px 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:4px;border:2px solid var(--line)}
+.side .btn{width:100%;margin-top:6px}
+.shade{display:none}
+@media (max-width:899px){
+  .side{position:fixed;top:0;right:0;bottom:0;width:min(320px,86vw);max-height:none;border-radius:18px 0 0 18px;z-index:60;transform:translateX(105%);transition:transform .25s}
+  body.side-open .side{transform:none}
+  body.side-open .shade{display:block;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:55}
+  .qnav{gap:6px}.qnav .btn{padding:10px 12px}.qnav .tx{display:none}.ragu{padding:8px 10px}
+  body.exam{overflow-x:hidden}
+}
+@media (min-width:900px){.navbtn{display:none}}
+@media (min-width:1600px){.exbody{max-width:1560px}.side{flex-basis:340px}}
+
+/* ---------- MODAL ---------- */
+.ov{position:fixed;inset:0;z-index:100;background:rgba(15,23,42,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.mdl{background:#fff;border-radius:20px;max-width:640px;width:100%;max-height:92vh;overflow:auto;padding:20px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.mdl h2{font-size:1.2rem;margin:0 36px 10px 0}
+.mdl .x{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:#f1f5f9;font-size:1.3rem;font-weight:800;color:var(--navy)}
+.mdl .x:hover{background:var(--red-l);color:var(--red)}
+.mdl ol{padding-left:22px;margin:6px 0 14px}.mdl li{margin:6px 0}
+.mdl .acts{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:14px}
+.mdl.lock{border-top:8px solid var(--red)}
+.mdl.warn{border-top:8px solid var(--yellow)}
+.tok{font-size:1.4rem;letter-spacing:4px;text-transform:uppercase;text-align:center;font-weight:800}
+.err{color:var(--red);font-weight:600;font-size:.9rem;min-height:1.2em;margin:6px 0 0}
+.zoom{background:rgba(0,0,0,.85);cursor:zoom-out}
+.zoom img{max-width:96vw;max-height:92vh;border-radius:8px;background:#fff}
+
+/* ---------- HASIL ---------- */
+.score{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+.ring{width:140px;height:140px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;flex:0 0 auto}
+.ring b{font-size:2.6rem;line-height:1}.ring span{font-size:.8rem;opacity:.9}
+.ring.ok{background:linear-gradient(150deg,#15803d,#22c55e)}.ring.no{background:linear-gradient(150deg,#b91c1c,#f97316)}
+.fb{display:flex;flex-direction:column;gap:8px}
+.fbi{border-radius:12px;padding:8px 12px;border:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.fbi .ic{font-size:1.1rem}
+.fbi.benar{background:var(--green-l);border-color:#bbe5c9}.fbi.salah,.fbi.kosong{background:var(--red-l);border-color:#f5c2c2}.fbi.sebagian{background:var(--yellow-l);border-color:#f6d98a}
+.fbi small{display:block;color:var(--ink)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.mat ol{margin:6px 0 0;padding-left:22px}.mat li{margin:6px 0}
+.warnbox{background:var(--yellow-l);border:2px solid var(--yellow);border-radius:12px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.rank .rk-me{display:flex;gap:14px;align-items:center}
+.rk-no{flex:0 0 auto;width:64px;height:64px;border-radius:50%;background:linear-gradient(150deg,#1d4ed8,#f97316);color:#fff;font-weight:900;font-size:1.4rem;display:flex;align-items:center;justify-content:center}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;align-items:end}
+.pd{border-radius:14px;padding:10px 6px;text-align:center;background:#f1f5f9;display:flex;flex-direction:column;gap:2px;min-width:0}
+.pd span{font-size:1.6rem}.pd b{font-size:.85rem;overflow-wrap:anywhere}.pd small{color:var(--muted);font-weight:700}
+.pd.p1{background:#fef3c7;order:2;padding-top:18px}.pd.p2{order:1}.pd.p3{order:3}
+.ring.pop{animation:pop .6s ease-out}@keyframes pop{0%{transform:scale(.6)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:200}
+.fbi small+small{margin-top:2px}.dtw{overflow-x:auto;margin:6px 0 12px}.dt{border-collapse:collapse;font-size:.95rem;min-width:60%}.dt th,.dt td{border:1px solid #cbd5e1;padding:6px 10px;text-align:center;white-space:nowrap}.dt th{background:var(--blue-l);color:var(--navy)}.dt tr:nth-child(even) td{background:#f8fafc}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="ov"></div>
+<script>
+(function () {
+  var URL_ULANGAN = 'https://script.google.com/macros/s/AKfycbwADwUnBq6SsdWihZGZv1cuShSdRKIArP_iZM_8lRlr0t-VdnMw4O0w28VciKqqiQau/exec';
+  // Kelas 8: alamat memuat informatika8/infor8, ?tingkat=8, atau dibuka dari subfolder ganjil/genap (?dari=…). Selain itu kelas 7.
+  var TG = /informatika8|infor8|kelas8/i.test(location.href) || /[?&](tingkat=(8|viii)|dari=(ganjil|genap))\b/i.test(location.search) ? 'VIII' : 'VII';
+  if (/[?&]tingkat=(7|vii)\b/i.test(location.search)) TG = 'VII';
+  var ANGKA = TG === 'VII' ? '7' : '8', GURU = /[?&]guru=1\b/.test(location.search);
+  var DARI = (location.search.match(/[?&]dari=(ganjil|genap)\b/) || [])[1];
+  var PILIH = ((location.search.match(/[?&]pilih=([\w-]+)/) || [])[1] || '').toUpperCase();   // mis. ?pilih=PTS → hanya Latihan PTS & PTS
+  var UL = {};
+  var KP = 'uhProf' + ANGKA, KS = 'uhSesi' + ANGKA, KT = 'uhTok' + ANGKA, KH = 'uhHasil' + ANGKA;
+  var app = document.getElementById('app'), ov = document.getElementById('ov');
+  var S = null, P = null, tick = null, blurT = null, sending = false, retryT = null, saveT = null;
+  var JENIS = {PG: 'Pilihan Ganda', PGK: 'Pilihan Ganda Kompleks', ISIAN: 'Isian Singkat', JODOH: 'Menjodohkan', LENGKAPI: 'Lengkapi Kalimat', HILANG: 'Soal'};
+
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return [].slice.call((r || document).querySelectorAll(s)); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]; }); }
+  function br(s) { return esc(s).replace(/\n/g, '<br>'); }
+  /* Teks soal: baris yang diawali "|" ditampilkan sebagai TABEL (baris pertama = judul kolom), baris lain biasa. */
+  function teksHtml(s) {
+    var out = [], tb = [];
+    var tutup = function () { if (!tb.length) return; out.push('<div class="dtw"><table class="dt">' + tb.map(function (r, i) { var c = r.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|'); var tag = i ? 'td' : 'th'; return '<tr>' + c.map(function (x) { return '<' + tag + '>' + esc(x.trim()) + '</' + tag + '>'; }).join('') + '</tr>'; }).join('') + '</table></div>'); tb = []; };
+    String(s == null ? '' : s).split('\n').forEach(function (l) { if (/^\s*\|/.test(l)) tb.push(l); else { tutup(); if (l.trim()) out.push('<span>' + esc(l) + '</span><br>'); } });
+    tutup(); return out.join('').replace(/<br>$/, '');
+  }
+  function get(k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+  function put(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function now() { return Date.now() + (S && S.off || 0); }
+
+  function api(aksi, data) {
+    if (/^__URL/.test(URL_ULANGAN)) return Promise.reject(new Error('Alamat ulangan belum dipasang guru.'));
+    data.aksi = aksi;
+    var ctrl = window.AbortController ? new AbortController() : null, tm = setTimeout(function () { if (ctrl) ctrl.abort(); }, 40000);
+    return fetch(URL_ULANGAN, {method: 'POST', body: JSON.stringify(data), signal: ctrl ? ctrl.signal : undefined})
+      .then(function (r) { clearTimeout(tm); return r.json(); })
+      .catch(function () { clearTimeout(tm); throw new Error('Koneksi internet bermasalah. Periksa sinyal/Wi-Fi lalu coba lagi.'); });
+  }
+
+  /* ---------- IDENTITAS ---------- */
+  function profil() {
+    var p = get(KP);
+    if (p && p.nama) return p;
+    var keys = ANGKA === '8' ? ['inf8-sem1-v1', 'inf8-sem2-v1'] : ['bk7-sem1-v1', 'bk7-sem2-v1'];
+    for (var i = 0; i < keys.length; i++) {
+      var s = get(keys[i]);
+      if (s && s.prof && s.prof.nama && String(s.prof.kelas).charAt(0) === ANGKA) return {nama: s.prof.nama, kelas: s.prof.kelas, absen: s.prof.absen};
+    }
+    return {nama: '', kelas: '', absen: ''};
+  }
+  function profOk(p) { return !!(p.nama && new RegExp('^' + ANGKA + '[A-F]$').test(p.kelas) && Number(p.absen) > 0); }
+
+  /* ---------- MODAL ---------- */
+  function modal(html, cls, onX) {
+    ov.innerHTML = '<div class="ov' + (cls === 'zoom' ? ' zoom' : '') + '">' + (cls === 'zoom' ? html : '<div class="mdl ' + (cls || '') + '">' + (onX ? '<button class="x" aria-label="Tutup" data-x>✕</button>' : '') + html + '</div>') + '</div>';
+    if (onX) $$('[data-x]', ov).forEach(function (b) { b.onclick = function () { tutup(); onX(); }; });
+    return ov.firstChild;
+  }
+  function tutup() { ov.innerHTML = ''; }
+
+  /* ---------- DAFTAR ULANGAN ---------- */
+  function daftar() {
+    stopUjian(); document.body.className = '';
+    var p = profil();
+    app.innerHTML = '<nav class="topnav"><a href="' + (DARI ? DARI + '/' : './') + '">🏠 Beranda</a><span>' + (/^LAT-/.test(PILIH) ? '🏋️ Latihan' : /^PTS/.test(PILIH) ? '🔒 PTS Online' : '📝 Ulangan Online') + '</span></nav>' +
+      '<header class="hero"><span class="pill">INFORMATIKA KELAS ' + TG + '</span><h1>' + (/^LAT-BAB(\d+)/.test(PILIH) ? 'Latihan Ulangan Bab ' + PILIH.replace(/\D+/g, '') : /^UH-BAB(\d+)/.test(PILIH) ? 'Ulangan Harian Bab ' + PILIH.replace(/\D+/g, '') : /^LAT-PTS/.test(PILIH) ? 'Latihan PTS' : /^PTS-/.test(PILIH) ? 'PTS Online' : PILIH === 'PTS' ? 'Latihan PTS &amp; PTS Online' : 'Ulangan Online') + '</h1><p>' + (/^LAT-BAB/.test(PILIH) ? 'Soal acak dari materi web · tanpa token dan tanpa batas waktu · boleh diulang.' : /^UH-BAB/.test(PILIH) ? 'Ulangan harian akhir bab · siapkan token dari guru.' : /^LAT-PTS/.test(PILIH) ? 'Soal acak dari simulasi PTS · tanpa token dan tanpa batas waktu · boleh diulang.' : /^PTS-/.test(PILIH) ? 'Penilaian Tengah Semester · siapkan token dari guru.' : PILIH === 'PTS' ? 'Latihan PTS bebas dikerjakan kapan saja. PTS Online memakai token dari guru.' : 'Ulangan harian akhir bab · Tahun Pelajaran 2026/2027<br>Latihan bebas dikerjakan; ulangan memakai token dari guru.') + '</p></header>' +
+      '<div class="page"><section class="card"><h2>👋 Identitas</h2><div class="prof">' +
+      '<div class="nm"><p class="lbl">Nama lengkap</p><input id="pN" autocomplete="name" value="' + esc(p.nama) + '"></div>' +
+      '<div><p class="lbl">Kelas</p><select id="pK"><option value="">Pilih</option>' + 'ABCDEF'.split('').map(function (h) { var k = ANGKA + h; return '<option' + (p.kelas === k ? ' selected' : '') + '>' + k + '</option>'; }).join('') + '</select></div>' +
+      '<div><p class="lbl">No. absen</p><input id="pA" type="number" min="1" max="45" value="' + esc(p.absen) + '"></div>' +
+      '<div style="flex:0 0 auto"><button class="btn" id="pS">Simpan</button></div></div>' +
+      '<p class="muted" style="margin:8px 0 0">Tulis nama lengkap yang sama seperti saat mengirim tugas. Nilai ulangan dicatat dengan nama, kelas, dan nomor absen ini.</p></section>' +
+      '<section class="card"><h2>📝 Daftar Ulangan</h2><div id="ul"><div class="msg"><div class="spin"></div>Memuat daftar ulangan…</div></div></section></div>' +
+      '<footer>Guru: <b>Ni Nyoman Dwi Mustikawati, S.Kom.</b> · SMP Negeri 6 Mengwi</footer>';
+    $('#pS').onclick = function () {
+      var q = {nama: $('#pN').value.trim().replace(/\s+/g, ' '), kelas: $('#pK').value, absen: parseInt($('#pA').value, 10) || ''};
+      if (!profOk(q)) { alert('Lengkapi nama lengkap, kelas, dan nomor absen ya.'); return; }
+      put(KP, q); muatDaftar();
+    };
+    muatDaftar();
+  }
+  function muatDaftar() {
+    var p = profil(), ul = $('#ul');
+    ul.innerHTML = '<div class="msg"><div class="spin"></div>Memuat daftar ulangan…</div>';
+    var lokal = get(KS);
+    api('daftar', {tingkat: ANGKA, nama: p.nama, kelas: p.kelas, guru: GURU}).then(function (d) {
+      if (!d.ok) throw new Error(d.pesan);
+      if (PILIH) d.ulangan = d.ulangan.filter(function (u) { return u.kode.indexOf(PILIH) >= 0; });
+      d.ulangan.sort(function (a, b) { return (b.latihan ? 1 : 0) - (a.latihan ? 1 : 0); });
+      UL = {}; d.ulangan.forEach(function (u) { UL[u.kode] = u; });
+      if (!d.ulangan.length) { ul.innerHTML = '<div class="msg">' + (/^(PTS-|UH-)/.test(PILIH) ? (/^PTS-/.test(PILIH) ? 'PTS Online' : 'Ulangan ini') + ' belum dibuka. Guru membukanya sesuai jadwal; siapkan token dari guru.' : /^LAT-/.test(PILIH) ? 'Latihan ini belum tersedia.' : 'Belum ada ulangan yang dibuka untuk kelas ' + TG + '. Tunggu informasi dari guru ya.') + '</div>'; return; }
+      ul.innerHTML = '<div class="ulist">' + d.ulangan.map(function (u) {
+        var punyaLokal = lokal && lokal.p && lokal.p.kode === u.kode, b, tombol;
+        if (u.latihan) { b = '<span class="badge on">🏋️ Latihan' + (u.percobaan ? ' · nilai terbaik ' + u.nilaiAkhir : '') + '</span>'; tombol = '<button class="btn gr" data-k="' + u.kode + '">' + (punyaLokal ? '▶ Lanjutkan Latihan' : u.percobaan ? '🔁 Ulangi Latihan' : '▶ Mulai Latihan') + '</button>'; }
+        else if (u.tuntas) { b = '<span class="badge ok">✅ Tuntas · nilai ' + u.nilaiAkhir + '</span>'; tombol = ''; }
+        else if (punyaLokal || u.sedang) { b = '<span class="badge on">⏳ Sedang dikerjakan</span>'; tombol = '<button class="btn or" data-k="' + u.kode + '">▶ Lanjutkan</button>'; }
+        else if (u.percobaan) { b = '<span class="badge rm">🔁 Wajib remedial · nilai terakhir ' + u.nilaiTerakhir + '</span>'; tombol = u.dibuka ? '<button class="btn rd" data-k="' + u.kode + '">🔁 Kerjakan Remedial</button>' : '<span class="muted">Remedial belum dibuka untuk kelasmu.</span>'; }
+        else { b = '<span class="badge nw">Belum dikerjakan</span>'; tombol = u.dibuka ? '<button class="btn" data-k="' + u.kode + '">▶ Mulai Ulangan</button>' : '<span class="muted">Belum dibuka untuk kelasmu.</span>'; }
+        return '<div class="uc"><h3>' + esc(u.judul) + '</h3><div class="meta">' + esc(u.kode) + (u.latihan ? ' · tanpa token & tanpa batas waktu' : ' · ⏱ ' + u.waktu + ' menit') + (u.jumlah ? ' · ' + u.jumlah + ' soal' : '') + (u.percobaan ? ' · sudah ' + u.percobaan + '× dikerjakan' : '') + '</div>' + b + tombol + '</div>';
+      }).join('') + '</div><p class="muted" style="margin:12px 0 0">Nilai tuntas minimal ' + d.kkm + ' (di atas 64). Jika di bawahnya, kamu wajib mengerjakan remedial sampai tuntas.</p>';
+      $$('[data-k]', ul).forEach(function (x) { x.onclick = function () { mulai(x.getAttribute('data-k')); }; });
+    }).catch(function (e) {
+      ul.innerHTML = '<div class="msg">😕 ' + esc(e.message) + '<br><br><button class="btn gh" id="ulg">Coba lagi</button></div>';
+      $('#ulg').onclick = muatDaftar;
+    });
+  }
+
+  /* ---------- MULAI ---------- */
+  function mulai(kode, tokenSimpan) {
+    var p = profil();
+    if (!profOk(p)) { alert('Isi dan simpan identitasmu dulu (nama lengkap, kelas, nomor absen).'); var n = $('#pN'); if (n) n.focus(); return; }
+    var lokal = get(KS);
+    if (lokal && lokal.p && lokal.p.kode === kode) { lanjutkan(lokal); return; }
+    if (UL[kode] && !UL[kode].perluToken) return kirimMulai(kode, '', true);
+    var tok = tokenSimpan || (get(KT) || {})[kode];
+    if (tok) return kirimMulai(kode, tok, true);
+    var m = modal('<h2>🔑 Token Ulangan</h2><p class="muted">Masukkan token yang diumumkan guru di kelas.</p><input class="inp tok" id="tk" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false"><p class="err" id="te"></p><div class="acts"><button class="btn gh" data-x>Batal</button><button class="btn" id="tg">Masuk</button></div>', '', function () {});
+    var tk = $('#tk', m); tk.focus();
+    tk.onkeydown = function (e) { if (e.key === 'Enter') $('#tg', m).click(); };
+    $('#tg', m).onclick = function () {
+      if (!tk.value.trim()) return;
+      this.disabled = true; this.textContent = 'Memeriksa…';
+      kirimMulai(kode, tk.value.trim().toUpperCase(), false);
+    };
+  }
+  function kirimMulai(kode, token, otomatis) {
+    var p = profil();
+    if (otomatis) modal('<div class="msg"><div class="spin"></div>Menyiapkan soal…</div>');
+    api('mulai', {kode: kode, token: token, nama: p.nama, kelas: p.kelas, absen: p.absen, perangkat: perangkat(), guru: GURU}).then(function (d) {
+      if (!d.ok) {
+        if (d.token) { var t = get(KT) || {}; delete t[kode]; put(KT, t); }
+        if (d.token && otomatis) { tutup(); return mulai(kode); }
+        if (!otomatis && $('#te')) { $('#te').textContent = d.pesan; var g = $('#tg'); g.disabled = false; g.textContent = 'Masuk'; return; }
+        modal('<h2>ℹ️ Informasi</h2><p>' + esc(d.pesan) + '</p><div class="acts"><button class="btn" data-x>Tutup</button></div>', '', muatDaftar);
+        return;
+      }
+      var t2 = get(KT) || {}; t2[kode] = token; put(KT, t2);
+      S = {p: d, j: {}, r: {}, i: 0, keluar: 0, detik: 0, away: null, kunci: false, kirim: null, off: d.sekarang - Date.now(), mulai: !!d.lanjut};
+      simpan();
+      tatib();
+    }).catch(function (e) {
+      if (!otomatis && $('#te')) { $('#te').textContent = e.message; var g = $('#tg'); g.disabled = false; g.textContent = 'Masuk'; return; }
+      modal('<h2>😕 Gagal</h2><p>' + esc(e.message) + '</p><div class="acts"><button class="btn" data-x>Tutup</button></div>', '', function () {});
+    });
+  }
+  function perangkat() { var u = navigator.userAgent; return /iPhone|iPad/.test(u) ? 'iOS' : /Android/.test(u) ? 'Android' : /Windows/.test(u) ? 'Windows' : /Mac/.test(u) ? 'Mac' : /CrOS/.test(u) ? 'Chromebook' : 'Lainnya'; }
+
+  function tatib() {
+    var a = S.p.aturan, p = profil();
+    if (S.p.latihan) return modal('<h2>🏋️ Petunjuk Latihan</h2><p class="muted" style="margin:0">' + esc(S.p.judul) + ' · ' + esc(p.nama) + ' · ' + esc(p.kelas) + '</p><ol>' +
+      '<li>Latihan ini <b>tanpa batas waktu</b> dan <b>tanpa token</b>. Kerjakan dengan tenang.</li>' +
+      '<li>Soal diambil acak dari simulasi PTS di web, jadi setiap kali diulang soalnya bisa berbeda.</li>' +
+      '<li>Jawaban tersimpan otomatis. Tekan <b>Selesai &amp; Kirim</b> untuk melihat nilai dan petunjuk.</li>' +
+      '<li>Boleh diulang sesuka hati. <b>Nilai terbaikmu</b> tercatat untuk guru.</li></ol>' +
+      '<div class="acts"><button class="btn gr" data-x>Mulai latihan</button></div>', '', function () { siap(); });
+    modal('<h2>📋 Tata Tertib Ulangan Online</h2>' +
+      '<p class="muted" style="margin:0">' + esc(S.p.judul) + ' · ' + esc(p.nama) + ' · ' + esc(p.kelas) + ' · No. ' + esc(p.absen) + (S.p.percobaan > 1 ? ' · <b>Remedial (percobaan ke-' + S.p.percobaan + ')</b>' : '') + '</p><ol>' +
+      '<li>Pastikan nama, kelas, dan nomor absen di atas sudah benar. Jika salah, segera lapor guru.</li>' +
+      '<li>Waktu mengerjakan <b>' + S.p.waktu + ' menit</b>, mulai dihitung setelah tata tertib ini ditutup. Sisa waktu tampil di <b>pojok kanan atas</b>. Saat waktu habis, jawaban <b>terkirim otomatis</b>.</li>' +
+      '<li><b>Jangan keluar dari layar ulangan</b> (pindah aplikasi, membuka notifikasi, pindah tab, atau menutup layar). Setiap kali keluar akan <b>dicatat dan dilaporkan ke guru</b>.</li>' +
+      '<li>Keluar lebih dari <b>' + a.batasKeluar + ' detik</b> → ulangan <b>terkunci</b> dan hanya bisa dibuka guru/pengawas.</li>' +
+      '<li>Keluar sampai <b>' + a.maksKeluar + ' kali</b> → jawaban <b>dikirim otomatis</b>.</li>' +
+      '<li>Jawaban tersimpan otomatis di perangkat. Jika HP mati atau halaman tertutup, buka lagi halaman ini lalu pilih <b>Lanjutkan</b>. Waktu tetap berjalan.</li>' +
+      '<li>Tandai <b>Ragu-ragu</b> bila belum yakin, lalu periksa kembali lewat <b>Daftar Soal</b> sebelum menekan <b>Selesai &amp; Kirim</b>.</li>' +
+      '<li>Nilai tuntas minimal <b>' + S.p.kkm + '</b>. Jika di bawahnya, kamu <b>wajib remedial</b> sampai tuntas.</li>' +
+      '<li>Kerjakan sendiri dengan jujur. Berdoalah sebelum mulai 🙏</li></ol>' +
+      '<p class="muted">Tekan tombol <b>✕</b> (atau tombol di bawah) untuk menutup tata tertib. Soal tampil dan layar berubah menjadi layar penuh.</p>' +
+      '<div class="acts"><button class="btn gr" data-x>Saya mengerti, mulai mengerjakan</button></div>', '', function () { layarPenuh(); siap(); });
+  }
+  /* Waktu baru mulai berjalan setelah tata tertib ditutup. */
+  function siap() {
+    modal('<div class="msg"><div class="spin"></div>Memulai ulangan…</div>');
+    api('siap', {sesi: S.p.sesi}).then(function (d) {
+      if (!d.ok) throw new Error(d.pesan);
+      S.p.batas = d.batas; S.off = d.sekarang - Date.now(); S.mulai = true; simpan(); tutup(); ujian();
+    }).catch(function (e) {
+      modal('<h2>😕 Belum bisa memulai</h2><p>' + esc(e.message) + '</p><div class="acts"><button class="btn" data-x>Coba lagi</button></div>', '', function () { layarPenuh(); siap(); });
+    });
+  }
+
+  /* ---------- LANJUTKAN (halaman dibuka ulang) ---------- */
+  function lanjutkan(st) {
+    S = st;
+    if (S.kirim) { ujian(); return kirim(S.kirim, true); }
+    if (!S.mulai || !S.p.batas) return tatib();
+    modal('<h2>▶ Lanjutkan Ulangan</h2><p>' + esc(S.p.judul) + '</p><p class="muted">Jawabanmu masih tersimpan. Waktu tetap berjalan selama halaman tertutup.</p><div class="acts"><button class="btn gr" data-x>Lanjutkan mengerjakan</button></div>', '', function () {
+      layarPenuh(); ujian();
+      if (S.away) kembali();
+    });
+  }
+
+  /* ---------- UJIAN ---------- */
+  function ujian() {
+    document.body.className = 'exam';
+    var p = profil();
+    app.innerHTML = '<div class="exbar"><div class="ttl"><b>' + esc(S.p.judul) + '</b><small>' + esc(p.nama) + ' · ' + esc(p.kelas) + ' · No. ' + esc(p.absen) + (S.p.percobaan > 1 ? ' · Remedial ke-' + (S.p.percobaan - 1) : '') + '</small></div>' +
+      '<button class="navbtn" id="nb">☰ <span id="nbt"></span></button><div class="timer" id="tm">⏱ --:--</div></div>' +
+      '<div class="exbody"><div class="qwrap"><div class="qcard" id="q"></div>' +
+      '<div class="qnav"><button class="btn gh" id="pv">◀<span class="tx"> Sebelumnya</span></button><span class="sp"></span><label class="ragu"><input type="checkbox" id="rg"> Ragu-ragu</label><span class="sp"></span><button class="btn" id="nx">Lanjutkan ▶</button></div></div>' +
+      '<aside class="side" id="sd"><h4>Daftar Soal</h4><div class="grid" id="gr"></div><div class="legend"><span><i style="background:var(--green);border-color:var(--green)"></i>Dijawab</span><span><i style="background:var(--yellow);border-color:var(--yellow)"></i>Ragu-ragu</span><span><i></i>Belum</span></div>' +
+      '<button class="btn gr" id="fin">✅ Selesai &amp; Kirim</button></aside><div class="shade" id="sh"></div></div>';
+    $('#nb').onclick = function () { document.body.classList.toggle('side-open'); };
+    $('#sh').onclick = function () { document.body.classList.remove('side-open'); };
+    $('#pv').onclick = function () { ke(S.i - 1); };
+    $('#nx').onclick = function () { if (S.i < S.p.soal.length - 1) ke(S.i + 1); else konfirmasi(); };
+    $('#rg').onchange = function () { S.r[S.i + 1] = this.checked; simpan(); grid(); };
+    $('#fin').onclick = konfirmasi;
+    ke(S.i);
+    clearInterval(tick); tick = setInterval(waktu, 1000); waktu();
+    if (S.kunci) kunciLayar();
+  }
+  function stopUjian() { clearInterval(tick); tick = null; clearTimeout(retryT); }
+  function ke(i) {
+    if (i < 0 || i >= S.p.soal.length) return;
+    S.i = i; simpan(); soal(); grid();
+    document.body.classList.remove('side-open');
+    window.scrollTo(0, 0);
+  }
+  function grid() {
+    $('#gr').innerHTML = S.p.soal.map(function (q, i) {
+      var n = i + 1;
+      return '<button data-g="' + i + '" class="' + (S.r[n] ? 'rg' : terisi(S.j[n]) ? 'ans' : '') + (i === S.i ? ' cur' : '') + '">' + n + '</button>';
+    }).join('');
+    $$('[data-g]').forEach(function (b) { b.onclick = function () { ke(+b.getAttribute('data-g')); }; });
+    var sudah = S.p.soal.filter(function (q, i) { return terisi(S.j[i + 1]); }).length;
+    $('#nbt').textContent = 'Soal ' + (S.i + 1) + '/' + S.p.soal.length + ' · ' + sudah + ' dijawab';
+    $('#rg').checked = !!S.r[S.i + 1];
+    $('#pv').disabled = S.i === 0;
+    $('#nx').innerHTML = S.i === S.p.soal.length - 1 ? '✅ Selesai' : 'Lanjut<span class="tx">kan</span> ▶';
+  }
+  function terisi(j) {
+    if (j === undefined || j === null || j === '') return false;
+    if (Array.isArray(j)) return j.some(function (v) { return String(v || '').trim(); });
+    if (typeof j === 'object') return Object.keys(j).some(function (k) { return j[k]; });
+    return !!String(j).trim();
+  }
+  function gbr(src) { return src ? '<img class="qimg" src="' + src + '" alt="Gambar soal">' : ''; }
+  function soal() {
+    var q = S.p.soal[S.i], n = q.n, j = S.j[n], h = '';
+    h += '<div class="qhead"><span class="qno">Soal ' + n + '</span><span class="qtype">' + JENIS[q.jenis] + '</span></div>';
+    if (q.jenis !== 'LENGKAPI') h += '<div class="qtext">' + teksHtml(q.teks) + '</div>';
+    h += gbr(q.gambar);
+    if (q.jenis === 'PG' || q.jenis === 'PGK') {
+      var multi = q.jenis === 'PGK', pilih = multi ? (j || []) : [j];
+      if (multi) h += '<p class="hint">Jawaban benar <b>lebih dari satu</b>. Ketuk semua jawaban yang menurutmu benar.</p>';
+      h += '<div class="opts">' + q.opsi.map(function (o, k) {
+        return '<button class="opt' + (multi ? ' multi' : '') + (pilih.indexOf(o.id) >= 0 ? ' sel' : '') + '" data-o="' + o.id + '"><span class="L">' + 'ABCDE'.charAt(k) + '</span><span class="T">' + br(o.teks) + (o.gambar ? '<img src="' + o.gambar + '" alt="">' : '') + '</span></button>';
+      }).join('') + '</div>';
+    } else if (q.jenis === 'ISIAN') {
+      h += '<input class="inp" id="isi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ketik jawabanmu di sini…" value="' + esc(j || '') + '">' +
+        '<p class="hint" style="margin-top:8px">Huruf besar/kecil tidak berpengaruh. Tulis jawaban singkat saja.</p>';
+    } else if (q.jenis === 'JODOH') {
+      j = j || {};
+      h += '<p class="hint">Pilih pasangan yang tepat untuk setiap pernyataan di kiri.</p><div class="jodoh">' + q.kiri.map(function (k, i) {
+        return '<div class="jrow' + (j[i] ? ' done' : '') + '"><b>' + (i + 1) + '. ' + br(k) + '</b><select data-j="' + i + '"><option value="">— pilih pasangan —</option>' +
+          q.kanan.map(function (o) { return '<option value="' + o.id + '"' + (j[i] === o.id ? ' selected' : '') + '>' + esc(o.teks) + '</option>'; }).join('') + '</select></div>';
+      }).join('') + '</div>';
+    } else if (q.jenis === 'LENGKAPI') {
+      j = j || [];
+      if (q.kata) h += '<p class="hint">Pilih kata yang tepat untuk setiap titik-titik. Pilihan kata:</p><div class="chips">' + q.kata.map(function (w) { return '<span class="chip">' + esc(w) + '</span>'; }).join('') + '</div>';
+      else h += '<p class="hint">Ketik kata yang tepat pada setiap kotak isian.</p>';
+      h += '<div class="lengkap">' + q.bagian.map(function (b, i) {
+        if (i === q.bagian.length - 1) return teksHtml(b);
+        var f = q.kata ? '<select data-b="' + i + '"><option value="">— pilih —</option>' + q.kata.map(function (w) { return '<option' + (j[i] === w ? ' selected' : '') + '>' + esc(w) + '</option>'; }).join('') + '</select>'
+          : '<input data-b="' + i + '" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(j[i] || '') + '" placeholder="(' + (i + 1) + ')">';
+        return teksHtml(b) + '<span class="blank">' + f + '</span>';
+      }).join('') + '</div>';
+    }
+    var box = $('#q'); box.innerHTML = h;
+    $$('.qimg, .opt img', box).forEach(function (im) { im.onclick = function (e) { e.stopPropagation(); modal('<img src="' + im.src + '" alt="">', 'zoom'); ov.firstChild.onclick = tutup; }; });
+    $$('[data-o]', box).forEach(function (b) {
+      b.onclick = function () {
+        var id = b.getAttribute('data-o');
+        if (q.jenis === 'PG') S.j[n] = S.j[n] === id ? '' : id;
+        else { var a = (S.j[n] || []).slice(), k = a.indexOf(id); if (k >= 0) a.splice(k, 1); else a.push(id); S.j[n] = a; }
+        simpan(); soal(); grid();
+      };
+    });
+    var isi = $('#isi', box);
+    if (isi) isi.oninput = function () { S.j[n] = isi.value; simpanNanti(); };
+    $$('[data-j]', box).forEach(function (s) { s.onchange = function () { var o = S.j[n] || {}; o[s.getAttribute('data-j')] = s.value; S.j[n] = o; s.parentNode.classList.toggle('done', !!s.value); simpan(); grid(); }; });
+    $$('[data-b]', box).forEach(function (f) {
+      var up = function () { var a = (S.j[n] || []).slice(); a[+f.getAttribute('data-b')] = f.value; S.j[n] = a; };
+      if (f.tagName === 'SELECT') f.onchange = function () { up(); simpan(); grid(); };
+      else f.oninput = function () { up(); simpanNanti(); };
+    });
+  }
+  function simpan() { if (S) put(KS, S); }
+  function simpanNanti() { clearTimeout(saveT); saveT = setTimeout(function () { simpan(); if ($('#gr')) grid(); }, 400); }
+
+  /* ---------- WAKTU ---------- */
+  function waktu() {
+    if (!S || !S.p.batas) return;
+    if (S.p.latihan) { var tl = $('#tm'); if (tl) { tl.textContent = '🏋️ Latihan'; tl.className = 'timer'; } return; }
+    var sisa = Math.max(0, Math.floor((S.p.batas - now()) / 1000)), el = $('#tm');
+    if (el) {
+      var h = Math.floor(sisa / 3600), m = Math.floor(sisa % 3600 / 60), s = sisa % 60;
+      el.textContent = '⏱ ' + (h ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (s < 10 ? '0' : '') + s;
+      el.className = 'timer' + (sisa <= 60 ? ' crit' : sisa <= 300 ? ' warn' : '');
+    }
+    if (sisa <= 0 && !S.kirim) kirim('waktu');
+  }
+
+  /* ---------- PENGAWASAN LAYAR ---------- */
+  function aktif() { return S && S.mulai && !S.kirim && document.body.classList.contains('exam'); }
+  function diawasi() { return aktif() && !S.p.latihan && S.p.aturan.maksKeluar > 0; }
+  function pergi(t) { if (!diawasi() || S.away) return; S.away = t || Date.now(); simpan(); }
+  function kembali() {
+    if (!S || !S.away || S.kirim) return;
+    var dur = Math.round((Date.now() - S.away) / 1000); S.away = null;
+    if (dur < 2) { simpan(); return; }
+    S.keluar++; S.detik += dur; simpan();
+    var a = S.p.aturan;
+    if (S.keluar >= a.maksKeluar) {
+      modal('<h2>⛔ Batas keluar layar tercapai</h2><p>Kamu sudah keluar dari layar ulangan <b>' + S.keluar + ' kali</b>. Sesuai tata tertib, jawabanmu <b>dikirim otomatis</b> sekarang.</p>', 'lock');
+      setTimeout(function () { kirim('pelanggaran'); }, 1500);
+    } else if (dur > a.batasKeluar || S.kunci) { S.kunci = true; simpan(); kunciLayar(dur); }
+    else modal('<h2>⚠️ Kamu keluar dari layar ulangan</h2><p>Kamu meninggalkan layar ulangan selama <b>' + dur + ' detik</b>. Ini peringatan ke-<b>' + S.keluar + '</b> dari ' + a.maksKeluar + ' dan sudah <b>dicatat</b> untuk guru.</p>' +
+      '<p class="muted">Keluar lebih dari ' + a.batasKeluar + ' detik → ulangan terkunci. Keluar ' + a.maksKeluar + ' kali → jawaban dikirim otomatis.</p><div class="acts"><button class="btn" data-x>Kembali mengerjakan</button></div>', 'warn', layarPenuh);
+  }
+  function kunciLayar(dur) {
+    var m = modal('<h2>🔒 Ulangan Terkunci</h2><p>' + (dur ? 'Kamu meninggalkan layar ulangan selama <b>' + dur + ' detik</b> (lebih dari ' + S.p.aturan.batasKeluar + ' detik). ' : '') +
+      'Panggil guru/pengawas untuk membuka kunci. Waktu ulangan tetap berjalan.</p><p class="lbl">Token pengawas</p>' +
+      '<input class="inp tok" id="kp" autocomplete="off" autocapitalize="characters" spellcheck="false"><p class="err" id="ke"></p><div class="acts"><button class="btn" id="kb">Buka kunci</button></div>', 'lock');
+    var b = $('#kb', m), k = $('#kp', m);
+    k.onkeydown = function (e) { if (e.key === 'Enter') b.click(); };
+    b.onclick = function () {
+      if (!k.value.trim()) return;
+      b.disabled = true; b.textContent = 'Memeriksa…';
+      api('buka', {sesi: S.p.sesi, token: k.value.trim().toUpperCase()}).then(function (d) {
+        if (!d.ok) throw new Error(d.pesan);
+        S.kunci = false; simpan(); tutup(); layarPenuh();
+      }).catch(function (e) { $('#ke').textContent = e.message; b.disabled = false; b.textContent = 'Buka kunci'; });
+    };
+  }
+  document.addEventListener('visibilitychange', function () { if (document.hidden) pergi(); else kembali(); });
+  window.addEventListener('blur', function () { var t = Date.now(); clearTimeout(blurT); blurT = setTimeout(function () { if (!document.hasFocus()) pergi(t); }, 1500); });
+  window.addEventListener('focus', function () { clearTimeout(blurT); if (!document.hidden) kembali(); });
+  window.addEventListener('pagehide', function () { pergi(); });
+  window.addEventListener('beforeunload', function (e) { if (aktif()) { e.preventDefault(); e.returnValue = ''; } });
+  document.addEventListener('contextmenu', function (e) { if (aktif()) e.preventDefault(); });
+  document.addEventListener('copy', function (e) { if (aktif()) e.preventDefault(); });
+
+  function layarPenuh() {
+    if (S && S.p && S.p.latihan) return;
+    var d = document.documentElement, f = d.requestFullscreen || d.webkitRequestFullscreen;
+    if (f && !(document.fullscreenElement || document.webkitFullscreenElement)) { try { var r = f.call(d); if (r && r.catch) r.catch(function () {}); } catch (e) {} }
+  }
+  function keluarPenuh() {
+    var f = document.exitFullscreen || document.webkitExitFullscreen;
+    if (f && (document.fullscreenElement || document.webkitFullscreenElement)) { try { var r = f.call(document); if (r && r.catch) r.catch(function () {}); } catch (e) {} }
+  }
+  function fsBerubah() {
+    if (!diawasi() || S.kunci || document.fullscreenElement || document.webkitFullscreenElement || ov.firstChild) return;
+    modal('<h2>🖥️ Kembali ke layar penuh</h2><p>Ulangan harus dikerjakan dalam layar penuh. Tekan tombol di bawah untuk melanjutkan.</p><div class="acts"><button class="btn" data-x>Kembali ke layar penuh</button></div>', 'warn', layarPenuh);
+  }
+  document.addEventListener('fullscreenchange', fsBerubah);
+  document.addEventListener('webkitfullscreenchange', fsBerubah);
+
+  /* ---------- KIRIM ---------- */
+  function konfirmasi() {
+    var n = S.p.soal.length, kosong = 0, ragu = 0;
+    for (var i = 1; i <= n; i++) { if (!terisi(S.j[i])) kosong++; if (S.r[i]) ragu++; }
+    modal('<h2>✅ Selesai mengerjakan?</h2><p>Kamu sudah menjawab <b>' + (n - kosong) + ' dari ' + n + '</b> soal.' +
+      (kosong ? '<br>Belum dijawab: <b style="color:var(--red)">' + kosong + ' soal</b>.' : '') + (ragu ? '<br>Masih ragu-ragu: <b style="color:#b45309">' + ragu + ' soal</b>.' : '') +
+      '</p><p class="muted">Setelah dikirim, jawaban tidak bisa diubah lagi.</p><div class="acts"><button class="btn gh" data-x>Periksa lagi</button><button class="btn gr" id="ya">Ya, kirim jawaban</button></div>', '', function () {});
+    $('#ya').onclick = function () { tutup(); kirim('manual'); };
+  }
+  function kirim(cara, ulang) {
+    if (sending) return;
+    if (!S.kirim) { S.kirim = cara; simpan(); }
+    sending = true; clearTimeout(retryT);
+    modal('<div class="msg"><div class="spin"></div>' + (S.kirim === 'waktu' ? '⏰ Waktu habis. ' : '') + 'Mengirim jawaban…<br><small>Jangan tutup halaman ini.</small></div>');
+    api('kirim', {sesi: S.p.sesi, jawaban: S.j, keluar: S.keluar, detikKeluar: S.detik, cara: S.kirim}).then(function (d) {
+      sending = false;
+      if (!d.ok && d.hangus) { put(KS, null); S = null; stopUjian(); keluarPenuh(); modal('<h2>ℹ️ Sesi ditutup</h2><p>' + esc(d.pesan) + '</p><div class="acts"><button class="btn" data-x>Tutup</button></div>', '', daftar); return; }
+      if (!d.ok) throw new Error(d.pesan);
+      var hs = get(KH) || {}; hs[S.p.kode] = {judul: S.p.judul, h: d}; put(KH, hs);
+      var p = S.p; put(KS, null); S = null; stopUjian(); keluarPenuh(); tutup();
+      hasil(p, d);
+    }).catch(function (e) {
+      sending = false;
+      modal('<h2>📡 Jawaban belum terkirim</h2><p>' + esc(e.message) + '</p><p class="muted">Jawabanmu aman tersimpan di perangkat ini. Pengiriman dicoba ulang otomatis setiap 10 detik. <b>Jangan tutup halaman</b>, atau buka lagi halaman ini nanti.</p><div class="acts"><button class="btn" id="cl">Coba kirim sekarang</button></div>', 'warn');
+      $('#cl').onclick = function () { kirim(S.kirim, true); };
+      retryT = setTimeout(function () { kirim(S.kirim, true); }, 10000);
+    });
+  }
+
+  /* ---------- HASIL: skor langsung, perayaan, peringkat kelas, materi yang perlu dipelajari, pembahasan ---------- */
+  function umpanHtml(d) {
+    var lbl = {benar: ['✅', 'Benar'], salah: ['❌', 'Salah'], sebagian: ['◐', 'Sebagian benar'], kosong: ['⭕', 'Tidak dijawab']};
+    return d.umpan.map(function (u) { var l = lbl[u.status]; return '<div class="fbi ' + u.status + '"><span class="ic">' + l[0] + '</span><div><b>Soal ' + u.n + '</b> · ' + l[1] +
+      (u.materi ? '<small>📖 ' + esc(u.materi) + '</small>' : '') + (u.pembahasan ? '<small>💡 ' + br(u.pembahasan) + '</small>' : '') + '</div></div>'; }).join('');
+  }
+  function materiHtml(d) {
+    var g = {}, urut = [];
+    d.umpan.forEach(function (u) { if (u.status === 'benar' || !u.materi) return; if (!g[u.materi]) { g[u.materi] = []; urut.push(u.materi); } g[u.materi].push(u.n); });
+    if (!urut.length) return '';
+    urut.sort(function (a, b) { return g[b].length - g[a].length; });
+    return '<section class="card mat"><h2>📖 Materi yang perlu kamu pelajari lagi</h2><p class="muted" style="margin-top:-4px">Urut dari yang paling banyak salah. Buka materinya di web, baca ulang, lalu kerjakan lagi.</p><ol>' +
+      urut.map(function (m) { return '<li><b>' + esc(m) + '</b> <span class="muted">· soal ' + g[m].join(', ') + '</span></li>'; }).join('') + '</ol></section>';
+  }
+  function peringkatHtml(d) {
+    var r = d.peringkat; if (!r || !r.dari || !(r.posisi > 0)) return '';
+    var medali = ['🥇', '🥈', '🥉'];
+    return '<section class="card rank"><div class="rk-me"><span class="rk-no">#' + r.posisi + '</span><div><b>Peringkat ' + r.posisi + ' dari ' + r.dari + ' siswa</b><br><span class="muted">di kelas ' + esc(r.kelas) +
+      (d.latihan ? ' (nilai terbaik latihan)' : ' (nilai akhir)') + '. Nilai sama diurutkan dari yang paling cepat mengerjakan.</span></div></div>' +
+      (r.teratas && r.teratas.length ? '<div class="podium">' + r.teratas.map(function (x, i) { return '<div class="pd p' + (i + 1) + '"><span>' + medali[i] + '</span><b>' + esc(x.nama) + '</b><small>' + x.nilai + '</small></div>'; }).join('') + '</div>' : '') + '</section>';
+  }
+  function confetti(banyak) {
+    var c = document.createElement('canvas'), x = c.getContext('2d'), W, H, P = [], warna = ['#f97316', '#16a34a', '#2563eb', '#eab308', '#db2777', '#06b6d4'], t0 = Date.now();
+    c.className = 'confetti'; document.body.appendChild(c);
+    function uk() { W = c.width = innerWidth; H = c.height = innerHeight; } uk(); addEventListener('resize', uk);
+    for (var i = 0; i < banyak; i++) P.push({x: Math.random() * W, y: -20 - Math.random() * H * 0.6, r: 4 + Math.random() * 6, c: warna[i % warna.length], vy: 2 + Math.random() * 3, vx: -1.5 + Math.random() * 3, a: Math.random() * 6, va: -0.2 + Math.random() * 0.4});
+    (function f() {
+      x.clearRect(0, 0, W, H);
+      P.forEach(function (p) { p.y += p.vy; p.x += p.vx; p.a += p.va; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); x.restore(); });
+      if (Date.now() - t0 < 4500) requestAnimationFrame(f); else { c.remove(); removeEventListener('resize', uk); }
+    })();
+  }
+  function hasil(p, d) {
+    document.body.className = '';
+    var lat = !!d.latihan, ok = lat ? d.nilai >= d.kkm : d.tuntas, tuntasAkhir = !lat && d.tuntasAkhir;
+    var benar = d.umpan.filter(function (u) { return u.status === 'benar'; }).length, salah = d.umpan.length - benar;
+    var pesan = lat ? (d.nilai >= 90 ? '🌟 Luar biasa!' : d.nilai >= d.kkm ? '👍 Bagus, pertahankan!' : '💪 Ayo coba lagi!')
+      : ok ? (d.nilai >= 90 ? '🏆 Hebat sekali, kamu TUNTAS!' : '🎉 Selamat, kamu TUNTAS!') : 'Nilaimu belum mencapai ' + d.kkm;
+    var asal = d.asal ? '<div class="warnbox">⚠️ Kamu menyelesaikan ' + d.umpan.length + ' soal hanya dalam <b>' + Math.max(1, Math.round(d.durasi / 60)) + ' menit</b> dan banyak jawaban yang belum tepat. Sepertinya kamu menjawab terburu-buru. ' +
+      '<b>Baca pembahasan dan materi di bawah dulu</b> sebelum ' + (lat ? 'mengulang latihan' : 'mengerjakan remedial') + '.</div>' : '';
+    var tombol = lat ? '<button class="btn gr" id="rm">🔁 Ulangi Latihan</button>' : tuntasAkhir ? '' : '<button class="btn rd" id="rm">🔁 Kerjakan Remedial</button>';
+    app.innerHTML = '<nav class="topnav"><a href="#" id="kb2">📝 Daftar</a><span>' + (lat ? 'Hasil Latihan' : 'Hasil Ulangan') + '</span></nav>' +
+      '<header class="hero"><span class="pill">' + (lat ? 'HASIL LATIHAN' : 'HASIL') + '</span><h1>' + esc(p.judul) + '</h1><p>' + (lat ? 'Latihan ke-' + d.percobaan : 'Percobaan ke-' + d.percobaan + (d.percobaan > 1 ? ' (remedial)' : '')) + '</p></header>' +
+      '<div class="page"><section class="card"><div class="score"><div class="ring ' + (ok ? 'ok' : 'no') + ' pop"><b id="angka">0</b><span>dari 100</span></div><div style="flex:1;min-width:220px">' +
+      '<h2 style="color:' + (ok ? 'var(--green)' : lat ? 'var(--navy)' : 'var(--red)') + '">' + pesan + '</h2>' +
+      (!lat && !ok ? '<p>Kamu <b>wajib mengerjakan remedial</b> sampai nilaimu di atas 64. Pelajari materi dan petunjuk di bawah, lalu kerjakan lagi.</p>' : '') +
+      '<p>Benar penuh: <b>' + benar + '</b> dari ' + d.umpan.length + ' soal' + (salah ? ' · belum tepat: <b>' + salah + '</b>' : '') + '.<br>' +
+      (lat ? 'Nilai terbaikmu: <b>' + d.nilaiAkhir + '</b>' : 'Nilai akhir yang tercatat: <b>' + d.nilaiAkhir + '</b> (' + (d.tuntasAkhir ? 'Tuntas' : 'Belum tuntas') + ')' +
+        (d.tuntasAkhir && d.percobaan > 1 ? '<br><small class="muted">Nilai akhir remedial yang tuntas dicatat ' + d.nilaiAkhir + '.</small>' : '')) + '</p>' +
+      asal + '<div style="display:flex;flex-wrap:wrap;gap:10px">' + tombol + '<button class="btn gh" id="kd">📝 Kembali ke daftar</button></div></div></div></section>' +
+      peringkatHtml(d) + materiHtml(d) +
+      '<section class="card"><h2>🔎 Pembahasan per soal</h2><p class="muted" style="margin-top:-4px">Kunci jawaban tidak ditampilkan. Gunakan petunjuk dan materi untuk belajar kembali.</p><div class="fgrid">' + umpanHtml(d) + '</div></section></div>' +
+      '<footer>' + (lat ? 'Nilai terbaik latihanmu tercatat untuk guru.' : 'Hasil ini sudah tercatat di rekap guru.') + '</footer>';
+    // angka skor berjalan naik
+    var el = $('#angka'), n = 0, step = Math.max(1, Math.round(d.nilai / 40)), iv = setInterval(function () { n = Math.min(d.nilai, n + step); el.textContent = n; if (n >= d.nilai) clearInterval(iv); }, 25);
+    if (ok) setTimeout(function () { confetti(d.nilai >= 90 ? 220 : 120); }, 300);
+    $('#kd').onclick = $('#kb2').onclick = function (e) { e.preventDefault(); daftar(); };
+    var rm = $('#rm');
+    if (rm) {
+      var mulaiLagi = function () { daftar(); if (lat) UL[p.kode] = UL[p.kode] || {perluToken: false}; mulai(p.kode); };
+      // Banyak salah / asal jawab: tombol aktif setelah waktu baca pembahasan (2 detik per soal salah; asal jawab 4 detik; maks 90 detik)
+      var tunggu = !ok || d.asal ? Math.min(90, salah * (d.asal ? 4 : 2)) : 0, label = rm.innerHTML;
+      if (tunggu > 0) {
+        rm.disabled = true;
+        var it = setInterval(function () { tunggu--; rm.innerHTML = '📖 Baca pembahasan dulu (' + tunggu + ' dtk)'; if (tunggu <= 0) { clearInterval(it); rm.disabled = false; rm.innerHTML = label; } }, 1000);
+        rm.innerHTML = '📖 Baca pembahasan dulu (' + tunggu + ' dtk)';
+      }
+      rm.onclick = mulaiLagi;
+    }
+    window.scrollTo(0, 0);
+  }
+  /* ---------- AWAL ---------- */
+  var st = get(KS);
+  if (st && st.p && st.p.sesi) { daftar(); lanjutkan(st); } else daftar();
+})();
+</script>
+</body>
+</html>
