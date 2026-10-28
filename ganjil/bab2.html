@@ -429,6 +429,26 @@ body.mini main{padding-top:56px}
 .namebox.prof input[type=number]{width:120px}
 .namebox.prof select{width:120px}
 
+/* ===== kartu ringkas (2026-10-28) ===== */
+.bk.ring .band{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.bk.ring .band .e{font-size:2rem;line-height:1;flex:none}
+.bk.ring .band .n{margin-top:0;font-size:.72rem}
+.bk.ring .band h3{font-size:1.08rem;line-height:1.25}
+.bk.ring .bd{padding:8px 16px 10px;gap:0}
+.bk.ring .bd small{font-weight:600}
+.bk.ring.soon{opacity:1}
+.bk.ring.soon .band{background:linear-gradient(150deg,#64748b,#94a3b8);filter:none}
+.bk.ring.soon .bd small{color:#94a3b8}
+.tbls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin:16px 0 6px}
+.tbl{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:16px;color:#fff;text-decoration:none;background:var(--hg);box-shadow:0 6px 16px rgba(15,42,74,.14);transition:transform .15s,box-shadow .15s}
+.tbl:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(15,42,74,.2)}
+.tbl .e{font-size:1.8rem;line-height:1;flex:none}
+.tbl b{display:block;font-size:1.05rem;color:#fff}
+.tbl small{display:block;color:#fff;opacity:.92;font-size:.82rem}
+.pc.ring{min-height:0;gap:6px;border-top:5px solid var(--bk,#0f2a4a)}
+.pc.ring .num{font-size:.8rem}
+.pc.ring h3{font-size:1.02rem;line-height:1.3}
+.pc.ring .pc-acts{margin-top:auto;padding-top:4px}
 /* ===== Bab 3 kelas VIII: blok Scratch/Blockly & pseudocode ===== */
 .blk{display:inline-block;width:auto;max-width:100%;padding:3px 10px;border-radius:6px;color:#fff;font-weight:700;font-size:.85rem;line-height:1.5;margin:2px 1px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);white-space:nowrap}
 .blk.mo{background:#4c97ff}.blk.lo{background:#9966ff}
@@ -1806,32 +1826,28 @@ var SOON = [
   {sem:2, e:'🌱', label:'Semester Genap', title:'Materi Semester Genap', sub:'Bab-bab semester genap kelas VIII akan ditambahkan secara bertahap', grad:'linear-gradient(150deg,#134e4a 0%,#0f766e 60%,#2dd4bf 100%)'}
 ];
 function semOf(b){ return b.sem || 1; }
-function bookCard(b, i){ var sc = bScore(b); return '<button class="bk" data-b="' + i + '" style="--hg:' + b.grad + '"><div class="band"><div class="e">' + b.e + '</div><div class="n">' + b.label + '</div><h3>' + b.title + '</h3></div><div class="bd"><small>' + b.P.length + ' ' + unit(b).toLowerCase() + ' · ' + b.sub + '</small><div class="pb"><i style="width:' + sc.pct + '%"></i></div><small>⭐ Rata-rata nilai: ' + sc.pct + '/100</small></div></button>'; }
-function soonCard(s){ return '<div class="bk soon" style="--hg:' + s.grad + '"><div class="band"><div class="e">' + s.e + '</div><div class="n">' + s.label + '</div><h3>' + s.title + '</h3></div><div class="bd"><small>' + s.sub + '</small><span class="soon-tag">⏳ Segera hadir</span></div></div>'; }
+/* Card ringkas: ikon + label + judul di pita berwarna (warna khas tiap bab), satu baris nilai di bawahnya. */
+function bookCard(b, i){ var sc = bScore(b); return '<button class="bk ring" data-b="' + i + '" style="--hg:' + b.grad + '"><div class="band"><span class="e">' + b.e + '</span><div><div class="n">' + b.label + '</div><h3>' + b.title + '</h3></div></div><div class="bd"><small>⭐ Nilai ' + sc.pct + '/100 · ' + b.P.length + ' ' + unit(b).toLowerCase() + '</small></div></button>'; }
+function soonCard(s){ return '<div class="bk ring soon"><div class="band"><span class="e">' + s.e + '</span><div><div class="n">' + s.label + '</div><h3>' + s.title + '</h3></div></div><div class="bd"><small>⏳ Segera hadir</small></div></div>'; }
+/* Warna tetap untuk jenis kegiatan (beda dari warna bab): latihan = jingga, ulangan/asesmen = merah, cek tugas = merah muda. */
+var WARNA = {latihan:'linear-gradient(150deg,#9a3412 0%,#ea580c 55%,#f59e0b 100%)', ulangan:'linear-gradient(150deg,#7f1d1d 0%,#b91c1c 55%,#ef4444 100%)', cek:'linear-gradient(150deg,#831843 0%,#db2777 55%,#f472b6 100%)'};
 function semSection(n, name, icon){
   var cards = BOOKS.map(function(b, i){ return semOf(b) === n ? bookCard(b, i) : ''; }).filter(Boolean)
-    .concat(SOON.filter(function(s){ return s.sem === n && !BOOKS.some(function(b){ return b.label === s.label; }); }).map(soonCard))
-    .concat([cekCard(n), ulanganCard(n)]).filter(Boolean);
+    .concat(SOON.filter(function(s){ return s.sem === n && !BOOKS.some(function(b){ return b.label === s.label; }); }).map(soonCard));
   return '<div class="sem-h"><span>' + icon + '</span><div><h3>' + name + '</h3><small>Tahun Ajaran 2026/2027</small></div></div><div class="books" style="--cols:' + kolomCard(cards.length) + '">' + cards.join('') + '</div>';
 }
 /* Tata letak card (semua halaman, kelas 7 & 8): ≤4 card satu baris; lebih dari 4 → dua baris, baris atas = setengah dibulatkan ke atas
    (5 → 3+2, 6 → 3+3, 7 → 4+3, 8 → 4+4, 9 → 5+4, …). Baris bawah diletakkan di tengah. */
 function kolomCard(n){ return n <= 4 ? Math.max(n, 1) : Math.ceil(n / 2); }
-/* Card Cek Tugas di tiap semester → cek-tugas.html di akar situs (kelas 8: web berada di subfolder ganjil/ atau genap/). Hanya saat dibuka dari internet. */
-function cekCard(n){
+/* Tombol besar di beranda (sekali saja, di bawah kotak nama): Cek Tugas → cek-tugas.html, Ulangan Online → ulangan.html di akar situs
+   (kelas 8: web berada di subfolder ganjil/ atau genap/). Hanya saat dibuka dari internet; Ulangan hanya jika alamat ulangan sudah dipasang. */
+function tbl(href, grad, e, h, s){ return '<a class="tbl" href="' + href + '" style="--hg:' + grad + '"><span class="e">' + e + '</span><span><b>' + h + '</b><small>' + s + '</small></span></a>'; }
+function aksesCepat(){
   if (!/^https?:$/.test(location.protocol)) return '';
-  var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1];
-  var href = (sub ? '../' : '') + 'cek-tugas.html?sem=' + n + (sub ? '&dari=' + sub : '');
-  return '<a class="bk cek" href="' + href + '" style="--hg:linear-gradient(150deg,#14532d 0%,#16a34a 58%,#84cc16 100%)"><div class="band"><div class="e">✅</div><div class="n">CEK TUGAS</div><h3>Cek Pengumpulan Tugas</h3></div>' +
-    '<div class="bd"><small>Lihat siapa saja di kelasmu yang sudah mengumpulkan tugas semester ' + (n === 2 ? 'genap' : 'ganjil') + ', per bab dan tugas ke-</small><span class="cek-tag">Buka →</span></div></a>';
-}
-/* Card Ulangan Online → ulangan.html di akar situs (soal & kunci di server, bukan di web ini). Hanya saat dibuka dari internet & alamat ulangan sudah dipasang. */
-function ulanganCard(n){
-  if (!/^https?:$/.test(location.protocol) || typeof ULANGAN_URL === 'undefined' || !ULANGAN_URL) return '';
-  var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1];
-  var href = (sub ? '../' : '') + 'ulangan.html?sem=' + n + (sub ? '&dari=' + sub : '');
-  return '<a class="bk cek" href="' + href + '" style="--hg:linear-gradient(150deg,#7f1d1d 0%,#dc2626 58%,#fb923c 100%)"><div class="band"><div class="e">📝</div><div class="n">ULANGAN</div><h3>Ulangan Online</h3></div>' +
-    '<div class="bd"><small>Ulangan harian akhir bab: masukkan token dari guru, kerjakan, dan lihat nilaimu langsung</small><span class="cek-tag">Buka →</span></div></a>';
+  var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1], pre = sub ? '../' : '', q = sub ? '?dari=' + sub : '';
+  var t = [tbl(pre + 'cek-tugas.html' + q, WARNA.cek, '✅', 'Cek Tugas', 'Siapa yang sudah mengumpulkan')];
+  if (typeof ULANGAN_URL !== 'undefined' && ULANGAN_URL) t.push(tbl(pre + 'ulangan.html' + q, WARNA.ulangan, '📝', 'Ulangan Online', 'Ulangan Harian Bab 1–3'));
+  return '<div class="tbls">' + t.join('') + '</div>';
 }
 /* Kartu ulangan di halaman buku (hanya saat online & alamat ulangan terpasang):
    PTS  → Latihan PTS (tanpa token & waktu, ulangan.html?pilih=LAT-PTS) + PTS Online (token, ?pilih=PTS-GANJIL/GENAP)
@@ -1840,22 +1856,20 @@ function ptsOn(b){ return /^(pts|bab\d+)$/.test(b.id) && /^https?:$/.test(locati
 function ptsUlangan(b){
   if (!ptsOn(b)) return '';
   var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1], q = sub ? '&dari=' + sub : '', base = (sub ? '../' : '') + 'ulangan.html?pilih=';
-  var c = function(href, grad, e, n, h, s, tag){ return '<a class="bk cek" href="' + href + '" style="--hg:' + grad + '"><div class="band"><div class="e">' + e + '</div><div class="n">' + n + '</div><h3>' + h + '</h3></div><div class="bd"><small>' + s + '</small><span class="cek-tag">' + tag + '</span></div></a>'; };
-  var hijau = 'linear-gradient(150deg,#14532d 0%,#16a34a 58%,#84cc16 100%)', merah = 'linear-gradient(150deg,#7f1d1d 0%,#dc2626 58%,#fb923c 100%)';
-  if (b.id === 'pts') return '<h3 style="margin-top:22px">📝 Kerjakan PTS</h3><div class="books" style="--cols:2">' +
-    c(base + 'LAT-PTS' + q, hijau, '🏋️', 'LATIHAN', 'Latihan PTS', 'Soal acak dari simulasi PTS. Tanpa token dan tanpa batas waktu, boleh diulang. Nilai terbaikmu dicatat.', 'Mulai latihan →') +
-    c(base + 'PTS-' + (semOf(b) === 2 ? 'GENAP' : 'GANJIL') + q, merah, '🔒', 'PTS', 'PTS Online', 'Dikerjakan saat jadwal PTS dengan token dari guru. Waktu dibatasi dan layar diawasi.', 'Masuk PTS →') + '</div>';
+  if (b.id === 'pts') return '<div class="tbls">' +
+    tbl(base + 'LAT-PTS' + q, WARNA.latihan, '🏋️', 'Latihan PTS', 'Tanpa token · boleh diulang') +
+    tbl(base + 'PTS-' + (semOf(b) === 2 ? 'GENAP' : 'GANJIL') + q, WARNA.ulangan, '🔒', 'PTS Semester ' + (semOf(b) === 2 ? 'Genap' : 'Ganjil'), 'PTS asli · pakai token dari guru') + '</div>';
   var n = b.id.replace('bab', '');
-  return '<h3 style="margin-top:22px">📝 Latihan &amp; Ulangan ' + b.label + '</h3><div class="books" style="--cols:2">' +
-    c(base + 'LAT-BAB' + n + q, hijau, '🏋️', 'LATIHAN', 'Latihan Ulangan ' + b.label, 'Soal acak dari materi ' + b.label + '. Tanpa token dan tanpa batas waktu, boleh diulang sebagai persiapan ulangan.', 'Mulai latihan →') +
-    c(base + 'UH-BAB' + n + q, merah, '🔒', 'ULANGAN', 'Ulangan Harian ' + b.label, 'Dikerjakan saat jadwal ulangan dengan token dari guru. Nilai di bawah 65 wajib remedial.', 'Masuk ulangan →') + '</div>';
+  return '<div class="tbls">' +
+    tbl(base + 'LAT-BAB' + n + q, WARNA.latihan, '🏋️', 'Latihan Ulangan ' + b.label, 'Tanpa token · boleh diulang') +
+    tbl(base + 'UH-BAB' + n + q, WARNA.ulangan, '🔒', 'Ulangan Harian ' + b.label, 'Pakai token dari guru') + '</div>';
 }function renderHome(){
   cleanup(); curB = null; cur = null; setTheme(null); document.title = 'Informatika VIII · TA 2026/2027';
   app.innerHTML = topbar('Informatika Kelas VIII', 'Semester Ganjil & Genap · TA 2026/2027', {root:true}) +
     '<main><div class="wrap">' +
     '<section class="hero home-hero"><span class="pill">INFORMATIKA KELAS VII · TA 2026/2027</span><h1>Media Belajar Interaktif<br>Informatika Kelas VIII</h1><div class="sub">Semester Ganjil &amp; Semester Genap · materi, permainan, kuis, dan pegangan siswa (PDF) setiap pertemuan</div><div class="art">🧠📊🔍🏆🌱</div>' +
     '<div class="meta"><b>SMP Negeri 6 Mengwi</b> · Tahun Ajaran 2026/2027<br>Guru: <b>Ni Nyoman Dwi Mustikawati, S.Kom.</b></div></section>' +
-    nameBox() + lastBtn() +
+    nameBox() + lastBtn() + aksesCepat() +
     semSection(1, 'Semester Ganjil', '📘') + semSection(2, 'Semester Genap', '📗') +
     '<div class="row" style="justify-content:center;margin:20px 0"><button class="btn ghost" data-info>ℹ️ Petunjuk Penggunaan</button><button class="btn ghost" id="reset">🗑️ Hapus progres di perangkat ini</button></div>' +
     '</div></main><button class="restore" data-restore>☰ Menu</button>';
@@ -1877,7 +1891,7 @@ function renderBook(bi){
     '<div class="meta"><b>SMP Negeri 6 Mengwi</b> · Tahun Ajaran 2026/2027<br>Guru: <b>Ni Nyoman Dwi Mustikawati, S.Kom.</b></div></section>' +
     (BOOKS.length === 1 ? nameBox() : '') + ptsUlangan(b) +
     '<h3 style="margin-top:22px">📚 ' + (ptsOn(b) && b.id === 'pts' ? 'Bonus: Rangkuman &amp; Simulasi PTS · pilih ' : 'Pilih ') + unit(b) + '</h3><div class="pcards" style="--cols:' + kolomCard(b.P.length) + '">' +
-    b.P.map(function(p, i){ var sc = pScore(p); return '<div class="pc"><span class="num">' + unit(b).toUpperCase() + ' ' + p.no + '</span><span class="e">' + p.e + '</span><h3>' + p.title + '</h3><small>' + p.sub + '</small><div class="pb"><i style="width:' + sc.pct + '%"></i></div><small>⭐ Nilai ' + sc.pct + '/100</small><div class="pc-acts"><button class="btn or" data-p="' + i + '">▶ Buka</button><button class="btn ghost" data-pr="' + i + '">📄 PDF</button>' + (lkpdName(bi, i) ? '<button class="btn ghost" data-lkb="' + i + '">📝 LKPD</button>' : '') + '</div></div>'; }).join('') + '</div>' +
+    b.P.map(function(p, i){ var sc = pScore(p); return '<div class="pc ring"><span class="num">' + p.e + ' ' + unit(b).toUpperCase() + ' ' + p.no + '</span><h3>' + p.title + '</h3><small>⭐ Nilai ' + sc.pct + '/100</small><div class="pc-acts"><button class="btn or" data-p="' + i + '">▶ Buka</button><button class="btn ghost" data-pr="' + i + '">📄 PDF</button>' + (lkpdName(bi, i) ? '<button class="btn ghost" data-lkb="' + i + '">📝 LKPD</button>' : '') + '</div></div>'; }).join('') + '</div>' +
     '<div class="row" style="justify-content:center;margin:10px 0 24px">' + (bi > 0 ? '<button class="btn ghost" data-bn="' + (bi - 1) + '">⏮ ' + BOOKS[bi - 1].label + '</button>' : '') + (BOOKS.length > 1 ? '<button class="btn ghost" data-nav="">🏠 Beranda</button>' : '') + (bi < BOOKS.length - 1 ? '<button class="btn ghost" data-bn="' + (bi + 1) + '">' + BOOKS[bi + 1].label + ' ⏭</button>' : '') + '</div>' +
     '</div></main><button class="restore" data-restore>☰ Menu</button>';
   bindTop(); bindRestore(); if (BOOKS.length === 1) bindName();
