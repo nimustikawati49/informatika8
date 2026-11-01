@@ -1906,14 +1906,14 @@ function semSection(n, name, icon){
 /* Tata letak card (semua halaman, kelas 7 & 8): ≤4 card satu baris; lebih dari 4 → dua baris, baris atas = setengah dibulatkan ke atas
    (5 → 3+2, 6 → 3+3, 7 → 4+3, 8 → 4+4, 9 → 5+4, …). Baris bawah diletakkan di tengah. */
 function kolomCard(n){ return n <= 4 ? Math.max(n, 1) : Math.ceil(n / 2); }
-/* Tombol besar di beranda (sekali saja, di bawah kotak nama): Cek Tugas → cek-tugas.html, Ulangan Online → ulangan.html di akar situs
+/* Tombol besar (fungsi ubin; JANGAN dinamai tbl karena tbl dipakai untuk tabel) di beranda (sekali saja, di bawah kotak nama): Cek Tugas → cek-tugas.html, Ulangan Online → ulangan.html di akar situs
    (kelas 8: web berada di subfolder ganjil/ atau genap/). Hanya saat dibuka dari internet; Ulangan hanya jika alamat ulangan sudah dipasang. */
-function tbl(href, grad, e, h, s){ return '<a class="tbl" href="' + href + '" style="--hg:' + grad + '"><span class="e">' + e + '</span><span><b>' + h + '</b><small>' + s + '</small></span></a>'; }
+function ubin(href, grad, e, h, s){ return '<a class="tbl" href="' + href + '" style="--hg:' + grad + '"><span class="e">' + e + '</span><span><b>' + h + '</b><small>' + s + '</small></span></a>'; }
 function aksesCepat(){
   if (!/^https?:$/.test(location.protocol)) return '';
   var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1], pre = sub ? '../' : '', q = sub ? '?dari=' + sub : '';
-  var t = [tbl(pre + 'cek-tugas.html' + q, WARNA.cek, '✅', 'Cek Tugas', 'Siapa yang sudah mengumpulkan')];
-  if (typeof ULANGAN_URL !== 'undefined' && ULANGAN_URL) t.push(tbl(pre + 'ulangan.html' + q, WARNA.ulangan, '📝', 'Ulangan Online', 'Ulangan Harian Bab 1–3'));
+  var t = [ubin(pre + 'cek-tugas.html' + q, WARNA.cek, '✅', 'Cek Tugas', 'Siapa yang sudah mengumpulkan')];
+  if (typeof ULANGAN_URL !== 'undefined' && ULANGAN_URL) t.push(ubin(pre + 'ulangan.html' + q, WARNA.ulangan, '📝', 'Ulangan Online', 'Ulangan Harian Bab 1–3'));
   return '<div class="tbls">' + t.join('') + '</div>';
 }
 /* Kartu ulangan di halaman buku (hanya saat online & alamat ulangan terpasang):
@@ -1924,12 +1924,12 @@ function ptsUlangan(b){
   if (!ptsOn(b)) return '';
   var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1], q = sub ? '&dari=' + sub : '', base = (sub ? '../' : '') + 'ulangan.html?pilih=';
   if (b.id === 'pts') return '<div class="tbls">' +
-    tbl(base + 'LAT-PTS' + q, WARNA.latihan, '🏋️', 'Latihan PTS', 'Tanpa token · boleh diulang') +
-    tbl(base + 'PTS-' + (semOf(b) === 2 ? 'GENAP' : 'GANJIL') + q, WARNA.ulangan, '🔒', 'PTS Semester ' + (semOf(b) === 2 ? 'Genap' : 'Ganjil'), 'PTS asli · pakai token dari guru') + '</div>';
+    ubin(base + 'LAT-PTS' + q, WARNA.latihan, '🏋️', 'Latihan PTS', 'Tanpa token · boleh diulang') +
+    ubin(base + 'PTS-' + (semOf(b) === 2 ? 'GENAP' : 'GANJIL') + q, WARNA.ulangan, '🔒', 'PTS Semester ' + (semOf(b) === 2 ? 'Genap' : 'Ganjil'), 'PTS asli · pakai token dari guru') + '</div>';
   var n = b.id.replace('bab', '');
   return '<div class="tbls">' +
-    tbl(base + 'LAT-BAB' + n + q, WARNA.latihan, '🏋️', 'Latihan Ulangan ' + b.label, 'Tanpa token · boleh diulang') +
-    tbl(base + 'UH-BAB' + n + q, WARNA.ulangan, '🔒', 'Ulangan Harian ' + b.label, 'Pakai token dari guru') + '</div>';
+    ubin(base + 'LAT-BAB' + n + q, WARNA.latihan, '🏋️', 'Latihan Ulangan ' + b.label, 'Tanpa token · boleh diulang') +
+    ubin(base + 'UH-BAB' + n + q, WARNA.ulangan, '🔒', 'Ulangan Harian ' + b.label, 'Pakai token dari guru') + '</div>';
 }function renderHome(){
   cleanup(); curB = null; cur = null; setTheme(null); document.title = 'Informatika VIII · TA 2026/2027';
   app.innerHTML = topbar('Informatika Kelas VIII', 'Semester Ganjil & Genap · TA 2026/2027', {root:true}) +
