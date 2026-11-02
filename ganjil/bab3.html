@@ -486,6 +486,17 @@ button.qopt:disabled{cursor:default;opacity:1;color:inherit}
 .at-ang span.blm{background:#fef3c7;color:#92400e}
 .at-juara{text-align:center;margin-bottom:10px}.at-juara div{font-size:3.5rem}.at-juara h3{font-size:1.6rem}
 .at-best{margin-top:12px;font-size:.9rem}
+/* Tanda aktivitas sudah dikerjakan (shell.js rpBadge / rpSteps / kartu pertemuan) */
+.act-h{flex-wrap:wrap}
+.rp-x{margin-left:auto;font-size:.75rem;font-weight:800;border-radius:20px;padding:3px 10px;line-height:1.4}
+.rp-x.good,.rp-st.good,.rp-pc.good{background:#dcfce7;color:#15803d}
+.rp-x.mid,.rp-st.mid{background:#fef3c7;color:#a16207}
+.rp-x.low,.rp-st.low{background:#fee2e2;color:#b91c1c}
+.rp-x.prog,.rp-st.prog,.rp-pc.prog{background:#e0f2fe;color:#0369a1}
+.rp-x.todo,.rp-st.todo,.rp-pc.todo{background:#f1f5f9;color:#64748b}
+.act.rp-good{border-color:#86efac;box-shadow:0 4px 0 #bbf7d0}.act.rp-mid{border-color:#fcd34d;box-shadow:0 4px 0 #fde68a}.act.rp-low{border-color:#fca5a5;box-shadow:0 4px 0 #fecaca}
+.st .rp-st{font-style:normal;font-size:.7rem;font-weight:800;border-radius:12px;padding:1px 7px}
+.rp-pc{font-weight:800;border-radius:12px;padding:1px 7px;white-space:nowrap}
 /* ===== Bab 3 kelas VIII: blok Scratch/Blockly & pseudocode ===== */
 .blk{display:inline-block;width:auto;max-width:100%;padding:3px 10px;border-radius:6px;color:#fff;font-weight:700;font-size:.85rem;line-height:1.5;margin:2px 1px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);white-space:nowrap}
 .blk.mo{background:#4c97ff}.blk.lo{background:#9966ff}
@@ -2214,7 +2225,7 @@ function ptsUlangan(b){
     '</div></main><button class="restore" data-restore>☰ Menu</button>';
   bindTop(); bindName(); bindLast(); bindRestore();
   $$('[data-b]').forEach(function(b){ b.onclick = function(){ keepName(); nav('b' + b.dataset.b); }; });
-  $('#reset').onclick = function(){ if (confirm('Hapus semua skor dan progres di perangkat ini?')){ S.res = {}; S.seen = {}; S.last = null; S.refl = {}; S.chk = {}; S.draft = {}; save(); renderHome(); toast('Progres dihapus'); } };
+  $('#reset').onclick = function(){ if (confirm('Hapus semua skor dan progres di perangkat ini?')){ S.res = {}; S.rp = {};S.seen = {}; S.last = null; S.refl = {}; S.chk = {}; S.draft = {}; save(); renderHome(); toast('Progres dihapus'); } };
   window.scrollTo(0, 0);
 }
 function keepName(){ readProf(); }
@@ -2230,7 +2241,7 @@ function renderBook(bi){
     '<div class="meta"><b>SMP Negeri 6 Mengwi</b> · Tahun Ajaran 2026/2027<br>Guru: <b>Ni Nyoman Dwi Mustikawati, S.Kom.</b></div></section>' +
     (BOOKS.length === 1 ? nameBox() : '') + ptsUlangan(b) +
     '<h3 style="margin-top:22px">📚 ' + (ptsOn(b) && b.id === 'pts' ? 'Bonus: Rangkuman &amp; Simulasi PTS · pilih ' : 'Pilih ') + unit(b) + '</h3><div class="pcards" style="--cols:' + kolomCard(b.P.length) + '">' +
-    b.P.map(function(p, i){ var sc = pScore(p); return '<div class="pc ring"><span class="num">' + p.e + ' ' + unit(b).toUpperCase() + ' ' + p.no + '</span><h3>' + p.title + '</h3><small>⭐ Nilai ' + sc.pct + '/100</small><div class="pc-acts"><button class="btn or" data-p="' + i + '">▶ Buka</button><button class="btn ghost" data-pr="' + i + '">📄 PDF</button>' + (lkpdName(bi, i) ? '<button class="btn ghost" data-lkb="' + i + '">📝 LKPD</button>' : '') + '</div></div>'; }).join('') + '</div>' +
+    b.P.map(function(p, i){ var sc = pScore(p), rc = rpCount(p); return '<div class="pc ring"><span class="num">' + p.e + ' ' + unit(b).toUpperCase() + ' ' + p.no + '</span><h3>' + p.title + '</h3><small>⭐ Nilai ' + sc.pct + '/100' + (rc.n ? ' · <span class="rp-pc ' + (rc.d === rc.n ? 'good' : rc.d ? 'prog' : 'todo') + '">' + (rc.d === rc.n ? '✓ semua aktivitas selesai' : rc.d + '/' + rc.n + ' aktivitas dikerjakan') + '</span>' : '') + '</small><div class="pc-acts"><button class="btn or" data-p="' + i + '">▶ Buka</button><button class="btn ghost" data-pr="' + i + '">📄 PDF</button>' + (lkpdName(bi, i) ? '<button class="btn ghost" data-lkb="' + i + '">📝 LKPD</button>' : '') + '</div></div>'; }).join('') + '</div>' +
     '<div class="row" style="justify-content:center;margin:10px 0 24px">' + (bi > 0 ? '<button class="btn ghost" data-bn="' + (bi - 1) + '">⏮ ' + BOOKS[bi - 1].label + '</button>' : '') + (BOOKS.length > 1 ? '<button class="btn ghost" data-nav="">🏠 Beranda</button>' : '') + (bi < BOOKS.length - 1 ? '<button class="btn ghost" data-bn="' + (bi + 1) + '">' + BOOKS[bi + 1].label + ' ⏭</button>' : '') + '</div>' +
     '</div></main><button class="restore" data-restore>☰ Menu</button>';
   bindTop(); bindRestore(); if (BOOKS.length === 1) bindName();
@@ -2289,11 +2300,12 @@ function renderStep(){
   if (st.k === 'penutup'){ p.acts._refl = p.acts._refl || {type:'reflect'}; }
   $$('[data-act]', content).forEach(function(el){
     var id = el.dataset.act, a = p.acts[id];
-    if (a && E[a.type]){ E[a.type](el, a, id, p.key); mounted.push(el); }
+    if (a && E[a.type]){ mountAct(el, a, id, p.key); mounted.push(el); }
   });
   restoreDrafts(content, p);
   bindStepExtras(p);
   $$('.st').forEach(function(x, i){ x.classList.toggle('cur', i === stepIdx); x.classList.toggle('done', !!S.seen[p.key][i] && i !== stepIdx); });
+  rpSteps(p);
   var cb = $('.st.cur'); if (cb && cb.scrollIntoView) cb.scrollIntoView({inline:'center', block:'nearest'});
   $('#prev').disabled = stepIdx === 0 && cur === 0;
   var last = stepIdx === STEPS.length - 1;
@@ -2432,6 +2444,116 @@ document.addEventListener('input', function(e){
 });
 window.addEventListener('pagehide', function(){ save(); });
 document.addEventListener('visibilitychange', function(){ if (document.hidden) save(); });
+
+/* ---------- SIMPAN PEKERJAAN AKTIVITAS + TANDA SUDAH DIKERJAKAN ---------- */
+// Setiap ketukan/isian siswa di aktivitas dicatat (S.rp[pertemuan][aktivitas] = {sd: seed acak, lg: langkah}) lalu
+// diputar ulang saat aktivitas dibuka lagi. Urutan acak kartu memakai Math.random ber-seed per aktivitas, jadi hasilnya sama.
+// Jenis berbasis waktu/animasi (memory, maze, blockly, team, spin, timer) tidak diputar ulang.
+S.rp = S.rp || {};
+var RP_TYPES = {order:1, match:1, cat:1, quiz:1, fill:1, tablefill:1, bug:1, line:1, essay:1};
+var rpNow = false, rpRand = Math.random, rpT = null;
+function rpRng(seed){ var t = seed >>> 0; return function(){ t = (t + 0x6D2B79F5) >>> 0; var r = Math.imul(t ^ t >>> 15, 1 | t); r ^= r + Math.imul(r ^ r >>> 7, 61 | r); return ((r ^ r >>> 14) >>> 0) / 4294967296; }; }
+function rpSeed(){ return Math.floor(rpRand() * 4294967296); }
+function rpNodes(el){ return [].filter.call(el.querySelectorAll('*'), function(x){ return !(window.SVGElement && x instanceof SVGElement) && !x.closest('.rp-x'); }); }
+function rpSig(x){ return x.tagName + [].filter.call(x.attributes, function(t){ return /^data-/.test(t.name); }).map(function(t){ return '|' + t.name + '=' + t.value; }).join(''); }
+function rpSave(){ clearTimeout(rpT); rpT = setTimeout(save, 300); }
+function rpScored(a){ return a && !a.noScore && maxOf(a) > 0; }
+function mountAct(el, a, id, pk){
+  if (!RP_TYPES[a.type]){ E[a.type](el, a, id, pk); rpBadge(el, a, id, pk); return; }
+  S.rp[pk] = S.rp[pk] || {};
+  var rec = S.rp[pk][id] = S.rp[pk][id] || {sd: rpSeed(), lg: []};
+  function render(){ el._rng = rpRng(rec.sd); var o = Math.random; Math.random = el._rng; try { E[a.type](el, a, id, pk); } finally { Math.random = o; } }
+  render();
+  if (rec.lg.length && !rpPlay(el, rec)){ rec.sd = rpSeed(); rec.lg = []; render(); rpSave(); }   // tampilan berubah (soal diganti guru) → mulai bersih
+  rpListen(el, id, pk);
+  rpBadge(el, a, id, pk);
+}
+function rpPlay(el, rec){
+  var ok = true, keep = {beep: beep, confetti: confetti, toast: toast, award: award}, o = Math.random;
+  beep = confetti = toast = award = function(){};
+  rpNow = true; Math.random = el._rng;
+  try {
+    for (var i = 0; i < rec.lg.length; i++){
+      var g = rec.lg[i], x = rpNodes(el)[g[1]];
+      if (!x || rpSig(x) !== g[2]){ ok = false; break; }
+      if (g[0] === 'v'){ x.value = g[3]; x.dispatchEvent(new Event('input', {bubbles: true})); }
+      else if (g[0] === 'pd'){ x.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true})); x.dispatchEvent(new PointerEvent('pointerup', {bubbles: true, clientX: -9, clientY: -9})); }
+      else x.click();
+    }
+  } catch (e){ ok = false; }
+  Math.random = o; rpNow = false;
+  beep = keep.beep; confetti = keep.confetti; toast = keep.toast; award = keep.award;
+  return ok;
+}
+function rpListen(el, id, pk){
+  if (el._rpOn) return; el._rpOn = 1;
+  var skip = null;
+  function rec(){ return (S.rp[pk] || {})[id]; }
+  function swap(){ Math.random = el._rng; setTimeout(function(){ if (!rpNow) Math.random = rpRand; }, 0); }   // dikembalikan setelah semua handler event selesai
+  function log(g){ var r = rec(); if (!r) return; r.lg.push(g); rpSave(); if (r.lg.length === 1) rpMarks(); }
+  function at(x){ var i = rpNodes(el).indexOf(x); return i < 0 ? null : [i, rpSig(x)]; }
+  el.addEventListener('click', function(e){
+    if (rpNow || !e.isTrusted || !rec()) return;
+    var r = rec(), rt = e.target.closest('[data-retry]');
+    if (rt){ r.sd = rpSeed(); r.lg = []; el._rng = rpRng(r.sd); swap(); rpSave(); return; }   // Ulangi: mulai catatan baru
+    swap();
+    var x = e.target.closest('button, [data-k], [data-l], [data-r], [data-c], [data-p], .ln-it');
+    if (!x || !el.contains(x) || x === skip){ skip = null; return; }
+    var w = at(x); if (w) log(['c', w[0], w[1]]);
+  }, true);
+  el.addEventListener('pointerdown', function(e){
+    if (rpNow || !e.isTrusted || !rec()) return; swap();
+    var x = e.target.closest('.ln-l'); if (!x) return;
+    var w = at(x); if (w) log(['pd', w[0], w[1]]);
+  }, true);
+  el.addEventListener('pointerup', function(e){
+    if (rpNow || !e.isTrusted || !rec() || !e.target.closest('.ln-l')) return; swap();
+    var t = document.elementFromPoint(e.clientX, e.clientY), rr = t && t.closest ? t.closest('.ln-r') : null;
+    if (!rr || !el.contains(rr)) return;
+    var w = at(rr); if (w){ log(['c', w[0], w[1]]); skip = rr; setTimeout(function(){ skip = null; }, 400); }
+  }, true);
+  el.addEventListener('input', function(e){
+    var x = e.target; if (rpNow || !e.isTrusted || !rec() || !/^(INPUT|TEXTAREA)$/.test(x.tagName) || /checkbox|radio/.test(x.type)) return;
+    var w = at(x), r = rec(); if (!w) return;
+    var last = r.lg[r.lg.length - 1];
+    if (last && last[0] === 'v' && last[1] === w[0]){ last[3] = x.value; rpSave(); } else log(['v', w[0], w[1], x.value]);
+  }, true);
+}
+function rpBadge(el, a, id, pk){
+  var h = $('.act-h', el); if (!h || !rpScored(a)) return;
+  var old = $('.rp-x', h); if (old) old.remove();
+  var r = (S.res[pk] || {})[id], g = (S.rp[pk] || {})[id], b = document.createElement('span'), pct = r && r.m ? Math.round(r.s / r.m * 100) : 0;
+  var kls = r ? (pct >= 80 ? 'good' : pct >= 65 ? 'mid' : 'low') : (g && g.lg.length ? 'prog' : 'todo');
+  b.className = 'rp-x ' + kls;
+  b.textContent = r ? '✓ Sudah dikerjakan · skor ' + r.s + '/' + r.m + (pct < 65 ? ' · ayo ulangi' : '') : g && g.lg.length ? '✏️ Belum selesai · lanjutkan' : '○ Belum dikerjakan';
+  h.appendChild(b);
+  el.classList.remove('rp-good', 'rp-mid', 'rp-low'); if (r) el.classList.add('rp-' + kls);
+}
+function rpCount(p, ids){
+  var r = S.res[p.key] || {}, n = 0, d = 0, s = 0, m = 0;
+  (ids || Object.keys(p.acts)).forEach(function(id){ var a = p.acts[id]; if (!rpScored(a)) return; n++; if (r[id]){ d++; s += r[id].s; m += r[id].m; } });
+  return {n: n, d: d, pct: m ? Math.round(s / m * 100) : 0};
+}
+function rpSteps(p){
+  $$('.stepper .st').forEach(function(x, i){
+    var old = $('.rp-st', x); if (old) old.remove();
+    var ids = []; String(p.c[STEPS[i].k] || '').replace(/data-act="([^"]+)"/g, function(m, id){ if (ids.indexOf(id) < 0) ids.push(id); });
+    var c = rpCount(p, ids); if (!c.n) return;
+    var e = document.createElement('em');
+    e.className = 'rp-st ' + (c.d < c.n ? (c.d ? 'prog' : 'todo') : c.pct >= 80 ? 'good' : c.pct >= 65 ? 'mid' : 'low');
+    e.textContent = c.d < c.n ? c.d + '/' + c.n : '✓ ' + c.pct;
+    e.title = c.d < c.n ? c.d + ' dari ' + c.n + ' aktivitas sudah dikerjakan' : 'Semua aktivitas selesai · skor ' + c.pct;
+    x.appendChild(e);
+  });
+}
+function rpMarks(){
+  if (cur === null || !$('#content')) return;
+  var p = PP();
+  $$('[data-act]', $('#content')).forEach(function(el){ var a = p.acts[el.dataset.act]; if (a) rpBadge(el, a, el.dataset.act, p.key); });
+  rpSteps(p);
+}
+var rpAward = award;
+award = function(pk, id, s, m){ rpAward(pk, id, s, m); rpMarks(); };
 
 /* ---------- LKPD INTERAKTIF ---------- */
 E.lkpd = function(el, a, id, pk){
