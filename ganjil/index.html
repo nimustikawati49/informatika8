@@ -449,6 +449,43 @@ body.mini main{padding-top:56px}
 .pc.ring .num{font-size:.8rem}
 .pc.ring h3{font-size:1.02rem;line-height:1.3}
 .pc.ring .pc-acts{margin-top:auto;padding-top:4px}
+/* ===== Adu Tim Online ===== */
+.at-pilih{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin:12px 0}
+.at-besar{display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 14px;border-radius:18px;border:none;color:#fff;background:linear-gradient(150deg,#0f766e,#14b8a6);box-shadow:0 6px 16px rgba(15,42,74,.15);cursor:pointer}
+.at-besar.guru{background:linear-gradient(150deg,#1e3a8a,#3b82f6)}
+.at-besar span{font-size:2.4rem}.at-besar b{font-size:1.15rem;color:#fff}.at-besar small{opacity:.9}
+.at-kodein{display:block;width:100%;max-width:260px;margin:10px auto;text-align:center;font-size:2rem;font-weight:800;letter-spacing:10px;border:3px solid var(--line);border-radius:16px;padding:10px;font-family:inherit}
+.at-kodein:focus{outline:none;border-color:var(--teal)}
+.at-timku{display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.3rem;color:#fff;background:var(--tc);border-radius:18px;padding:16px;margin:8px 0;text-align:center}
+.at-timku span{font-size:2rem}.at-timku b{color:#fff}
+.at-bar{display:flex;justify-content:space-between;font-weight:800;color:#fff;background:var(--tc);border-radius:12px;padding:8px 14px}
+.at-dtk{min-width:46px;text-align:center;background:var(--navy);color:#fff;border-radius:10px;padding:4px 8px;font-size:1rem}
+.at-dtk.warn{background:var(--red)}
+button.qopt{width:100%;font:inherit;cursor:pointer}
+button.qopt:disabled{cursor:default;opacity:1;color:inherit}
+.at-absen{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px}
+.at-absen button{min-height:42px;border-radius:10px;border:2px solid var(--green);background:var(--green-l);color:#166534;font-weight:800;font-family:inherit}
+.at-absen button.off{border-color:#fca5a5;background:#fee2e2;color:#b91c1c;text-decoration:line-through}
+.at-n{font-size:1.4rem;min-width:44px;text-align:center}
+.at-tims{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:8px;margin-top:10px}
+.at-tim{border-left:6px solid var(--tc);background:#fff;border-radius:10px;padding:8px 10px;box-shadow:0 2px 8px rgba(15,42,74,.08)}
+.at-tim b{display:block;color:var(--tc)}.at-tim small{color:var(--muted)}
+.at-kodebox{text-align:center;background:var(--navy);color:#fff;border-radius:18px;padding:14px;margin-bottom:12px}
+.at-kodebox small{display:block;opacity:.8;letter-spacing:1px;text-transform:uppercase}
+.at-kodebox b{display:block;font-size:3.4rem;letter-spacing:14px;color:#fde68a;line-height:1.1}
+.at-kodebox span{font-size:.9rem;opacity:.9}.at-kodebox span b{display:inline;font-size:inherit;letter-spacing:0;color:#fff}
+.at-papan{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
+.at-pt{border:3px solid var(--tc);border-radius:16px;background:#fff;padding:10px 12px}
+.at-pt-h{display:flex;justify-content:space-between;align-items:center;color:var(--tc)}
+.at-pt-h span{font-size:2rem;font-weight:800}
+.at-pt-m{font-size:.82rem;color:var(--muted);margin-top:2px}
+.at-ang{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.at-ang span{font-size:.75rem;background:#f1f5f9;border-radius:8px;padding:2px 6px}
+.at-ang span.ok{background:var(--green-l);color:#166534}
+.at-ang span i{font-style:normal;opacity:.75}
+.at-ang span.blm{background:#fef3c7;color:#92400e}
+.at-juara{text-align:center;margin-bottom:10px}.at-juara div{font-size:3.5rem}.at-juara h3{font-size:1.6rem}
+.at-best{margin-top:12px;font-size:.9rem}
 /* ===== Bab 3 kelas VIII: blok Scratch/Blockly & pseudocode ===== */
 .blk{display:inline-block;width:auto;max-width:100%;padding:3px 10px;border-radius:6px;color:#fff;font-weight:700;font-size:.85rem;line-height:1.5;margin:2px 1px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);white-space:nowrap}
 .blk.mo{background:#4c97ff}.blk.lo{background:#9966ff}
@@ -565,6 +602,7 @@ function two(lt, lh, rt, rh){ return '<div class="g2">' + box('orange', lt, lh) 
 var BOOKS = [];
 var SEND_URL = 'https://script.google.com/macros/s/AKfycbw_RUaSPKjJkSaVYWlKdCkPn-ISuedMh5Ud1MnF9v5op48Rchsh39B2FYNcQ8YUa5ua/exec';
 var ULANGAN_URL = 'https://script.google.com/macros/s/AKfycbwADwUnBq6SsdWihZGZv1cuShSdRKIArP_iZM_8lRlr0t-VdnMw4O0w28VciKqqiQau/exec';
+var ADUTIM_URL = 'https://script.google.com/macros/s/AKfycbzxePW6M-hWTrGjWhlHd8uEbkvu-nwmB2FnhxmRpHu62cCNGH1IR_sVL_nqGn7tnA6LGA/exec';
 function addBook(o, fn){ o.P = fn(); o.P.forEach(function(p){ p.key = o.id + '-' + p.key; }); BOOKS.push(o); }
 addBook({id:'bab1', send:'TUGAS8-1', pdf:['Bab1_Pertemuan1_Pencarian_Data','Bab1_Pertemuan2_Visualisasi_SUMIFS_COUNTIFS','Bab1_Pertemuan3_PivotTable_PivotChart','Bab1_Pertemuan4_Rangkuman_dan_Pembahasan_LKS'], label:'Bab 1', short:'Bab1', title:'Analisis Data', sub:'VLOOKUP, HLOOKUP, reference, visualisasi data, SUMIFS, COUNTIFS &amp; PivotTable', e:'📊', art:'🔍📊Σ🧾', grad:'linear-gradient(150deg,#064e3b 0%,#059669 58%,#34d399 100%)', dark:'#064e3b'}, function(){
 var P = [];
@@ -2670,6 +2708,232 @@ E.blockly = function(el, a, id, pk){
   start();
 };
 
+
+/* ---------- ADU TIM ONLINE (siswa menjawab dari HP, skor tim dihitung otomatis) ----------
+   Server: Apps Script "Adu Tim Online" (Adu_Tim_Online\Kode_Adu_Tim.gs.txt), alamat di ADUTIM_URL.
+   Tanpa alamat atau dibuka dari file lokal → langsung mode IFP lama (E.teamIFP). */
+E.teamIFP = E.team;
+var TIM = [{n:'Tim Merah', c:'#dc2626', e:'🔴'}, {n:'Tim Biru', c:'#2563eb', e:'🔵'}, {n:'Tim Hijau', c:'#16a34a', e:'🟢'}, {n:'Tim Kuning', c:'#ca8a04', e:'🟡'}, {n:'Tim Ungu', c:'#7c3aed', e:'🟣'}, {n:'Tim Oranye', c:'#ea580c', e:'🟠'}];
+function atOn(){ return /^https?:$/.test(location.protocol) && typeof ADUTIM_URL !== 'undefined' && !!ADUTIM_URL; }
+function atApi(aksi, d){
+  d = Object.assign({aksi: aksi}, d || {});
+  return fetch(ADUTIM_URL, {method: 'POST', body: JSON.stringify(d)}).then(function(r){ return r.json(); }, function(){ throw new Error('Koneksi internet bermasalah. Coba lagi.'); })
+    .then(function(r){ if (!r.ok){ var e = new Error(r.pesan || 'Gagal menghubungi server.'); e.r = r; throw e; } return r; });
+}
+function atGet(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+function atPut(k, v){ try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+function atEsc(s){ return String(s === undefined || s === null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;'}[c]; }); }
+/* Mode online hanya untuk Adu Tim di pertemuan Rangkuman Bab (bab1, bab2, bab3, …); PTS & pembahasan ulangan tetap mode IFP. */
+function atBoleh(pk){
+  var b = BOOKS.filter(function(x){ return pk.indexOf(x.id + '-') === 0; })[0], p = b && b.P.filter(function(x){ return x.key === pk; })[0];
+  return !!(b && p && /^bab\d+$/.test(b.id) && /Rangkuman/i.test(p.title));
+}
+function atTingkat(){ return /^inf8/.test(KEY) ? '8' : '7'; }   // KEY penyimpanan: kelas 8 = inf8-…, kelas 7 = bk7-…
+
+E.team = function(el, a, id, pk){
+  if (!atOn() || !atBoleh(pk)) return E.teamIFP(el, a, id, pk);
+  var u = shell(el, a, 'Adu Tim · Online', '🏆'), akt = pk + '|' + id, KS = 'adutim-s|' + akt, KG = 'adutim-g|' + akt;
+  var iv = null, tmr = null, kirimT = null;
+  function stop(){ clearInterval(iv); iv = null; clearInterval(tmr); tmr = null; clearTimeout(kirimT); }
+  el._cleanup = stop;
+  function msg(t){ return '<div class="act-ins">' + t + '</div>'; }
+  function salah(box, e){ box.innerHTML = '<div class="fb bad">' + atEsc(e.message || e) + '</div>'; }
+
+  /* ===== pilih peran ===== */
+  function awal(){
+    stop(); u.foot.innerHTML = '';
+    var s = atGet(KS), g = atGet(KG);
+    u.body.innerHTML = msg('👉 Setiap siswa menjawab dari HP masing-masing. Sistem membagi tim otomatis, lalu menghitung skor tim dari <b>ketepatan</b> dan <b>kecepatan</b> anggotanya.') +
+      (s ? '<div class="row"><button class="btn or" data-lanjut-s>▶ Lanjutkan permainan (kode ' + atEsc(s.kode) + ')</button></div>' : '') +
+      (g ? '<div class="row"><button class="btn or" data-lanjut-g>🖥️ Kembali ke papan skor (kode ' + atEsc(g.kode) + ')</button></div>' : '') +
+      '<div class="at-pilih"><button class="at-besar" data-siswa><span>📱</span><b>Saya Siswa</b><small>Gabung dengan kode dari layar guru</small></button>' +
+      '<button class="at-besar guru" data-guru><span>🧑‍🏫</span><b>Mode Guru</b><small>Buat permainan &amp; tampilkan papan skor di IFP</small></button></div>' +
+      '<div class="row" style="justify-content:center"><button class="btn ghost sm" data-ifp>🖥️ Main tanpa HP (mode IFP biasa)</button></div>';
+    $('[data-siswa]', u.body).onclick = siswaKode;
+    $('[data-guru]', u.body).onclick = guruPin;
+    $('[data-ifp]', u.body).onclick = function(){ stop(); E.teamIFP(el, a, id, pk); };
+    var ls = $('[data-lanjut-s]', u.body); if (ls) ls.onclick = function(){ gabung(s.kode); };
+    var lg = $('[data-lanjut-g]', u.body); if (lg) lg.onclick = function(){ papanGuru(g); };
+  }
+
+  /* ===== SISWA ===== */
+  function siswaKode(){
+    stop();
+    if (!profOk()){
+      u.body.innerHTML = msg('🙋 Isi dulu <b>nama lengkap, kelas, dan nomor absen</b> di Beranda (kotak identitas), lalu kembali ke sini.') +
+        '<div class="row"><button class="btn" data-home>🏠 Ke Beranda</button><button class="btn ghost" data-back>← Kembali</button></div>';
+      $('[data-home]', u.body).onclick = function(){ nav(''); };
+      $('[data-back]', u.body).onclick = awal;
+      return;
+    }
+    u.body.innerHTML = msg('Halo <b>' + atEsc(S.prof.nama) + '</b> (' + atEsc(S.prof.kelas) + ', no. ' + atEsc(S.prof.absen) + '). Ketik <b>kode permainan</b> yang tampil di layar guru.') +
+      '<input class="at-kodein" id="atK" inputmode="numeric" maxlength="4" placeholder="0000" autocomplete="off"><div class="at-err"></div>' +
+      '<div class="row"><button class="btn ghost" data-back>← Kembali</button><button class="btn gr" data-go>Gabung ▶</button></div>';
+    var k = $('#atK', u.body); k.focus();
+    k.onkeydown = function(e){ if (e.key === 'Enter') $('[data-go]', u.body).click(); };
+    $('[data-back]', u.body).onclick = awal;
+    $('[data-go]', u.body).onclick = function(){ if (/^\d{4}$/.test(k.value.trim())) gabung(k.value.trim()); else $('.at-err', u.body).innerHTML = '<div class="fb bad">Kode terdiri dari 4 angka.</div>'; };
+  }
+  function gabung(kode){
+    stop();
+    u.body.innerHTML = msg('⏳ Menghubungkan ke permainan ' + atEsc(kode) + '…');
+    atApi('gabung', {kode: kode, kelas: S.prof.kelas, absen: S.prof.absen, nama: S.prof.nama, akt: akt}).then(function(r){
+      var s = atGet(KS);
+      if (!s || s.kode !== kode) s = {kode: kode, ke: 0, benar: 0, skor: 0, waktu: 0, rincian: [], selesai: false};
+      if (r.progres && r.progres.ke > s.ke){ s.ke = r.progres.ke; s.benar = r.progres.benar; s.skor = r.progres.skor; s.waktu = r.progres.waktu; s.selesai = r.progres.selesai; s.rincian = r.progres.rincian ? r.progres.rincian.split(' ') : []; }
+      s.tim = r.tim; s.g = r.game; atPut(KS, s);
+      if (s.selesai || r.game.status === 'SELESAI') return akhirSiswa(s);
+      var t = TIM[r.tim];
+      u.body.innerHTML = '<div class="at-timku" style="--tc:' + t.c + '"><span>' + t.e + '</span>Kamu masuk <b>' + t.n + '</b></div>' +
+        msg('📋 ' + r.game.jumlah + ' soal · ' + r.game.detik + ' detik per soal. Jawab <b>sendiri</b> dengan teliti dan cepat: benar = 100 poin + bonus kecepatan sampai 50 poin. Skor timmu = rata-rata skor anggota.') +
+        '<div class="row" style="justify-content:center"><button class="btn gr at-mulai" data-mulai>' + (s.ke ? '▶ Lanjutkan dari soal ' + (s.ke + 1) : '🚀 Mulai menjawab') + '</button></div>';
+      $('[data-mulai]', u.body).onclick = function(){ soal(s); };
+    }).catch(function(e){
+      if (/tidak ditemukan|selesai|kelas|lain/i.test(e.message)) atPut(KS, null);
+      u.body.innerHTML = '<div class="fb bad">' + atEsc(e.message) + '</div><div class="row"><button class="btn ghost" data-back>← Kembali</button><button class="btn" data-retry>↻ Coba lagi</button></div>';
+      $('[data-back]', u.body).onclick = awal;
+      $('[data-retry]', u.body).onclick = function(){ gabung(kode); };
+    });
+  }
+  function kirim(s){
+    clearTimeout(kirimT);
+    atApi('jawab', {kode: s.kode, kelas: S.prof.kelas, absen: S.prof.absen, nama: S.prof.nama, ke: s.ke, benar: s.benar, skor: s.skor, waktu: s.waktu, selesai: s.selesai, rincian: s.rincian.join(' ')})
+      .then(function(){ s.belum = false; atPut(KS, s); })
+      .catch(function(e){ if (e.r && e.r.selesai){ s.ditutup = true; atPut(KS, s); return; } s.belum = true; atPut(KS, s); kirimT = setTimeout(function(){ kirim(s); }, 5000); });
+  }
+  function soal(s){
+    stop();
+    var qs = a.qs, n = s.ke, det = s.g.detik || a.sec || 30;
+    if (s.ditutup) return akhirSiswa(s);
+    if (n >= qs.length){ s.selesai = true; atPut(KS, s); kirim(s); return akhirSiswa(s); }
+    var q = qs[n], t = TIM[s.tim];
+    if (!s.mulaiSoal || s.soalKe !== n){ s.mulaiSoal = Date.now(); s.soalKe = n; atPut(KS, s); }   // muat ulang halaman tidak mengulang waktu soal
+    u.body.innerHTML = '<div class="at-bar" style="--tc:' + t.c + '"><span>' + t.e + ' ' + t.n + '</span><span>⭐ ' + s.skor + '</span></div>' +
+      '<div class="qprog" style="margin-top:8px"><span>Soal ' + (n + 1) + '/' + qs.length + '</span><div class="bar"><i style="width:' + (n / qs.length * 100) + '%"></i></div><span class="at-dtk" id="atT">' + det + '</span></div>' +
+      '<div class="qtext">' + q.q + '</div><div class="qopts">' + q.o.map(function(o, k){ return '<button class="qopt" data-k="' + k + '"><span class="ql">' + 'ABCD'.charAt(k) + '</span>' + o + '</button>'; }).join('') + '</div><div class="qfb"></div>';
+    u.foot.innerHTML = '';
+    var sudah = false;
+    function sisa(){ return Math.max(0, det - (Date.now() - s.mulaiSoal) / 1000); }
+    function jawab(k){
+      if (sudah) return; sudah = true; clearInterval(tmr); tmr = null;
+      var pakai = Math.min(det, (Date.now() - s.mulaiSoal) / 1000), ok = k === q.a, poin = ok ? 100 + Math.round(50 * Math.max(0, det - pakai) / det) : 0;
+      s.ke = n + 1; s.waktu = Math.round((s.waktu + pakai) * 10) / 10; s.skor += poin; if (ok) s.benar++;
+      s.rincian.push((n + 1) + (k < 0 ? '-' : ok ? 'B' : 'S')); s.mulaiSoal = 0; s.selesai = s.ke >= qs.length; atPut(KS, s); kirim(s);
+      $$('.qopt', u.body).forEach(function(x, j){ x.disabled = true; if (j === q.a) x.classList.add('ok'); else if (j === k) x.classList.add('bad'); });
+      beep(ok);
+      $('.qfb', u.body).innerHTML = '<div class="fb ' + (ok ? 'ok' : 'bad') + '"><b>' + (ok ? '✓ Benar! +' + poin + ' poin' : k < 0 ? '⏰ Waktu habis' : '✗ Belum tepat') + '</b>' + (ok ? '' : ' · Jawaban: ' + 'ABCD'.charAt(q.a) + '. ' + q.o[q.a]) + (q.e ? '<br>' + q.e : '') + '</div>';
+      u.foot.innerHTML = '<div class="row" style="justify-content:flex-end"><button class="btn or" data-next>' + (s.selesai ? '🏁 Lihat hasil' : 'Soal berikutnya ▶') + '</button></div>';
+      $('[data-next]', u.foot).onclick = function(){ soal(s); };
+    }
+    $$('.qopt', u.body).forEach(function(b){ b.onclick = function(){ jawab(+b.dataset.k); }; });
+    function tick(){ var d = Math.ceil(sisa()), el2 = $('#atT', u.body); if (el2){ el2.textContent = d; el2.classList.toggle('warn', d <= 10); } if (d <= 0) jawab(-1); }
+    tmr = setInterval(tick, 250); tick();
+  }
+  function akhirSiswa(s){
+    stop();
+    var t = TIM[s.tim || 0], n = a.qs.length;
+    u.body.innerHTML = '<div class="at-timku" style="--tc:' + t.c + '"><span>' + t.e + '</span>' + t.n + '</div>' +
+      '<div class="res good" style="text-align:center"><b style="font-size:1.4rem">⭐ Skormu: ' + s.skor + '</b><br>Benar ' + s.benar + ' dari ' + n + ' soal · rata-rata ' + (s.ke ? Math.round(s.waktu / s.ke * 10) / 10 : 0) + ' detik per soal</div>' +
+      (s.ditutup && s.ke < n ? msg('Permainan sudah diakhiri guru sebelum semua soal selesai.') : '') + '<div id="atPapan">' + msg('⏳ Memuat papan skor…') + '</div>';
+    u.foot.innerHTML = '<div class="row" style="justify-content:center"><button class="btn ghost" data-keluar>Keluar dari permainan</button></div>';
+    $('[data-keluar]', u.foot).onclick = function(){ atPut(KS, null); awal(); };
+    if (s.belum) kirim(s);
+    function muat(){ atApi('papan', {kode: s.kode}).then(function(r){ var p = $('#atPapan', u.body); if (!p) return; p.innerHTML = papanHtml(r, false); if (r.game.status === 'SELESAI'){ clearInterval(iv); iv = null; juaraEfek(r); } }).catch(function(){}); }
+    muat(); iv = setInterval(muat, 6000);
+  }
+
+  /* ===== GURU ===== */
+  function guruPin(){
+    stop();
+    var pin = atGet('adutim-pin');
+    if (pin) return atApi('pin', {pin: pin}).then(function(){ guruAtur(pin); }).catch(function(){ atPut('adutim-pin', null); guruPin(); });
+    u.body.innerHTML = msg('🔐 Masukkan <b>PIN guru</b> (tertulis di log Apps Script saat memasang "Adu Tim Online"). PIN diingat di perangkat ini.') +
+      '<input class="at-kodein" id="atP" inputmode="numeric" maxlength="8" type="password" autocomplete="off"><div class="at-err"></div>' +
+      '<div class="row"><button class="btn ghost" data-back>← Kembali</button><button class="btn" data-go>Masuk</button></div>';
+    var p = $('#atP', u.body); p.focus();
+    p.onkeydown = function(e){ if (e.key === 'Enter') $('[data-go]', u.body).click(); };
+    $('[data-back]', u.body).onclick = awal;
+    $('[data-go]', u.body).onclick = function(){ var v = p.value.trim(); atApi('pin', {pin: v}).then(function(){ atPut('adutim-pin', v); guruAtur(v); }).catch(function(e){ salah($('.at-err', u.body), e); }); };
+  }
+  function guruAtur(pin){
+    stop();
+    var tg = atTingkat(), cfg = atGet('adutim-cfg') || {}, kelas = cfg.kelas && cfg.kelas.charAt(0) === tg ? cfg.kelas : '', mode = cfg.mode || 'tim', nilai = cfg.nilai || 4, absen = {};
+    function total(){ return (atGet('adutim-n') || {})[kelas] || 32; }
+    function hadir(){ var h = []; for (var i = 1; i <= total(); i++) if (!absen[i]) h.push(i); return h; }
+    function jmlTim(h){ return mode === 'tim' ? Math.min(nilai, 6) : Math.max(2, Math.min(6, Math.round(h.length / nilai))); }
+    function draw(){
+      var h = hadir(), nT = jmlTim(h), grup = [];
+      for (var t = 0; t < nT; t++) grup.push([]);
+      h.forEach(function(ab, i){ grup[i % nT].push(ab); });
+      u.body.innerHTML = '<div class="lbl2">1. Kelas</div><div class="row">' + 'ABCDEF'.split('').map(function(x){ var k = tg + x; return '<button class="btn sm' + (k === kelas ? ' or' : ' ghost') + '" data-kls="' + k + '">' + k + '</button>'; }).join('') + '</div>' +
+        (kelas ? '<div class="lbl2">2. Jumlah siswa di kelas ' + kelas + '</div><div class="row"><button class="btn ghost sm" data-n="-1">−</button><b class="at-n">' + total() + '</b><button class="btn ghost sm" data-n="1">+</button></div>' +
+        '<div class="lbl2">3. Ketuk no. absen yang TIDAK hadir · hadir: <b style="color:var(--green)">' + h.length + '</b></div><div class="at-absen">' +
+        Array.apply(null, Array(total())).map(function(_, i){ var ab = i + 1; return '<button class="' + (absen[ab] ? 'off' : '') + '" data-ab="' + ab + '">' + ab + '</button>'; }).join('') + '</div>' +
+        '<div class="lbl2">4. Pembagian tim (urut no. absen bergilir)</div><div class="row"><button class="btn sm' + (mode === 'tim' ? ' or' : ' ghost') + '" data-mode="tim">Jumlah tim</button><button class="btn sm' + (mode === 'per' ? ' or' : ' ghost') + '" data-mode="per">Siswa per tim</button></div>' +
+        '<div class="row">' + (mode === 'tim' ? [2, 3, 4, 5, 6] : [3, 4, 5, 6, 7, 8]).map(function(v){ return '<button class="btn sm' + (v === nilai ? ' gr' : ' ghost') + '" data-v="' + v + '">' + v + (mode === 'tim' ? ' tim' : ' siswa') + '</button>'; }).join('') + '</div>' +
+        '<div class="at-tims">' + grup.map(function(g, t){ return '<div class="at-tim" style="--tc:' + TIM[t].c + '"><b>' + TIM[t].e + ' ' + TIM[t].n + ' · ' + g.length + ' siswa</b><small>No. ' + g.join(', ') + '</small></div>'; }).join('') + '</div>' +
+        '<div class="at-err"></div>' : msg('Pilih kelas yang sedang bermain.'));
+      u.foot.innerHTML = '<div class="row"><button class="btn ghost" data-back>← Kembali</button>' + (kelas ? '<button class="btn gr" data-buat>🚀 Buat permainan (' + a.qs.length + ' soal)</button>' : '') + '</div>';
+      $$('[data-kls]', u.body).forEach(function(b){ b.onclick = function(){ kelas = b.dataset.kls; absen = {}; draw(); }; });
+      $$('[data-n]', u.body).forEach(function(b){ b.onclick = function(){ var m = atGet('adutim-n') || {}; m[kelas] = Math.max(4, Math.min(45, total() + Number(b.dataset.n))); atPut('adutim-n', m); draw(); }; });
+      $$('[data-ab]', u.body).forEach(function(b){ b.onclick = function(){ var ab = +b.dataset.ab; if (absen[ab]) delete absen[ab]; else absen[ab] = 1; draw(); }; });
+      $$('[data-mode]', u.body).forEach(function(b){ b.onclick = function(){ mode = b.dataset.mode; nilai = mode === 'tim' ? 4 : 5; draw(); }; });
+      $$('[data-v]', u.body).forEach(function(b){ b.onclick = function(){ nilai = +b.dataset.v; draw(); }; });
+      $('[data-back]', u.foot).onclick = awal;
+      var bb = $('[data-buat]', u.foot);
+      if (bb) bb.onclick = function(){
+        if (h.length < nT) return salah($('.at-err', u.body), 'Siswa hadir terlalu sedikit untuk ' + nT + ' tim.');
+        atPut('adutim-cfg', {kelas: kelas, mode: mode, nilai: nilai});
+        bb.disabled = true; bb.textContent = '⏳ Membuat…';
+        atApi('buat', {pin: pin, kelas: kelas, hadir: h, nTim: nT, judul: a.title, akt: akt, jumlahSoal: a.qs.length, detik: a.sec || 30})
+          .then(function(r){ var g = {kode: r.game.kode, pin: pin}; atPut(KG, g); papanGuru(g); })
+          .catch(function(e){ bb.disabled = false; bb.textContent = '🚀 Buat permainan'; salah($('.at-err', u.body), e); });
+      };
+    }
+    draw();
+  }
+  function papanGuru(g){
+    stop();
+    u.body.innerHTML = '<div class="at-kodebox"><small>Kode permainan</small><b>' + atEsc(g.kode) + '</b><span>Siswa: buka halaman ini di HP → <b>Adu Tim</b> → <b>Saya Siswa</b> → ketik kode</span></div><div id="atPapan">' + msg('⏳ Memuat papan skor…') + '</div>';
+    u.foot.innerHTML = '<div class="row"><button class="btn ghost" data-baru>↻ Permainan baru</button><button class="btn or" data-akhir>🏁 Akhiri &amp; umumkan juara</button></div>';
+    $('[data-baru]', u.foot).onclick = function(){ if (confirm('Tinggalkan papan skor ini dan buat permainan baru?')){ atPut(KG, null); guruPin(); } };
+    $('[data-akhir]', u.foot).onclick = function(){
+      if (!confirm('Akhiri permainan sekarang? Jawaban yang belum terkirim tidak dihitung lagi.')) return;
+      atApi('tutup', {pin: g.pin, kode: g.kode}).then(function(r){ stop(); tampil(r); }).catch(function(e){ toast(e.message); });
+    };
+    function tampil(r){
+      var p = $('#atPapan', u.body); if (!p) return;
+      p.innerHTML = papanHtml(r, true);
+      if (r.game.status === 'SELESAI'){
+        stop(); juaraEfek(r);
+        u.foot.innerHTML = '<div class="row" style="justify-content:center"><button class="btn gr" data-baru2>↻ Permainan baru</button></div>';
+        $('[data-baru2]', u.foot).onclick = function(){ atPut(KG, null); guruPin(); };
+      }
+    }
+    function muat(){ atApi('papan', {kode: g.kode}).then(tampil).catch(function(){}); }
+    muat(); iv = setInterval(muat, 4000);
+  }
+
+  /* ===== PAPAN SKOR (guru & siswa) ===== */
+  function papanHtml(r, guru){
+    var sel = r.game.status === 'SELESAI', med = ['🥇', '🥈', '🥉'];
+    var head = sel ? '<div class="at-juara"><div>🏆</div><h3>Juara: ' + r.tim[0].nama + '</h3><p class="muted">Skor rata-rata ' + r.tim[0].skor + ' · ketepatan ' + r.tim[0].ketepatan + '%</p></div>'
+      : '<div class="lbl2">Papan skor sementara · diperbarui otomatis</div>';
+    return head + '<div class="at-papan">' + r.tim.map(function(t, k){
+      var c = TIM[t.i], top = t.anggota[0];
+      return '<div class="at-pt" style="--tc:' + c.c + '"><div class="at-pt-h"><b>' + (sel && k < 3 ? med[k] + ' ' : (k + 1) + '. ') + c.e + ' ' + c.n + '</b><span>' + t.skor + '</span></div>' +
+        '<div class="at-pt-m">🎯 ' + t.ketepatan + '% tepat · ⏱️ ' + t.waktu + ' dtk/soal · ✅ ' + t.selesai + '/' + (t.anggota.length + t.belum.length) + ' selesai</div>' +
+        (guru ? '<div class="at-ang">' + t.anggota.map(function(m){ return '<span' + (m.selesai ? ' class="ok"' : '') + '>' + atEsc(m.nama.split(' ').slice(0, 2).join(' ')) + ' <i>' + m.skor + ' · ' + m.ke + '/' + r.game.jumlah + '</i></span>'; }).join('') +
+          (t.belum.length ? '<span class="blm">Belum gabung: no. ' + t.belum.join(', ') + '</span>' : '') + '</div>'
+          : (sel && top ? '<div class="at-pt-m">⭐ Terbaik: ' + atEsc(top.nama) + ' (' + top.skor + ')</div>' : '')) + '</div>';
+    }).join('') + '</div>' +
+      (sel && guru ? '<div class="at-best"><div class="lbl2">⭐ Siswa terbaik setiap tim</div>' + r.tim.map(function(t){ var m = t.anggota[0]; return m ? '<div>' + TIM[t.i].e + ' ' + atEsc(m.nama) + ' · ' + m.skor + ' poin · benar ' + m.benar + '/' + r.game.jumlah + '</div>' : ''; }).join('') + '</div>' : '');
+  }
+  function juaraEfek(r){ if (el._juara === r.game.kode) return; el._juara = r.game.kode; confetti(); beep(true); }
+
+  var s0 = atGet(KS);
+  if (s0 && !s0.selesai && s0.ke > 0 && profOk()) gabung(s0.kode); else awal();
+};
 /* =========================================================
    SHELL SEMESTER: navigasi, cetak, layar penuh
    ========================================================= */
@@ -2827,19 +3091,20 @@ function aksesCepat(){
   if (!/^https?:$/.test(location.protocol)) return '';
   var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1], pre = sub ? '../' : '', q = sub ? '?dari=' + sub : '';
   var t = [ubin(pre + 'cek-tugas.html' + q, WARNA.cek, '✅', 'Cek Tugas', 'Siapa yang sudah mengumpulkan')];
-  if (typeof ULANGAN_URL !== 'undefined' && ULANGAN_URL) t.push(ubin(pre + 'ulangan.html' + q, WARNA.ulangan, '📝', 'Ulangan Online', 'Ulangan Harian Bab 1–3'));
-  return '<div class="tbls">' + t.join('') + '</div>';
+  if (typeof ULANGAN_URL !== 'undefined' && ULANGAN_URL) t.push(ubin(pre + 'ulangan.html' + q, WARNA.ulangan, '📝', 'Ulangan Online', 'Ulangan Harian Bab 1–3'));  return '<div class="tbls">' + t.join('') + '</div>';
 }
 /* Kartu ulangan di halaman buku (hanya saat online & alamat ulangan terpasang):
    PTS  → Latihan PTS (tanpa token & waktu, ulangan.html?pilih=LAT-PTS) + PTS Online (token, ?pilih=PTS-GANJIL/GENAP)
    Bab n → Latihan Ulangan Bab n (?pilih=LAT-BABn) + Ulangan Harian Bab n (token, ?pilih=UH-BABn). Materi/sesi tetap di bawahnya. */
-function ptsOn(b){ return /^(pts|bab\d+)$/.test(b.id) && /^https?:$/.test(location.protocol) && typeof ULANGAN_URL !== 'undefined' && !!ULANGAN_URL; }
+function ptsOn(b){ return /^(pts|asas|bab\d+)$/.test(b.id) && /^https?:$/.test(location.protocol) && typeof ULANGAN_URL !== 'undefined' && !!ULANGAN_URL; }
 function ptsUlangan(b){
   if (!ptsOn(b)) return '';
   var sub = (location.pathname.match(/\/(ganjil|genap)\/[^\/]*$/) || [])[1], q = sub ? '&dari=' + sub : '', base = (sub ? '../' : '') + 'ulangan.html?pilih=';
   if (b.id === 'pts') return '<div class="tbls">' +
     ubin(base + 'LAT-PTS' + q, WARNA.latihan, '🏋️', 'Latihan PTS', 'Tanpa token · boleh diulang') +
     ubin(base + 'PTS-' + (semOf(b) === 2 ? 'GENAP' : 'GANJIL') + q, WARNA.ulangan, '🔒', 'PTS Semester ' + (semOf(b) === 2 ? 'Genap' : 'Ganjil'), 'PTS asli · pakai token dari guru') + '</div>';
+  if (b.id === 'asas') return '<div class="tbls">' +   /* latihan ASAS (LAT-SAS-…); ASAS asli menyusul */
+    ubin(base + 'LAT-SAS' + q, WARNA.latihan, '🏋️', 'Latihan ASAS Online', 'Bab 1–3 · tanpa token · boleh diulang') + '</div>';
   var n = b.id.replace('bab', '');
   return '<div class="tbls">' +
     ubin(base + 'LAT-BAB' + n + q, WARNA.latihan, '🏋️', 'Latihan Ulangan ' + b.label, 'Tanpa token · boleh diulang') +
