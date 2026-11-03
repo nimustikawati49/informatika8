@@ -3596,7 +3596,40 @@ function lkpdData(p){
     } else parts.push(nm + ': ' + (r[id] ? 'benar ' + r[id].s + '/' + r[id].m : 'belum'));
   });
   return {n: any ? Math.round(s / m * 100) : '', t: parts.join(' | ')};
-}function sendInfo(p){
+}
+/* Aturan guru: tugas dengan nilai pertemuan di bawah MIN_KIRIM tidak diterima (siswa wajib mengerjakan ulang).
+   cekBagian(p) = aktivitas bernilai yang BELUM dikerjakan dan yang skornya masih di bawah MIN_KIRIM, beserta langkahnya. */
+var MIN_KIRIM = 70;
+function cekBagian(p){
+  var r = S.res[p.key] || {}, out = {belum: [], rendah: []};
+  Object.keys(p.acts).forEach(function(id){
+    var a = p.acts[id]; if (!(maxOf(a) > 0)) return;
+    var si = -1; STEPS.forEach(function(st, i){ if (si < 0 && (p.c[st.k] || '').indexOf('data-act="' + id + '"') >= 0) si = i; });
+    if (si < 0) return;   // aktivitas yang tidak dipasang di langkah mana pun tidak ditagih
+    var x = {id: id, s: si, nama: String(a.title || 'Aktivitas').replace(/<[^>]+>/g, ''), langkah: STEPS[si].l};
+    if (!r[id]) out.belum.push(x);
+    else { x.pct = Math.round(r[id].s / r[id].m * 100); if (x.pct < MIN_KIRIM) out.rendah.push(x); }
+  });
+  return out;
+}
+function daftarBagian(list, label){
+  return list.map(function(x){ return '<li><b>' + esc(x.nama) + '</b> <span class="muted">· langkah ' + (x.s + 1) + ' ' + x.langkah + (x.pct !== undefined ? ' · skor ' + x.pct + '/100' : '') + '</span> <button class="btn ghost" style="padding:4px 10px;font-size:.85rem" data-goa="' + x.id + '" data-gos="' + x.s + '">' + label + ' →</button></li>'; }).join('');
+}
+function notifBagian(p){
+  var sc = pScore(p), c = cekBagian(p), h = '';
+  if (sc.pct < MIN_KIRIM) h += '<div class="kirim-warn bad">⚠️ <b>Nilaimu ' + sc.pct + '/100, masih di bawah ' + MIN_KIRIM + '.</b> Tugas belum bisa dikirim. Baca lagi materinya, lalu kerjakan ulang bagian di bawah ini sampai nilaimu minimal ' + MIN_KIRIM + '.</div>';
+  if (c.belum.length) h += '<div class="kirim-warn">📝 <b>Ada ' + c.belum.length + ' bagian soal yang belum kamu kerjakan:</b><ul>' + daftarBagian(c.belum, 'Kerjakan') + '</ul></div>';
+  if (c.rendah.length) h += '<div class="kirim-warn">🔁 <b>Bagian dengan skor di bawah ' + MIN_KIRIM + ' (ketuk Ulangi di bagian itu):</b><ul>' + daftarBagian(c.rendah, 'Ulangi') + '</ul></div>';
+  return h;
+}
+function bindGoAct(root){
+  $$('[data-goa]', root).forEach(function(b){ b.onclick = function(){
+    var id = b.dataset.goa, m = b.closest('.modal'); if (m) m.remove();
+    go(+b.dataset.gos);
+    setTimeout(function(){ var el = $('[data-act="' + id + '"]'); if (el && el.scrollIntoView) el.scrollIntoView({block:'start'}); }, 200);
+  }; });
+}
+function sendInfo(p){
   var el = $('#sendInfo'); if (!el) return;
   var sc = pScore(p), lk = lkpdData(p);
   el.innerHTML = notifBagian(p) + tbl(['Data yang dikirim',''], [['Identitas', profOk() ? '<b>' + profLabel() + '</b>' : '<span style="color:#dc2626">belum lengkap</span>'], ['Nilai pertemuan', sc.pct + ' / 100'], ['Nilai percobaan pertama', (pScoreFirst(p) === '' ? '-' : pScoreFirst(p) + ' / 100')], ['Nilai LKPD', lk.n === '' ? 'belum dikerjakan' : lk.n + ' / 100'], ['Syarat kirim', sc.pct >= MIN_KIRIM ? '✅ nilai minimal ' + MIN_KIRIM + ' terpenuhi' : '<span style="color:#dc2626">❌ nilai minimal ' + MIN_KIRIM + ' (sekarang ' + sc.pct + ')</span>']]);
@@ -3638,7 +3671,7 @@ function kirimNilai(p, paksa){
   }
   var d = {sheet: String(b.send).replace(/\{kelas\}/g, S.prof.kelas).replace(/\{sem\}/g, String(semOf(b))), nama: S.prof.nama, kelas: S.prof.kelas, absen: S.prof.absen, bab: b.label, pertemuan: p.no, judul: p.title.replace(/<[^>]+>/g, ''), nilai: sc.pct, nilaiPertama: pScoreFirst(p), nilaiLkpd: lk.n, jawabanLkpd: lk.t, perangkat: S.dev, semester: semOf(b)};
   if (st) st.textContent = '⏳ Mengirim…';
-  postNilai(d).then(function(j){ if (st) st.innerHTML = '✅ Terkirim ' + new Date().toLocaleString('id-ID') + ' (kiriman ke-' + j.jumlah + ')'; beep(true); toast('✅ Nilai terkirim ke guru'); }).catch(function(){
+  postNilai(d).then(function(j){ if (st) st.innerHTML = '✅ Nilai ' + sc.pct + '/100 terkirim ke guru · ' + new Date().toLocaleString('id-ID') + (j.jumlah ? ' (kiriman ke-' + j.jumlah + ')' : ''); beep(true); toast('✅ Nilai terkirim ke guru'); }).catch(function(){
     S.outbox = S.outbox.filter(function(x){ return !(x.sheet === d.sheet && x.pertemuan === d.pertemuan); }); S.outbox.push(d); save();
     if (st) st.innerHTML = '⚠️ Belum terkirim (internet bermasalah). Nilai disimpan dan akan dikirim otomatis saat online.';
     toast('⚠️ Belum terkirim, akan dicoba lagi otomatis');
