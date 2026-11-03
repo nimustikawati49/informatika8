@@ -79,7 +79,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
     <p class="lbl">Kelas</p>
     <div class="chips" id="kelas"></div>
     <div class="row" style="margin-top:14px">
-      <div><p class="lbl">Laporan bulan</p><select id="bulan"></select></div>
+      <div><p class="lbl">Bab</p><div class="chips" id="bab"></div></div>
       <div><p class="lbl">Cari nama</p><input type="search" id="cari" placeholder="Ketik namamu…" autocomplete="off"></div>
     </div>
   </section>
@@ -90,7 +90,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
   <div id="isi" class="hide" style="display:flex;flex-direction:column;gap:14px">
     <section class="card">
       <h2 id="judulTabel">Siswa yang sudah mengumpulkan</h2>
-      <div class="legend"><span>✅ sudah tercatat</span><span>▫️ belum tercatat</span><span><span class="st l">Lengkap</span> semua tugas Bab 3 sudah dikirim</span></div>
+      <div class="legend"><span>✅ sudah tercatat</span><span>▫️ belum tercatat</span><span id="lgMin"></span><span><span class="st l">Lengkap</span> semua tugas bab ini sudah dikirim</span></div>
       <div class="tw"><table id="tabel"></table></div>
       <p class="note">Nama ditampilkan seperti yang kamu ketik saat mengirim tugas, tanpa nilai. Jika namamu belum ada padahal sudah mengirim,
         atau kamu salah memilih kelas, beri tahu guru lewat WhatsApp.</p>
@@ -100,6 +100,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
 
     <section class="card">
       <h2 id="judulGrafik">Perkembangan pengumpulan tugas</h2>
+      <div class="row" style="margin:4px 0 12px"><div><p class="lbl">Laporan bulan (untuk grafik ini)</p><select id="bulan"></select></div></div>
       <div class="bars" id="bars"></div><div class="xl" id="xl"></div>
       <p class="note" id="noteGrafik"></p>
     </section>
@@ -142,16 +143,22 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
   var namaKelas = function (k) { return k === SEMUA ? 'semua kelas' + (rentang() || ' ' + TG) : 'kelas ' + k; };
   var HARI = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   var berjalan = function (p) { return !p.selesai || p.selesai >= HARI; };
-  var D = null, S = {kelas: '', bulan: '', cari: ''};
+  var D = null, S = {kelas: '', bulan: '', cari: '', bab: ''};
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]; }); };
   var simpan = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
   var ambil = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
   // "Bab 3 · P1" (dari server) ditampilkan sebagai "Bab 3 · Pertemuan 1".
-  // Yang ditampilkan & dihitung hanya tugas per pertemuan bab yang sedang berjalan (BAB_TAMPIL), untuk kelas 7 dan 8.
-  // Tugas Bab 1–2 dan "Tugas Google Sheets" disembunyikan. Ganti BAB_TAMPIL saat pindah bab (mis. 'Bab 4').
-  var BAB_TAMPIL = 'Bab 3';
-  var tampak = function (t) { return String(t.label).indexOf(BAB_TAMPIL + ' · P') === 0; };
+  // Bab yang tampil diatur guru di sheet CEK_TUGAS (kolom TAMPIL); server versi 3 mengirim daftarnya di D.bab.
+  // Server lama (tanpa D.bab): cadangan BAB_CADANGAN. Yang ditampilkan & dihitung hanya tugas per pertemuan bab terpilih.
+  var BAB_CADANGAN = 'Bab 3';
+  var daftarBab = function () {
+    var b = D && D.bab && D.bab[TG];
+    if (b && b.length) return b.map(function (x) { return {id: x.sem + '|' + x.bab, bab: x.bab, sem: x.sem, min: x.min, nama: x.bab + (b.some(function (y) { return y.bab === x.bab && y.sem !== x.sem; }) ? ' ' + x.sem : '')}; });
+    return [{id: 'Ganjil|' + BAB_CADANGAN, bab: BAB_CADANGAN, sem: '', min: null, nama: BAB_CADANGAN}];
+  };
+  var babPilih = function () { var l = daftarBab(); return l.filter(function (x) { return x.id === S.bab; })[0] || l[l.length - 1]; };
+  var tampak = function (t) { var b = babPilih(); return (t.bab ? t.bab === b.bab && (!b.sem || t.sem === b.sem) : String(t.label).indexOf(b.bab + ' · P') === 0) && / · P\d+$/.test(String(t.label)); };
   var namaTugas = function (t) { return String(t.label).replace(/ · P(\d+)$/, ' · Pertemuan $1'); };
   var pct = function (x) { return (Math.round(x * 10) / 10).toString().replace('.', ',') + '%'; };
 
@@ -212,6 +219,8 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
     // Satu tahun pelajaran: Juli–Desember = Semester Ganjil, Januari–Juni = Semester Genap.
     var grup = {};
     per.forEach(function (p) { var g = Number(p.key.slice(5, 7)) >= 7 ? 'Semester Ganjil' : 'Semester Genap'; (grup[g] = grup[g] || []).push(p); });
+    var lb = daftarBab(); if (!lb.some(function (x) { return x.id === S.bab; })) S.bab = lb[lb.length - 1].id;   // bawaan: bab terbaru
+    $('bab').innerHTML = lb.map(function (x) { return '<button class="chip" data-b="' + esc(x.id) + '" aria-pressed="' + (x.id === S.bab) + '">' + esc(x.nama) + '</button>'; }).join('');
     $('bulan').innerHTML = ['Semester Ganjil', 'Semester Genap'].filter(function (g) { return grup[g]; }).map(function (g) {
       return '<optgroup label="' + g + '">' + grup[g].map(function (p) {
         return '<option value="' + p.key + '"' + (p.key === S.bulan ? ' selected' : '') + '>Laporan ' + esc(p.nama) + (berjalan(p) ? ' (sedang berjalan)' : '') + '</option>';
@@ -225,12 +234,13 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
     simpan(KEY + 'Pilihan', JSON.stringify({kelas: S.kelas}));
     var per = D.periode.filter(function (p) { return p[TG]; }), P = per.filter(function (p) { return p.key === S.bulan; })[0];
     var tugas = D.tugas[TG] || [];
-    // Semua tugas BAB_TAMPIL (per pertemuan), tidak dibatasi bulan laporan, supaya siswa tahu tugas mana yang sudah/belum.
+    // Semua tugas bab terpilih (per pertemuan), tidak dibatasi bulan laporan, supaya siswa tahu tugas mana yang sudah/belum.
     var idxBulan = []; tugas.forEach(function (t, i) { if (tampak(t)) idxBulan.push(i); });
     var noP = function (i) { return Number((String(tugas[i].label).match(/P(\d+)$/) || [0, 0])[1]); };
     idxBulan.sort(function (a, b) { return noP(a) - noP(b); });
     var ikut = function (s) { return idxBulan.some(function (i) { return s.t.indexOf(i) >= 0; }); };
-    var JT = 'Tugas ' + BAB_TAMPIL;
+    var BP = babPilih(), JT = 'Tugas ' + BP.bab;
+    $('lgMin').textContent = BP.min ? '🔁 nilai di bawah ' + BP.min + ' tidak dihitung: kerjakan ulang lalu kirim lagi' : '';
     var semuaKls = SEMUA_KELAS.concat(Object.keys(D.kelas)).filter(function (k, i, a) { return k.charAt(0) === ANGKA && a.indexOf(k) === i; }).sort();
     // Kelas guru lain (8E/8F) dipisah: tidak ikut "Semua kelas", grafik, dan rekap guru; punya kotak rekap sendiri.
     var kls = semuaKls.filter(function (k) { return !PENGAMPU[k]; }), klsLain = semuaKls.filter(function (k) { return PENGAMPU[k]; });
@@ -246,7 +256,7 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
 
     // Kartu ringkasan
     $('stats').innerHTML =
-      '<div class="stat g"><span>' + (semua ? 'Semua kelas' + (rentang() || ' ' + TG) : 'Kelas ' + S.kelas) + ' · ' + JT + '</span><b>' + kirim + ' siswa</b><span>sudah mengirim tugas ' + BAB_TAMPIL + '</span></div>' +
+      '<div class="stat g"><span>' + (semua ? 'Semua kelas' + (rentang() || ' ' + TG) : 'Kelas ' + S.kelas) + ' · ' + JT + '</span><b>' + kirim + ' siswa</b><span>sudah mengirim tugas ' + BP.bab + '</span></div>' +
       (P && P[TG] && P[TG].pct != null ? '<div class="stat"><span>Seluruh kelas ' + TG + ' · Laporan ' + esc(namaBulan) + '</span><b>' + pct(P[TG].pct) + '</b><span>' +
         P[TG].jumlah + ' dari ' + P[TG].siswa + ' siswa mengumpulkan' + (P[TG].sumber === 'laporan' ? ' (termasuk LKPD di kelas)' : '') + '</span></div>' : '') +
       '<div class="stat y"><span>' + JT + ' (per pertemuan)</span><b>' + idxBulan.length + '</b><span>' + (idxBulan.length ? esc(idxBulan.map(function (i) { return namaTugas(tugas[i]); }).join(', ')) : 'belum ada') + '</span></div>';
@@ -335,6 +345,12 @@ footer{text-align:center;color:var(--muted);font-size:.85rem;padding:0 16px 28px
     tampil();
   });
   $('bulan').addEventListener('change', function () { S.bulan = this.value; tampil(); });
+  $('bab').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-b]'); if (!b) return;
+    S.bab = b.getAttribute('data-b');
+    [].forEach.call(this.children, function (c) { c.setAttribute('aria-pressed', c === b); });
+    tampil();
+  });
   $('cari').addEventListener('input', function () { S.cari = this.value; tampil(); });
   muat();
 })();
