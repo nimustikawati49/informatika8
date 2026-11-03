@@ -496,7 +496,11 @@ button.qopt:disabled{cursor:default;opacity:1;color:inherit}
 .rp-x.todo,.rp-st.todo,.rp-pc.todo{background:#f1f5f9;color:#64748b}
 .act.rp-good{border-color:#86efac;box-shadow:0 4px 0 #bbf7d0}.act.rp-mid{border-color:#fcd34d;box-shadow:0 4px 0 #fde68a}.act.rp-low{border-color:#fca5a5;box-shadow:0 4px 0 #fecaca}
 .st .rp-st{font-style:normal;font-size:.7rem;font-weight:800;border-radius:12px;padding:1px 7px}
-.rp-pc{font-weight:800;border-radius:12px;padding:1px 7px;white-space:nowrap}
+.rp-pc{font-weight:800;border-radius:12px;padding:1px 7px;white-space:nowrap}/* notifikasi Kirim Nilai: nilai minimal & bagian yang belum dikerjakan */
+.kirim-warn{background:#fff7ed;border:1.5px solid #fdba74;border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:.95rem}
+.kirim-warn.bad{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.kirim-warn ul{margin:6px 0 0;padding-left:20px}.kirim-warn li{margin:5px 0}
+
 /* ===== Bab 3 kelas VIII: blok Scratch/Blockly & pseudocode ===== */
 .blk{display:inline-block;width:auto;max-width:100%;padding:3px 10px;border-radius:6px;color:#fff;font-weight:700;font-size:.85rem;line-height:1.5;margin:2px 1px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);white-space:nowrap}
 .blk.mo{background:#4c97ff}.blk.lo{background:#9966ff}
@@ -3334,7 +3338,10 @@ function renderPenutup(p){
   return h;
 }
 function bindStepExtras(p){
-  var sd = $('[data-send]'); if (sd){ sendInfo(p); sd.onclick = function(){ kirimNilai(p); }; $('[data-prof]').onclick = function(){ profModal(function(){ sendInfo(p); }); }; }
+  var sd = $('[data-send]'); if (sd){ sendInfo(p); sd.onclick = function(){ kirimNilai(p); }; $('[data-prof]').onclick = function(){ profModal(function(){ sendInfo(p); }); };
+    var sc0 = pScore(p), c0 = cekBagian(p);
+    if (sc0.pct < MIN_KIRIM) setTimeout(function(){ toast('⚠️ Nilaimu ' + sc0.pct + ', minimal ' + MIN_KIRIM + '. Kerjakan ulang dulu sebelum mengirim.'); }, 400);
+    else if (c0.belum.length) setTimeout(function(){ toast('📝 Masih ada ' + c0.belum.length + ' bagian soal yang belum dikerjakan.'); }, 400); }
   var s = $('[data-start]'); if (s) s.onclick = function(){ go(1); };
   var n = $('[data-nextp]'); if (n) n.onclick = function(){ nav('b' + curB + '-p' + (cur + 1)); };
   var nb = $('[data-nextb]'); if (nb) nb.onclick = function(){ nav('b' + (curB + 1)); };
@@ -3592,7 +3599,17 @@ function lkpdData(p){
 }function sendInfo(p){
   var el = $('#sendInfo'); if (!el) return;
   var sc = pScore(p), lk = lkpdData(p);
-  el.innerHTML = tbl(['Data yang dikirim',''], [['Identitas', profOk() ? '<b>' + profLabel() + '</b>' : '<span style="color:#dc2626">belum lengkap</span>'], ['Nilai pertemuan', sc.pct + ' / 100'], ['Nilai percobaan pertama', (pScoreFirst(p) === '' ? '-' : pScoreFirst(p) + ' / 100')], ['Nilai LKPD', lk.n === '' ? 'belum dikerjakan' : lk.n + ' / 100']]);
+  el.innerHTML = notifBagian(p) + tbl(['Data yang dikirim',''], [['Identitas', profOk() ? '<b>' + profLabel() + '</b>' : '<span style="color:#dc2626">belum lengkap</span>'], ['Nilai pertemuan', sc.pct + ' / 100'], ['Nilai percobaan pertama', (pScoreFirst(p) === '' ? '-' : pScoreFirst(p) + ' / 100')], ['Nilai LKPD', lk.n === '' ? 'belum dikerjakan' : lk.n + ' / 100'], ['Syarat kirim', sc.pct >= MIN_KIRIM ? '✅ nilai minimal ' + MIN_KIRIM + ' terpenuhi' : '<span style="color:#dc2626">❌ nilai minimal ' + MIN_KIRIM + ' (sekarang ' + sc.pct + ')</span>']]);
+  bindGoAct(el);
+}
+function modalBagian(p, judul, isi, tombol){
+  var m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = '<div class="modal-box" style="max-width:600px"><div class="modal-h"><h3>' + judul + '</h3><button class="ib" data-x>✕</button></div>' + isi + '<div class="row" style="justify-content:center;margin-top:10px">' + (tombol || '') + '<button class="btn or" data-x>Mengerti 👍</button></div></div>';
+  document.body.appendChild(m);
+  $$('[data-x]', m).forEach(function(x){ x.onclick = function(){ m.remove(); }; });
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+  bindGoAct(m);
+  return m;
 }
 function profModal(done){
   var m = document.createElement('div'); m.className = 'modal';
@@ -3605,10 +3622,20 @@ function profModal(done){
 function postNilai(d){
   return fetch(SEND_URL, {method:'POST', body: JSON.stringify(d)}).then(function(r){ return r.json(); }).then(function(j){ if (!j.ok) throw new Error(j.pesan || 'gagal'); return j; });
 }
-function kirimNilai(p){
+function kirimNilai(p, paksa){
   if (!SEND_URL){ toast('Alamat penerima nilai belum dipasang guru'); return; }
   if (!profOk()){ profModal(function(){ sendInfo(p); kirimNilai(p); }); return; }
-  var b = B(), sc = pScore(p), lk = lkpdData(p), st = $('#sendSt');
+  var b = B(), sc = pScore(p), lk = lkpdData(p), st = $('#sendSt'), c = cekBagian(p);
+  if (sc.pct < MIN_KIRIM){   // aturan guru: tidak menerima nilai di bawah MIN_KIRIM
+    if (st) st.innerHTML = '<span style="color:#dc2626">❌ Belum dikirim: nilaimu ' + sc.pct + '/100, minimal ' + MIN_KIRIM + '. Kerjakan ulang dulu.</span>';
+    modalBagian(p, '⚠️ Nilai belum mencapai ' + MIN_KIRIM, notifBagian(p) + '<p class="muted">Guru hanya menerima tugas dengan nilai minimal ' + MIN_KIRIM + '. Baca soal dan materinya dengan teliti, jangan asal menjawab. 💪</p>');
+    beep(false); return;
+  }
+  if (c.belum.length && !paksa){
+    var m = modalBagian(p, '📝 Masih ada bagian yang belum dikerjakan', notifBagian(p) + '<p class="muted">Sebaiknya kerjakan semua bagian dulu agar nilaimu maksimal.</p>', '<button class="btn ghost" data-paksa>Tetap kirim</button>');
+    $('[data-paksa]', m).onclick = function(){ m.remove(); kirimNilai(p, true); };
+    return;
+  }
   var d = {sheet: String(b.send).replace(/\{kelas\}/g, S.prof.kelas).replace(/\{sem\}/g, String(semOf(b))), nama: S.prof.nama, kelas: S.prof.kelas, absen: S.prof.absen, bab: b.label, pertemuan: p.no, judul: p.title.replace(/<[^>]+>/g, ''), nilai: sc.pct, nilaiPertama: pScoreFirst(p), nilaiLkpd: lk.n, jawabanLkpd: lk.t, perangkat: S.dev, semester: semOf(b)};
   if (st) st.textContent = '⏳ Mengirim…';
   postNilai(d).then(function(j){ if (st) st.innerHTML = '✅ Terkirim ' + new Date().toLocaleString('id-ID') + ' (kiriman ke-' + j.jumlah + ')'; beep(true); toast('✅ Nilai terkirim ke guru'); }).catch(function(){
@@ -3618,6 +3645,7 @@ function kirimNilai(p){
   });
 }
 function kirimAntrean(){
+  var n0 = S.outbox.length; S.outbox = S.outbox.filter(function(x){ return !(Number(x.nilai) < MIN_KIRIM); }); if (S.outbox.length !== n0) save();   // kiriman lama di bawah nilai minimal dibuang
   if (!SEND_URL || !S.outbox.length || !navigator.onLine) return;
   var d = S.outbox[0];
   postNilai(d).then(function(){ S.outbox.shift(); save(); toast('✅ Nilai tertunda berhasil dikirim'); kirimAntrean(); }).catch(function(){});
