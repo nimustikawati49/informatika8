@@ -496,7 +496,19 @@ button.qopt:disabled{cursor:default;opacity:1;color:inherit}
 .rp-x.todo,.rp-st.todo,.rp-pc.todo{background:#f1f5f9;color:#64748b}
 .act.rp-good{border-color:#86efac;box-shadow:0 4px 0 #bbf7d0}.act.rp-mid{border-color:#fcd34d;box-shadow:0 4px 0 #fde68a}.act.rp-low{border-color:#fca5a5;box-shadow:0 4px 0 #fecaca}
 .st .rp-st{font-style:normal;font-size:.7rem;font-weight:800;border-radius:12px;padding:1px 7px}
-.rp-pc{font-weight:800;border-radius:12px;padding:1px 7px;white-space:nowrap}
+.rp-pc{font-weight:800;border-radius:12px;padding:1px 7px;white-space:nowrap}/* notifikasi Kirim Nilai: nilai minimal & bagian yang belum dikerjakan */
+.kirim-warn{background:#fff7ed;border:1.5px solid #fdba74;border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:.95rem}
+.kirim-warn.bad{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.kirim-warn ul{margin:6px 0 0;padding-left:20px}.kirim-warn li{margin:5px 0}
+
+/* Cara mengerjakan per jenis soal (shell.js actHow) + debugging */
+.act-how{margin:8px 0 2px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:6px 12px;font-size:.88rem;color:#334155}
+.act-how summary{cursor:pointer;font-weight:800;color:#0f2a4a}
+.act-how div{margin-top:4px;line-height:1.45}
+.bugline{position:relative}
+.bugline .bug-tag{display:inline-block;margin-left:8px;font-size:.75rem;font-weight:800;border-radius:12px;padding:1px 8px;background:#fff;vertical-align:middle}
+.tile.fix{border-color:#f59e0b!important;background:#fef3c7!important;color:#92400e}
+.tile.ok .bug-tag{color:#15803d}.tile.bad .bug-tag{color:#b91c1c}.tile.fix .bug-tag{color:#92400e}
 /* ===== Bab 3 kelas VIII: blok Scratch/Blockly & pseudocode ===== */
 .blk{display:inline-block;width:auto;max-width:100%;padding:3px 10px;border-radius:6px;color:#fff;font-weight:700;font-size:.85rem;line-height:1.5;margin:2px 1px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);white-space:nowrap}
 .blk.mo{background:#4c97ff}.blk.lo{background:#9966ff}
@@ -506,6 +518,44 @@ button.qopt:disabled{cursor:default;opacity:1;color:inherit}
 .code{font-family:Consolas,"Courier New",monospace;font-size:.88rem;background:#0f172a;color:#e2e8f0;border-radius:12px;padding:10px 14px;white-space:pre;overflow-x:auto;line-height:1.5;margin:8px 0;text-align:left}
 .code .kw{color:#fbbf24;font-weight:700}.code .cm{color:#94a3b8;font-style:italic}.code .st{display:inline!important;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;border-radius:0!important;min-width:0!important;height:auto!important;font:inherit!important;color:#86efac!important;white-space:pre!important}
 .fill-h{flex:1 1 100%;font-size:.86rem;color:#334155;background:#eef2ff;border-left:3px solid #6366f1;border-radius:8px;padding:5px 9px;margin:4px 0 6px}
+
+/* Lembar Kerja Excel (sheet8.js) */
+.xs-bar{display:flex;align-items:center;gap:6px;border:2px solid #cbd5e1;border-radius:10px;padding:4px 6px;background:#fff;margin-top:8px}
+.xs-addr{min-width:46px;font:700 .9rem Consolas,monospace;color:#166534;background:#ecfdf5;border-radius:6px;padding:5px 6px;text-align:center}
+.xs-fxl{font-style:italic;font-weight:700;color:#64748b;font-family:Georgia,serif}
+.xs-fx{flex:1;min-width:0;border:none;outline:none;font:1rem Consolas,"Courier New",monospace;padding:7px 4px;background:transparent}
+.xs-fx[readonly]{color:#64748b}
+.xs-bar button{border:none;background:#f1f5f9;border-radius:8px;padding:7px 10px;font-weight:800;cursor:pointer;color:#0f2a4a}
+.xs-bar .xs-ok{background:#dcfce7;color:#15803d}.xs-bar .xs-no{background:#fee2e2;color:#b91c1c}
+.xs-keys{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:5px;margin:6px 0;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+.xs-keys button{flex:none}
+.xs-keys button{border:1.5px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 10px;font:700 .95rem Consolas,monospace;cursor:pointer;min-width:38px;color:#0f2a4a}
+.xs-keys button.fn{background:#eef2ff;border-color:#c7d2fe;color:#3730a3;font-size:.85rem}
+.xs-task{font-size:.92rem;background:#f0fdf4;border-left:4px solid #16a34a;border-radius:8px;padding:7px 10px;margin:4px 0 8px}
+.xs-hb{border:1px solid #fcd34d;background:#fef9c3;border-radius:14px;padding:2px 10px;font-size:.82rem;font-weight:700;cursor:pointer;margin-left:4px}
+.xs-h{margin-top:6px;font-family:Consolas,monospace;font-size:.88rem;background:#fff;border:1px dashed #94a3b8;border-radius:6px;padding:5px 8px}
+.xs-warn{margin-top:6px;color:#b91c1c;font-weight:700;font-size:.88rem}
+.xs-wrap{overflow:auto;max-height:430px;border:1px solid #cbd5e1;border-radius:8px;-webkit-overflow-scrolling:touch;background:#fff}
+.xs-wrap.picking{touch-action:none}
+table.xs{border-collapse:separate;border-spacing:0;font:.9rem Calibri,"Segoe UI",Arial,sans-serif;width:max-content;min-width:100%}
+table.xs th{background:#f3f4f6;color:#475569;font-weight:600;border-right:1px solid #d1d5db;border-bottom:1px solid #d1d5db;padding:3px 6px;font-size:.78rem;text-align:center;user-select:none}
+table.xs thead th{position:sticky;top:0;z-index:2}
+table.xs tbody th{position:sticky;left:0;z-index:1;min-width:32px}
+table.xs thead th.xs-c{left:0;z-index:3}
+table.xs td{border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;min-width:76px;height:30px;padding:2px 7px;white-space:nowrap;background:#fff;cursor:cell;color:#0f172a;user-select:none}
+table.xs td.lk{background:#f8fafc}
+table.xs td.hd{font-weight:700;background:#e7f5ec;color:#14532d}
+table.xs td.wr{white-space:normal;line-height:1.25}
+table.xs td.num{text-align:right}
+table.xs td.ans{background:#fef9c3}
+table.xs td.err{color:#dc2626;font-weight:700}
+table.xs td.ref{background:#dbeafe!important;box-shadow:inset 0 0 0 1px #60a5fa}
+table.xs td.sel{box-shadow:inset 0 0 0 2.5px #16a34a!important}
+table.xs td.ok{background:#dcfce7!important;color:#166534;font-weight:700}
+table.xs td.bad{background:#fee2e2!important;color:#b91c1c;font-weight:700}
+.xs-pr{border-collapse:collapse;font-size:9pt;margin:4px 0}
+.xs-pr th,.xs-pr td{border:1px solid #cbd5e1;padding:2px 6px}
+.xs-pr th{background:#f3f4f6;color:#475569}
 .bk-task{background:#eef2ff;border-left:4px solid #6366f1;border-radius:10px;padding:8px 12px;margin:6px 0;font-size:.95rem}
 .bk-tip{margin-top:4px;font-size:.88rem;color:#334155}
 .bk-target{margin:6px 0;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
@@ -1063,6 +1113,7 @@ function maxOf(a){
     case 'essay': return a.qs.reduce(function(n, q){ return n + q.k.length; }, 0);
     case 'tablefill': return a.rows.reduce(function(n, r){ return n + r.c.length; }, 0);
     case 'blockly': return a.noScore ? 0 : a.levels.length;
+    case 'sheet': return a.tasks.length;
     default: return 0;
   }
 }
@@ -1812,6 +1863,432 @@ E.blockly = function(el, a, id, pk){
   start();
 };
 
+/* =========================================================
+   LEMBAR KERJA EXCEL (kelas VIII): kolom A, B, C… · baris 1, 2, 3… · baris rumus fx
+   Rumus dihitung langsung seperti Excel. Sel data terkunci, sel kuning = jawaban (dinilai, WAJIB rumus),
+   sel lain = latihan bebas (tidak dinilai).
+   a.rows  = [[A1, B1, …], [A2, B2, …], …]  data & label tugas ('' = sel kosong)
+   a.tasks = [{c:'H2', a:39, q:'Total Salad Buah', h:'petunjuk pola rumus (tanpa jawaban)'}]
+   a.w     = {G:170} lebar kolom (px, teks dibungkus) · a.fns = ['SUMIFS', …] tombol fungsi cepat
+   ========================================================= */
+var XS = (function(){
+  function Er(e){ this.e = e; }
+  function err(v){ return v instanceof Er; }
+  function colN(s){ var n = 0; for (var i = 0; i < s.length; i++) n = n * 26 + (s.charCodeAt(i) - 64); return n - 1; }
+  function colL(n){ var s = ''; n++; while (n > 0){ var m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; }
+  function addr(r, c){ return colL(c) + (r + 1); }
+  function ref1(s){ var m = /^\$?([A-Z]{1,3})\$?(\d+)$/.exec(s.toUpperCase()); return m ? {r: +m[2] - 1, c: colN(m[1])} : null; }
+  function Ref(s){ var p = s.split(':'), a = ref1(p[0]), b = ref1(p[1] || p[0]); this.r1 = Math.min(a.r, b.r); this.c1 = Math.min(a.c, b.c); this.r2 = Math.max(a.r, b.r); this.c2 = Math.max(a.c, b.c); }
+
+  /* ---------- token & parser ---------- */
+  function tok(s){
+    var t = [], i = 0, m, rest;
+    while (i < s.length){
+      var ch = s.charAt(i); rest = s.slice(i);
+      if (/\s/.test(ch)){ i++; continue; }
+      if (ch === '"'){
+        var j = i + 1, str = '';
+        while (j < s.length){ if (s.charAt(j) === '"'){ if (s.charAt(j + 1) === '"'){ str += '"'; j += 2; continue; } break; } str += s.charAt(j++); }
+        if (j >= s.length) throw 'kutip';
+        t.push({k: 's', v: str}); i = j + 1; continue;
+      }
+      if ((m = /^\d+(\.\d+)?/.exec(rest))){ t.push({k: 'n', v: parseFloat(m[0])}); i += m[0].length; continue; }
+      if ((m = /^\$?[A-Za-z]{1,3}\$?\d+(:\$?[A-Za-z]{1,3}\$?\d+)?(?![A-Za-z0-9_(])/.exec(rest))){ t.push({k: 'r', v: m[0].toUpperCase()}); i += m[0].length; continue; }
+      if ((m = /^[A-Za-z_][A-Za-z0-9_.]*/.exec(rest))){ t.push({k: 'id', v: m[0]}); i += m[0].length; continue; }
+      if ((m = /^(<=|>=|<>|[-+*\/^&=<>(),;%])/.exec(rest))){ t.push({k: 'o', v: m[0]}); i += m[0].length; continue; }
+      throw 'karakter';
+    }
+    return t;
+  }
+  function parse(src){
+    var t = tok(src), p = 0;
+    function is(v){ var x = t[p]; return x && x.k === 'o' && x.v === v; }
+    function sep(){ return is(';') || is(','); }
+    function cmp(){ var a = cat(); while (t[p] && t[p].k === 'o' && /^(=|<>|<|>|<=|>=)$/.test(t[p].v)){ var o = t[p++].v; a = {k: 'bin', o: o, a: a, b: cat()}; } return a; }
+    function cat(){ var a = add(); while (is('&')){ p++; a = {k: 'bin', o: '&', a: a, b: add()}; } return a; }
+    function add(){ var a = mul(); while (is('+') || is('-')){ var o = t[p++].v; a = {k: 'bin', o: o, a: a, b: mul()}; } return a; }
+    function mul(){ var a = pw(); while (is('*') || is('/')){ var o = t[p++].v; a = {k: 'bin', o: o, a: a, b: pw()}; } return a; }
+    function pw(){ var a = un(); while (is('^')){ p++; a = {k: 'bin', o: '^', a: a, b: un()}; } return a; }
+    function un(){ if (is('-')){ p++; return {k: 'neg', a: un()}; } if (is('+')){ p++; return un(); } var a = prim(); while (is('%')){ p++; a = {k: 'bin', o: '/', a: a, b: {k: 'n', v: 100}}; } return a; }
+    function prim(){
+      var x = t[p++]; if (!x) throw 'akhir';
+      if (x.k === 'n' || x.k === 's') return {k: x.k, v: x.v};
+      if (x.k === 'r') return {k: 'r', v: x.v};
+      if (x.k === 'id'){
+        var u = x.v.toUpperCase();
+        if (is('(')){
+          p++; var args = [];
+          if (!is(')')){ do { args.push(sep() || is(')') ? {k: 'empty'} : cmp()); } while (sep() && ++p); }
+          if (!is(')')) throw 'kurung'; p++;
+          return {k: 'f', n: u, a: args};
+        }
+        if (u === 'TRUE' || u === 'FALSE') return {k: 'b', v: u === 'TRUE'};
+        return {k: 'name', v: x.v};
+      }
+      if (x.k === 'o' && x.v === '('){
+        var e = cmp(), list = [e];
+        while (sep()){ p++; list.push(cmp()); }
+        if (!is(')')) throw 'kurung'; p++;
+        return list.length > 1 ? {k: 'union', a: list} : e;
+      }
+      throw 'token';
+    }
+    var e = cmp(); if (p < t.length) throw 'sisa'; return e;
+  }
+
+  /* ---------- lembar & evaluasi ---------- */
+  function Sheet(get){ this.get = get; this.cache = {}; this.stack = {}; }
+  Sheet.prototype.val = function(r, c){
+    var ad = addr(r, c);
+    if (this.cache.hasOwnProperty(ad)) return this.cache[ad];
+    var raw = this.get(ad), v;
+    if (raw === null || raw === undefined || raw === '') v = null;
+    else if (typeof raw === 'number') v = raw;
+    else {
+      raw = String(raw);
+      if (raw.charAt(0) === '='){
+        if (this.stack[ad]) return new Er('#CIRC!');
+        this.stack[ad] = 1;
+        try { v = this.calc(raw.slice(1)); } catch (e){ v = err(e) ? e : new Er('#NAME?'); }
+        delete this.stack[ad];
+        if (v instanceof Ref) v = this.one(v);
+        if (v === null) v = 0;
+      } else if (/^-?\d+([.,]\d+)?$/.test(raw.trim())) v = parseFloat(raw.trim().replace(',', '.'));
+      else v = raw;
+    }
+    this.cache[ad] = v; return v;
+  };
+  Sheet.prototype.calc = function(src){ return this.ev(parse(src)); };
+  Sheet.prototype.one = function(v){ if (!(v instanceof Ref)) return v; if (v.r1 !== v.r2 || v.c1 !== v.c2) return new Er('#VALUE!'); return this.val(v.r1, v.c1); };
+  Sheet.prototype.cells = function(v){ var out = []; for (var r = v.r1; r <= v.r2; r++) for (var c = v.c1; c <= v.c2; c++) out.push(this.val(r, c)); return out; };
+  function num(v){
+    if (err(v)) throw v;
+    if (v === null) return 0;
+    if (typeof v === 'number') return v;
+    if (typeof v === 'boolean') return v ? 1 : 0;
+    var s = String(v).trim().replace(',', '.'); if (s !== '' && !isNaN(+s)) return +s;
+    throw new Er('#VALUE!');
+  }
+  function low(v){ return String(v === null ? '' : v).toLowerCase(); }
+  function same(a, b){ if (typeof a === 'number' && typeof b === 'number') return Math.abs(a - b) < 1e-9; return low(a).trim() === low(b).trim(); }
+  function compare(a, b){
+    if (a === null) a = typeof b === 'number' ? 0 : ''; if (b === null) b = typeof a === 'number' ? 0 : '';
+    var na = typeof a === 'number', nb = typeof b === 'number';
+    if (na && nb) return a < b ? -1 : a > b ? 1 : 0;
+    if (na !== nb) return na ? -1 : 1;          // angka < teks (seperti Excel)
+    a = low(a); b = low(b); return a < b ? -1 : a > b ? 1 : 0;
+  }
+  function crit(c){
+    if (err(c)) throw c;
+    if (typeof c === 'number') return function(v){ return typeof v === 'number' ? v === c : low(v).trim() === String(c); };
+    var m = /^(<=|>=|<>|<|>|=)?([\s\S]*)$/.exec(String(c === null ? '' : c)), op = m[1] || '=', rhs = m[2], n = rhs.trim() !== '' && !isNaN(+rhs.replace(',', '.')) ? +rhs.replace(',', '.') : null;
+    if (n !== null) return function(v){ if (typeof v !== 'number'){ return op === '<>' ? true : false; } return op === '=' ? v === n : op === '<>' ? v !== n : op === '<' ? v < n : op === '>' ? v > n : op === '<=' ? v <= n : v >= n; };
+    var re = new RegExp('^' + low(rhs).replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
+    if (op === '=') return function(v){ return rhs === '' ? v === null || v === '' : re.test(low(v)); };
+    if (op === '<>') return function(v){ return !re.test(low(v)); };
+    return function(v){ if (typeof v === 'number') return false; var k = compare(low(v), low(rhs)); return op === '<' ? k < 0 : op === '>' ? k > 0 : op === '<=' ? k <= 0 : k >= 0; };
+  }
+  Sheet.prototype.ev = function(n){
+    var me = this;
+    switch (n.k){
+      case 'n': case 's': case 'b': return n.v;
+      case 'empty': return null;
+      case 'r': return new Ref(n.v);
+      case 'name': throw new Er('#NAME?');
+      case 'union': return n.a.map(function(x){ var v = me.ev(x); if (!(v instanceof Ref)) throw new Er('#VALUE!'); return v; });
+      case 'neg': return -num(this.one(this.ev(n.a)));
+      case 'bin':
+        var a = this.one(this.ev(n.a)), b = this.one(this.ev(n.b));
+        if (err(a)) throw a; if (err(b)) throw b;
+        switch (n.o){
+          case '+': return num(a) + num(b);
+          case '-': return num(a) - num(b);
+          case '*': return num(a) * num(b);
+          case '/': if (num(b) === 0) throw new Er('#DIV/0!'); return num(a) / num(b);
+          case '^': return Math.pow(num(a), num(b));
+          case '&': return String(a === null ? '' : a) + String(b === null ? '' : b);
+          case '=': return compare(a, b) === 0;
+          case '<>': return compare(a, b) !== 0;
+          case '<': return compare(a, b) < 0;
+          case '>': return compare(a, b) > 0;
+          case '<=': return compare(a, b) <= 0;
+          case '>=': return compare(a, b) >= 0;
+        }
+        break;
+      case 'f':
+        var F = FN[n.n]; if (!F) throw new Er('#NAME?');
+        return F.call(this, n.a);
+    }
+    throw new Er('#VALUE!');
+  };
+  Sheet.prototype.arg = function(x){ return this.one(this.ev(x)); };
+  Sheet.prototype.range = function(x){ var v = this.ev(x); if (!(v instanceof Ref)) throw new Er('#VALUE!'); return v; };
+  Sheet.prototype.nums = function(args){
+    var me = this, out = [];
+    args.forEach(function(x){
+      var v = me.ev(x);
+      if (v instanceof Ref) me.cells(v).forEach(function(c){ if (err(c)) throw c; if (typeof c === 'number') out.push(c); });
+      else out.push(num(v));
+    });
+    return out;
+  };
+  function need(args, a, b){ if (args.length < a || args.length > b) throw new Er('#N/A'); }
+  function bool(v){ if (err(v)) throw v; if (typeof v === 'string'){ var u = v.toUpperCase(); if (u === 'TRUE') return true; if (u === 'FALSE') return false; throw new Er('#VALUE!'); } return !!num(v); }
+  function shape(base, r){ return {r1: base.r1, c1: base.c1, r2: base.r1 + (r.r2 - r.r1), c2: base.c1 + (r.c2 - r.c1)}; }
+  function multi(me, args, step0){   // pasangan (range; kriteria) → daftar indeks sel yang memenuhi semua syarat
+    var pairs = [];
+    for (var i = step0; i < args.length; i += 2){ var rg = me.range(args[i]); pairs.push({rg: rg, f: crit(me.arg(args[i + 1]))}); }
+    var h = pairs[0].rg.r2 - pairs[0].rg.r1, w = pairs[0].rg.c2 - pairs[0].rg.c1, ok = [];
+    pairs.forEach(function(p){ if (p.rg.r2 - p.rg.r1 !== h || p.rg.c2 - p.rg.c1 !== w) throw new Er('#VALUE!'); });
+    for (var r = 0; r <= h; r++) for (var c = 0; c <= w; c++){
+      if (pairs.every(function(p){ return p.f(me.val(p.rg.r1 + r, p.rg.c1 + c)); })) ok.push([r, c]);
+    }
+    return ok;
+  }
+  function lookup(me, args, vert){
+    need(args, 3, 4);
+    var x = me.arg(args[0]), rg = me.range(args[1]), k = Math.floor(num(me.arg(args[2]))), approx = args[3] && args[3].k !== 'empty' ? bool(me.arg(args[3])) : true;
+    if (err(x)) throw x;
+    var len = vert ? rg.r2 - rg.r1 : rg.c2 - rg.c1, span = vert ? rg.c2 - rg.c1 : rg.r2 - rg.r1;
+    if (k < 1) throw new Er('#VALUE!'); if (k > span + 1) throw new Er('#REF!');
+    var hit = -1;
+    for (var i = 0; i <= len; i++){
+      var v = vert ? me.val(rg.r1 + i, rg.c1) : me.val(rg.r1, rg.c1 + i);
+      if (!approx){ if (same(v, x)){ hit = i; break; } }
+      else if (v !== null && (typeof v === 'number') === (typeof x === 'number') && compare(v, x) <= 0) hit = i;
+    }
+    if (hit < 0) throw new Er('#N/A');
+    return vert ? me.val(rg.r1 + hit, rg.c1 + k - 1) : me.val(rg.r1 + k - 1, rg.c1 + hit);
+  }
+  var FN = {
+    SUM: function(a){ return this.nums(a).reduce(function(s, x){ return s + x; }, 0); },
+    AVERAGE: function(a){ var n = this.nums(a); if (!n.length) throw new Er('#DIV/0!'); return n.reduce(function(s, x){ return s + x; }, 0) / n.length; },
+    MIN: function(a){ var n = this.nums(a); return n.length ? Math.min.apply(null, n) : 0; },
+    MAX: function(a){ var n = this.nums(a); return n.length ? Math.max.apply(null, n) : 0; },
+    COUNT: function(a){ var me = this, k = 0; a.forEach(function(x){ var v = me.ev(x); if (v instanceof Ref) me.cells(v).forEach(function(c){ if (typeof c === 'number') k++; }); else if (typeof v === 'number') k++; }); return k; },
+    COUNTA: function(a){ var me = this, k = 0; a.forEach(function(x){ var v = me.ev(x); if (v instanceof Ref) me.cells(v).forEach(function(c){ if (c !== null && c !== '') k++; }); else if (x.k !== 'empty') k++; }); return k; },
+    COUNTBLANK: function(a){ need(a, 1, 1); return this.cells(this.range(a[0])).filter(function(c){ return c === null || c === ''; }).length; },
+    COUNTIF: function(a){ need(a, 2, 2); return multi(this, a, 0).length; },
+    COUNTIFS: function(a){ if (a.length < 2 || a.length % 2) throw new Er('#N/A'); return multi(this, a, 0).length; },
+    SUMIF: function(a){
+      need(a, 2, 3); var me = this, rg = this.range(a[0]), f = crit(this.arg(a[1])), sr = a[2] ? shape(this.range(a[2]), rg) : rg, s = 0;
+      for (var r = 0; r <= rg.r2 - rg.r1; r++) for (var c = 0; c <= rg.c2 - rg.c1; c++) if (f(me.val(rg.r1 + r, rg.c1 + c))){ var v = me.val(sr.r1 + r, sr.c1 + c); if (err(v)) throw v; if (typeof v === 'number') s += v; }
+      return s;
+    },
+    SUMIFS: function(a){
+      if (a.length < 3 || a.length % 2 === 0) throw new Er('#N/A');
+      var me = this, sr = this.range(a[0]), s = 0;
+      multi(this, a, 1).forEach(function(p){ var v = me.val(sr.r1 + p[0], sr.c1 + p[1]); if (err(v)) throw v; if (typeof v === 'number') s += v; });
+      return s;
+    },
+    AVERAGEIF: function(a){
+      need(a, 2, 3); var me = this, rg = this.range(a[0]), f = crit(this.arg(a[1])), sr = a[2] ? shape(this.range(a[2]), rg) : rg, s = 0, n = 0;
+      for (var r = 0; r <= rg.r2 - rg.r1; r++) for (var c = 0; c <= rg.c2 - rg.c1; c++) if (f(me.val(rg.r1 + r, rg.c1 + c))){ var v = me.val(sr.r1 + r, sr.c1 + c); if (typeof v === 'number'){ s += v; n++; } }
+      if (!n) throw new Er('#DIV/0!'); return s / n;
+    },
+    AVERAGEIFS: function(a){
+      if (a.length < 3 || a.length % 2 === 0) throw new Er('#N/A');
+      var me = this, sr = this.range(a[0]), s = 0, n = 0;
+      multi(this, a, 1).forEach(function(p){ var v = me.val(sr.r1 + p[0], sr.c1 + p[1]); if (typeof v === 'number'){ s += v; n++; } });
+      if (!n) throw new Er('#DIV/0!'); return s / n;
+    },
+    IF: function(a){ need(a, 2, 3); return bool(this.arg(a[0])) ? this.arg(a[1]) : (a[2] ? this.arg(a[2]) : false); },
+    IFERROR: function(a){ need(a, 2, 2); try { var v = this.arg(a[0]); if (err(v)) throw v; return v; } catch (e){ if (err(e)) return this.arg(a[1]); throw e; } },
+    AND: function(a){ var me = this; return a.every(function(x){ return bool(me.arg(x)); }); },
+    OR: function(a){ var me = this; return a.some(function(x){ return bool(me.arg(x)); }); },
+    NOT: function(a){ need(a, 1, 1); return !bool(this.arg(a[0])); },
+    VLOOKUP: function(a){ return lookup(this, a, true); },
+    HLOOKUP: function(a){ return lookup(this, a, false); },
+    INDEX: function(a){
+      need(a, 2, 4);
+      var v = this.ev(a[0]), area = a[3] ? Math.floor(num(this.arg(a[3]))) : 1;
+      var rg = Array.isArray(v) ? v[area - 1] : v; if (!(rg instanceof Ref)) throw new Er(Array.isArray(v) ? '#REF!' : '#VALUE!');
+      var r = Math.floor(num(this.arg(a[1]))), c = a[2] && a[2].k !== 'empty' ? Math.floor(num(this.arg(a[2]))) : 1;
+      if (rg.r1 === rg.r2 && a.length === 2){ c = r; r = 1; }
+      if (r < 1 || c < 1 || r > rg.r2 - rg.r1 + 1 || c > rg.c2 - rg.c1 + 1) throw new Er('#REF!');
+      return this.val(rg.r1 + r - 1, rg.c1 + c - 1);
+    },
+    MATCH: function(a){
+      need(a, 2, 3); var x = this.arg(a[0]), rg = this.range(a[1]), t = a[2] ? num(this.arg(a[2])) : 1, list = this.cells(rg), hit = -1;
+      list.forEach(function(v, i){ if (t === 0){ if (hit < 0 && same(v, x)) hit = i; } else if (v !== null && (t > 0 ? compare(v, x) <= 0 : compare(v, x) >= 0)) hit = i; });
+      if (hit < 0) throw new Er('#N/A'); return hit + 1;
+    },
+    ROUND: function(a){ need(a, 1, 2); var d = a[1] ? num(this.arg(a[1])) : 0, p = Math.pow(10, d), x = num(this.arg(a[0])); return Math.round(Math.abs(x) * p) / p * (x < 0 ? -1 : 1); },
+    ROUNDUP: function(a){ need(a, 1, 2); var d = a[1] ? num(this.arg(a[1])) : 0, p = Math.pow(10, d), x = num(this.arg(a[0])); return Math.ceil(Math.abs(x) * p - 1e-9) / p * (x < 0 ? -1 : 1); },
+    ROUNDDOWN: function(a){ need(a, 1, 2); var d = a[1] ? num(this.arg(a[1])) : 0, p = Math.pow(10, d), x = num(this.arg(a[0])); return Math.floor(Math.abs(x) * p + 1e-9) / p * (x < 0 ? -1 : 1); },
+    ABS: function(a){ need(a, 1, 1); return Math.abs(num(this.arg(a[0]))); },
+    INT: function(a){ need(a, 1, 1); return Math.floor(num(this.arg(a[0]))); },
+    MOD: function(a){ need(a, 2, 2); var d = num(this.arg(a[1])); if (!d) throw new Er('#DIV/0!'); var x = num(this.arg(a[0])); return x - d * Math.floor(x / d); }
+  };
+
+  function show(v){
+    if (v === null || v === undefined) return '';
+    if (err(v)) return v.e;
+    if (typeof v === 'boolean') return v ? 'TRUE' : 'FALSE';
+    if (typeof v === 'number'){ if (!isFinite(v)) return '#NUM!'; var r = Math.round(v * 1e4) / 1e4; return String(r).replace('.', ','); }
+    return String(v);
+  }
+  function hasRef(raw){ try { return String(raw).charAt(0) === '=' && tok(String(raw).slice(1)).some(function(t){ return t.k === 'r'; }); } catch (e){ return false; } }
+  return {Sheet: Sheet, show: show, err: err, addr: addr, ref1: ref1, colL: colL, hasRef: hasRef, same: same, Ref: Ref};
+})();
+
+function sheetKey(v, a){
+  if (XS.err(v) || v === null) return false;
+  return [].concat(a).some(function(k){ return typeof k === 'number' ? typeof v === 'number' && Math.abs(v - k) < 0.005 : XS.same(v, k); });
+}
+/* versi cetak (PDF pegangan siswa) */
+function sheetStatic(a){
+  var R = a.rows.length, C = 0;
+  a.rows.forEach(function(r){ C = Math.max(C, r.length); });
+  a.tasks.forEach(function(t){ var p = XS.ref1(t.c); R = Math.max(R, p.r + 1); C = Math.max(C, p.c + 1); });
+  var tk = {}; a.tasks.forEach(function(t){ tk[t.c.toUpperCase()] = 1; });
+  var h = '<table class="xs-pr"><tr><th></th>'; for (var c = 0; c < C; c++) h += '<th>' + XS.colL(c) + '</th>'; h += '</tr>';
+  for (var r = 0; r < R; r++){ h += '<tr><th>' + (r + 1) + '</th>'; for (c = 0; c < C; c++){ var ad = XS.addr(r, c), v = (a.rows[r] || [])[c]; h += '<td' + (tk[ad] ? ' style="background:#fef9c3"' : '') + '>' + (tk[ad] ? '' : v === undefined ? '' : v) + '</td>'; } h += '</tr>'; }
+  return h + '</table><p class="muted">Isi sel kuning dengan rumus Excel/Google Sheets.</p>';
+}
+
+E.sheet = function(el, a, id, pk){
+  var u = shell(el, a, 'Lembar Kerja Excel · ketik rumus langsung', '📗');
+  S.xs = S.xs || {};
+  var key = pk + '|' + id, st = S.xs[key] = S.xs[key] || {v: {}, chk: false};
+  var R = a.rows.length, C = 0, lock = {}, task = {}, W = a.w || {};
+  a.rows.forEach(function(row, r){ C = Math.max(C, row.length); row.forEach(function(v, c){ if (v !== '' && v !== null && v !== undefined) lock[XS.addr(r, c)] = v; }); });
+  a.tasks.forEach(function(t, i){ var ad = t.c.toUpperCase(), p = XS.ref1(ad); task[ad] = i; delete lock[ad]; R = Math.max(R, p.r + 1); C = Math.max(C, p.c + 1); });
+  R += a.extra === undefined ? 3 : a.extra; C += 1;
+  var sel = a.tasks.length ? a.tasks[0].c.toUpperCase() : 'A1', editing = false, lastIns = null, marks = {}, drag = null;
+  function raw(ad){ return lock.hasOwnProperty(ad) ? lock[ad] : (st.v[ad] || ''); }
+  function sheet(){ return new XS.Sheet(function(ad){ return ad === sel && editing ? (fx.value.trim() || '') : raw(ad); }); }
+
+  var keys = ['=', ';', '(', ')', ':', '$', '"', '+', '-', '*', '/'];
+  var grid = '<table class="xs"><thead><tr><th class="xs-c"></th>';
+  for (var c = 0; c < C; c++) grid += '<th>' + XS.colL(c) + '</th>';
+  grid += '</tr></thead><tbody>';
+  for (var r = 0; r < R; r++){
+    grid += '<tr><th>' + (r + 1) + '</th>';
+    for (c = 0; c < C; c++){
+      var ad = XS.addr(r, c), L = XS.colL(c), w = W[L];
+      grid += '<td data-a="' + ad + '" class="' + (task.hasOwnProperty(ad) ? 'ans' : lock.hasOwnProperty(ad) ? 'lk' + (r === 0 ? ' hd' : '') : 'free') + (w ? ' wr' : '') + '"' + (w ? ' style="min-width:' + w + 'px;max-width:' + w + 'px"' : '') + '></td>';
+    }
+    grid += '</tr>';
+  }
+  grid += '</tbody></table>';
+  u.body.innerHTML = (a.tip ? '<div class="fill-h">💡 ' + a.tip + '</div>' : '') + '<div class="xs-task"></div>' +
+    '<div class="xs-bar"><span class="xs-addr"></span><span class="xs-fxl">fx</span><input class="xs-fx" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done"><button class="xs-ok" title="Simpan (Enter)">✔</button><button class="xs-no" title="Batal (Esc)">✖</button></div>' +
+    '<div class="xs-keys">' + keys.map(function(k){ return '<button data-key="' + k.replace(/"/g, '&quot;') + '">' + k + '</button>'; }).join('') + (a.fns || []).map(function(f){ return '<button class="fn" data-key="' + f + '(">' + f + '</button>'; }).join('') + '</div>' +
+    '<div class="xs-wrap">' + grid + '</div>' +
+    '<p class="muted" style="font-size:.82rem;margin:6px 0 0">👆 Ketuk sel kuning lalu ketik rumus diawali <b>=</b>. Saat menulis rumus, <b>ketuk sel</b> atau <b>geser beberapa sel</b> untuk memasukkan alamatnya. Tekan <b>Enter</b>/✔ untuk menyimpan. Sel putih kosong boleh dipakai untuk mencoba rumus (tidak dinilai).</p>';
+  var fx = $('.xs-fx', u.body), wrap = $('.xs-wrap', u.body), tb = $('table.xs', u.body), tbox = $('.xs-task', u.body), adBox = $('.xs-addr', u.body);
+  var tds = {}; $$('td[data-a]', tb).forEach(function(td){ tds[td.dataset.a] = td; });
+
+  function picking(){ return editing && fx.value.charAt(0) === '=' && document.activeElement === fx; }
+  function refsIn(s){ var o = {}; if (String(s).charAt(0) !== '=') return o; (String(s).replace(/"[^"]*"/g, '').match(/\$?[A-Z]{1,3}\$?\d+(:\$?[A-Z]{1,3}\$?\d+)?/gi) || []).forEach(function(m){ try { var g = new XS.Ref(m.toUpperCase()); for (var r = g.r1; r <= g.r2 && r < R; r++) for (var c = g.c1; c <= g.c2 && c < C; c++) o[XS.addr(r, c)] = 1; } catch (e){} }); return o; }
+  function paint(){
+    var sh = sheet(), hl = refsIn(editing ? fx.value : raw(sel));
+    Object.keys(tds).forEach(function(ad){
+      var td = tds[ad], p = XS.ref1(ad), v = sh.val(p.r, p.c);
+      td.textContent = XS.show(v);
+      td.classList.toggle('num', typeof v === 'number');
+      td.classList.toggle('err', XS.err(v));
+      td.classList.toggle('sel', ad === sel);
+      td.classList.toggle('ref', !!hl[ad] && ad !== sel);
+      td.classList.toggle('ok', marks[ad] === 'ok'); td.classList.toggle('bad', marks[ad] === 'bad');
+    });
+    if (drag) rangeOf(drag.a, drag.b).forEach(function(ad){ if (tds[ad]) tds[ad].classList.add('ref'); });
+    adBox.textContent = sel;
+    var i = task[sel], t = a.tasks[i];
+    tbox.innerHTML = t ? '📝 <b>Tugas sel ' + sel + ':</b> ' + (t.q || '') + (t.h ? ' <button class="xs-hb" data-hint>💡 Petunjuk</button><div class="xs-h" style="display:none">' + t.h + '</div>' : '') + (marks[sel] === 'bad' && !XS.hasRef(raw(sel)) && raw(sel) !== '' ? '<div class="xs-warn">✋ Gunakan rumus (diawali = dan memakai alamat sel), bukan angka yang diketik langsung.</div>' : '')
+      : lock.hasOwnProperty(sel) ? '🔒 Sel ' + sel + ' berisi data (terkunci).' : '🧪 Sel ' + sel + ' untuk latihan bebas (tidak dinilai).';
+    var hb = $('[data-hint]', tbox);
+    if (hb){ hb.addEventListener('mousedown', function(e){ e.preventDefault(); }); hb.onclick = function(e){ e.preventDefault(); var x = $('.xs-h', tbox); x.style.display = x.style.display === 'none' ? '' : 'none'; }; }
+    wrap.classList.toggle('picking', picking());
+  }
+  function rangeOf(x, y){ var g = new XS.Ref(x + ':' + y), o = []; for (var r = g.r1; r <= g.r2; r++) for (var c = g.c1; c <= g.c2; c++) o.push(XS.addr(r, c)); return o; }
+  function load(){ fx.value = raw(sel) === '' ? '' : String(raw(sel)); fx.readOnly = lock.hasOwnProperty(sel); editing = false; lastIns = null; }
+  function select(ad, focus){
+    if (editing) commit();
+    sel = ad; load(); paint();
+    if (focus && !lock.hasOwnProperty(ad)){ editing = true; fx.focus(); try { fx.setSelectionRange(fx.value.length, fx.value.length); } catch (e){} }
+    var td = tds[ad]; if (td && td.scrollIntoView) td.scrollIntoView({block: 'nearest', inline: 'nearest'});
+  }
+  function commit(){
+    if (!editing) return; editing = false; lastIns = null;
+    if (lock.hasOwnProperty(sel)) return;
+    var v = fx.value.trim(), old = st.v[sel] || '';
+    if (v) st.v[sel] = v; else delete st.v[sel];
+    if (v !== old){ delete marks[sel]; if (task.hasOwnProperty(sel) && st.chk){ st.chk = false; footCheck(); } }
+    save(); paint(); if (typeof rpMarks === 'function') rpMarks();
+  }
+  function insert(txt){
+    if (lock.hasOwnProperty(sel)) return;
+    if (document.activeElement !== fx){ fx.focus(); editing = true; }
+    editing = true;
+    var v = fx.value, s = fx.selectionStart == null ? v.length : fx.selectionStart, e = fx.selectionEnd == null ? s : fx.selectionEnd;
+    if (lastIns && lastIns.e === s && s === e && /^\$?[A-Z]/.test(txt)) s = lastIns.s;   // ketuk sel lain berturut-turut = ganti alamat
+    fx.value = v.slice(0, s) + txt + v.slice(e);
+    var p = s + txt.length; try { fx.setSelectionRange(p, p); } catch (er){}
+    lastIns = /^\$?[A-Z]{1,3}\$?\d/.test(txt) ? {s: s, e: p} : null;
+    paint();
+  }
+
+  /* sel: ketuk = pilih; saat menulis rumus: ketuk/geser = masukkan alamat */
+  tb.addEventListener('pointerdown', function(e){
+    var td = e.target.closest('td[data-a]'); if (!td || !picking()) return;
+    e.preventDefault(); drag = {a: td.dataset.a, b: td.dataset.a, id: e.pointerId}; paint();
+  });
+  tb.addEventListener('pointermove', function(e){
+    if (!drag) return; var t = document.elementFromPoint(e.clientX, e.clientY), td = t && t.closest ? t.closest('td[data-a]') : null;
+    if (td && td.dataset.a !== drag.b){ drag.b = td.dataset.a; paint(); }
+  });
+  function endDrag(){ if (!drag) return; var d = drag; drag = null; insert(d.a === d.b ? d.a : d.a + ':' + d.b); }
+  tb.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointerup', endDrag);
+  el._cleanup = function(){ document.removeEventListener('pointerup', endDrag); };
+  tb.addEventListener('click', function(e){
+    var td = e.target.closest('td[data-a]'); if (!td || picking()) return;
+    select(td.dataset.a, true);
+  });
+  $$('[data-key]', u.body).forEach(function(b){
+    b.addEventListener('pointerdown', function(e){ e.preventDefault(); });
+    b.addEventListener('mousedown', function(e){ e.preventDefault(); });
+    b.onclick = function(){ if (!editing && lock.hasOwnProperty(sel)) { toast('Ketuk sel kuning atau sel kosong dulu ya 👆'); return; } insert(b.dataset.key); };
+  });
+  fx.addEventListener('focus', function(){ if (!fx.readOnly){ editing = true; paint(); } });
+  fx.addEventListener('input', function(){ editing = true; lastIns = null; paint(); });
+  fx.addEventListener('keydown', function(e){
+    if (e.key === 'Enter'){ e.preventDefault(); commit(); var p = XS.ref1(sel); if (p.r + 1 < R) select(XS.addr(p.r + 1, p.c), !lock.hasOwnProperty(XS.addr(p.r + 1, p.c))); }
+    else if (e.key === 'Escape'){ load(); paint(); fx.blur(); }
+  });
+  fx.addEventListener('blur', function(){ setTimeout(function(){ if (document.activeElement !== fx && !drag) commit(); }, 200); });
+  $('.xs-ok', u.body).addEventListener('mousedown', function(e){ e.preventDefault(); });
+  $('.xs-ok', u.body).onclick = function(){ commit(); fx.blur(); };
+  $('.xs-no', u.body).addEventListener('mousedown', function(e){ e.preventDefault(); });
+  $('.xs-no', u.body).onclick = function(){ load(); paint(); fx.blur(); };
+
+  function footCheck(){
+    u.foot.innerHTML = '<div class="row"><button class="btn or" data-c>✔ Periksa</button></div>';
+    $('[data-c]', u.foot).onclick = function(){ if (editing) commit(); check(false); };
+  }
+  function check(silent){
+    var sh = new XS.Sheet(raw), s = 0, notes = [], noF = 0;
+    marks = {};
+    a.tasks.forEach(function(t){
+      var ad = t.c.toUpperCase(), p = XS.ref1(ad), v = sh.val(p.r, p.c), f = XS.hasRef(raw(ad)), ok = f && sheetKey(v, t.a);
+      if (ok) s++; else { if (!f && raw(ad) !== '') noF++; notes.push('<b>' + ad + '</b> ' + (t.q || '') + (raw(ad) === '' ? ' · belum diisi' : !f ? ' · belum memakai rumus' : ' · hasilnya belum tepat')); }
+      marks[ad] = ok ? 'ok' : 'bad';
+    });
+    st.chk = true; save(); paint();
+    var m = a.tasks.length, hint = notes.length ? '<div class="hint"><b>Perbaiki sel berikut</b> (ketuk sel → 💡 Petunjuk):<br>' + notes.join('<br>') + (noF ? '<br>✋ Nilai hanya dihitung jika sel diisi <b>rumus</b>.' : '') + '</div>' : '';
+    if (silent){ var c0 = confetti, b0 = beep; confetti = beep = function(){}; resultBox(u.foot, s, m, retry, hint); confetti = c0; beep = b0; }
+    else { beep(s === m); award(pk, id, s, m); resultBox(u.foot, s, m, retry, hint); }
+    var rb = $('[data-retry]', u.foot); if (rb) rb.innerHTML = '↻ Ulangi dari kosong';
+  }
+  function retry(){ if (!confirm('Kosongkan semua isian di lembar kerja ini?')) return; st.v = {}; st.chk = false; marks = {}; save(); load(); paint(); footCheck(); if (typeof rpMarks === 'function') rpMarks(); }
+  el._rpProg = function(){ return Object.keys(st.v).some(function(k){ return task.hasOwnProperty(k); }); };
+
+  load(); paint();
+  if (st.chk) check(true); else footCheck();
+};
+
 
 /* ---------- ADU TIM ONLINE (siswa menjawab dari HP, skor tim dihitung otomatis) ----------
    Server: Apps Script "Adu Tim Online" (Adu_Tim_Online\Kode_Adu_Tim.gs.txt), alamat di ADUTIM_URL.
@@ -2341,7 +2818,10 @@ function renderPenutup(p){
   return h;
 }
 function bindStepExtras(p){
-  var sd = $('[data-send]'); if (sd){ sendInfo(p); sd.onclick = function(){ kirimNilai(p); }; $('[data-prof]').onclick = function(){ profModal(function(){ sendInfo(p); }); }; }
+  var sd = $('[data-send]'); if (sd){ sendInfo(p); sd.onclick = function(){ kirimNilai(p); }; $('[data-prof]').onclick = function(){ profModal(function(){ sendInfo(p); }); };
+    var sc0 = pScore(p), c0 = cekBagian(p);
+    if (sc0.pct < MIN_KIRIM) setTimeout(function(){ toast('⚠️ Nilaimu ' + sc0.pct + ', minimal ' + MIN_KIRIM + '. Kerjakan ulang dulu sebelum mengirim.'); }, 400);
+    else if (c0.belum.length) setTimeout(function(){ toast('📝 Masih ada ' + c0.belum.length + ' bagian soal yang belum dikerjakan.'); }, 400); }
   var s = $('[data-start]'); if (s) s.onclick = function(){ go(1); };
   var n = $('[data-nextp]'); if (n) n.onclick = function(){ nav('b' + curB + '-p' + (cur + 1)); };
   var nb = $('[data-nextb]'); if (nb) nb.onclick = function(){ nav('b' + (curB + 1)); };
@@ -2388,6 +2868,8 @@ function staticAct(a){
       h = a.opts.map(function(o){ return '☐ ' + o.e + ' ' + o.t; }).join(' &nbsp; '); break;
     case 'maze':
       h = '<p>Permainan robot dikerjakan pada versi interaktif (laptop/HP/IFP).</p>'; break;
+    case 'sheet':
+      h = typeof sheetStatic === 'function' ? sheetStatic(a) : ''; break;
     default: return '';
   }
   return '<div class="pact"><div class="pact-h">🎮 ' + (T[a.type] || 'Aktivitas') + (a.title ? ': ' + a.title : '') + '</div>' + (a.ins ? '<div class="ins">👉 ' + a.ins + '</div>' : '') + h + '</div>';
@@ -2454,20 +2936,66 @@ var RP_TYPES = {order:1, match:1, cat:1, quiz:1, fill:1, tablefill:1, bug:1, lin
 var rpNow = false, rpRand = Math.random, rpT = null;
 function rpRng(seed){ var t = seed >>> 0; return function(){ t = (t + 0x6D2B79F5) >>> 0; var r = Math.imul(t ^ t >>> 15, 1 | t); r ^= r + Math.imul(r ^ r >>> 7, 61 | r); return ((r ^ r >>> 14) >>> 0) / 4294967296; }; }
 function rpSeed(){ return Math.floor(rpRand() * 4294967296); }
-function rpNodes(el){ return [].filter.call(el.querySelectorAll('*'), function(x){ return !(window.SVGElement && x instanceof SVGElement) && !x.closest('.rp-x'); }); }
+function rpNodes(el){ return [].filter.call(el.querySelectorAll('*'), function(x){ return !(window.SVGElement && x instanceof SVGElement) && !x.closest('.rp-x, .rp-skip'); }); }
 function rpSig(x){ return x.tagName + [].filter.call(x.attributes, function(t){ return /^data-/.test(t.name); }).map(function(t){ return '|' + t.name + '=' + t.value; }).join(''); }
 function rpSave(){ clearTimeout(rpT); rpT = setTimeout(save, 300); }
 function rpScored(a){ return a && !a.noScore && maxOf(a) > 0; }
 function mountAct(el, a, id, pk){
-  if (!RP_TYPES[a.type]){ E[a.type](el, a, id, pk); rpBadge(el, a, id, pk); return; }
+  if (!RP_TYPES[a.type]){ E[a.type](el, a, id, pk); actHow(el, a, id, pk); rpBadge(el, a, id, pk); return; }
   S.rp[pk] = S.rp[pk] || {};
   var rec = S.rp[pk][id] = S.rp[pk][id] || {sd: rpSeed(), lg: []};
   function render(){ el._rng = rpRng(rec.sd); var o = Math.random; Math.random = el._rng; try { E[a.type](el, a, id, pk); } finally { Math.random = o; } }
   render();
   if (rec.lg.length && !rpPlay(el, rec)){ rec.sd = rpSeed(); rec.lg = []; render(); rpSave(); }   // tampilan berubah (soal diganti guru) → mulai bersih
+  actHow(el, a, id, pk);
   rpListen(el, id, pk);
   rpBadge(el, a, id, pk);
 }
+/* Petunjuk "Cara mengerjakan" per jenis soal (di bawah judul aktivitas; .rp-skip = tidak ikut indeks rekaman) */
+var HOWTO = {
+  quiz: 'Ketuk <b>satu</b> pilihan jawaban. Jawaban langsung diperiksa: hijau = benar, merah = pilihanmu yang salah. Baca pembahasannya, lalu tekan <b>Soal berikutnya →</b>.',
+  order: 'Ketuk kartu di bagian <b>Pilihan</b> sesuai urutan yang benar (yang pertama diketuk = nomor 1). Salah urutan? Ketuk kartu di <b>Urutan jawabanmu</b> untuk mengembalikannya. Tombol <b>Periksa</b> muncul setelah semua kartu dipindahkan.',
+  match: 'Ketuk kartu di <b>kiri</b>, lalu ketuk pasangannya di <b>kanan</b> (warnanya akan sama). Ingin mengganti? Ketuk lagi kartu kiri itu. Tombol <b>Periksa</b> muncul setelah semua kartu berpasangan.',
+  line: 'Tarik garis dari titik ● kiri ke titik ● kanan, atau ketuk kotak kiri lalu ketuk kotak kanan. Ketuk kotak kiri dua kali untuk menghapus garis. Tombol <b>Periksa</b> muncul setelah semua tersambung.',
+  cat: 'Ketuk <b>satu kartu</b> (kartu menyala), lalu ketuk <b>kotak kelompok</b> tujuannya. Salah tempat? Ketuk kartu di dalam kotak untuk mengembalikannya. Tombol <b>Periksa</b> muncul setelah semua kartu ditempatkan.',
+  fill: 'Ketik jawaban singkat di setiap kotak (perhatikan 💡 petunjuknya), lalu tekan <b>Periksa</b>. Jawaban yang sudah diketik tersimpan otomatis.',
+  tablefill: 'Ketik jawaban di setiap kotak kosong pada tabel, lalu tekan <b>Periksa</b>.',
+  essay: 'Tulis jawaban 2–4 kalimat dengan bahasamu sendiri dan gunakan <b>kata kunci</b> yang tersedia, lalu tekan <b>Periksa Jawaban</b>.',
+  bug: 'Baca tujuan program, periksa baris demi baris, lalu ketuk <b>SATU</b> baris yang salah. Jawaban langsung diperiksa dan tidak bisa diganti: ✓ hijau = tepat, ✗ merah = pilihanmu, 🐞 kuning = baris yang sebenarnya salah. Ingin mencoba lagi? Tekan <b>↻ Ulangi</b> setelah semua program dijawab.',
+  memory: 'Ketuk dua kartu untuk membukanya. Jika keduanya berpasangan, kartu tetap terbuka; jika tidak, kartu tertutup lagi. Temukan semua pasangan.',
+  sheet: 'Ketuk <b>sel kuning</b>, ketik rumus diawali <b>=</b> pada baris <b>fx</b>, lalu tekan <b>Enter</b>/✔. Hasil rumus langsung muncul di sel. Nilai hanya dihitung jika sel diisi <b>rumus</b> (bukan angka yang diketik langsung). Setelah semua sel kuning terisi, tekan <b>Periksa</b>.'
+};
+function actHow(el, a, id, pk){
+  var h = $('.act-h', el), t = HOWTO[a.type];
+  if (!h || !t || $('.act-how', el)) return;
+  h.insertAdjacentHTML('afterend', '<details class="act-how rp-skip"' + ((S.res[pk] || {})[id] ? '' : ' open') + '><summary>❓ Cara mengerjakan</summary><div>' + t + '</div></details>');
+}
+/* Debugging: baris pilihan siswa dan baris yang sebenarnya salah dibedakan (dulu keduanya merah → terlihat seperti dua jawaban) */
+E.bug = function(el, a, id, pk){
+  var u = shell(el, a, 'Debugging · temukan baris yang salah', '🐞');
+  function start(){
+    var answered = 0, s = 0;
+    u.foot.innerHTML = '<div class="muted" style="font-size:.85rem">Terjawab 0 dari ' + a.items.length + ' program</div>';
+    u.body.innerHTML = a.items.map(function(it, i){ return '<div class="card" data-i="' + i + '"><p><b>Program ' + (i + 1) + '.</b> ' + it.g + '</p><p class="muted" style="font-size:.85rem;margin:-4px 0 6px">👇 Ketuk satu baris yang salah:</p>' + it.lines.map(function(l, k){ return '<button class="tile bugline" data-k="' + k + '">' + l + '</button>'; }).join('') + '<div class="qfb"></div></div>'; }).join('');
+    $$('.card[data-i]', u.body).forEach(function(cd){
+      var it = a.items[+cd.dataset.i];
+      $$('.bugline', cd).forEach(function(b){ b.onclick = function(){
+        var k = +b.dataset.k, ok = k === it.w; if (ok) s++; answered++;
+        $$('.bugline', cd).forEach(function(x, j){
+          x.onclick = null; x.disabled = true;
+          if (j === k && ok){ x.classList.add('ok'); x.insertAdjacentHTML('beforeend', '<span class="bug-tag">✓ tepat</span>'); }
+          else if (j === k){ x.classList.add('bad'); x.insertAdjacentHTML('beforeend', '<span class="bug-tag">✗ pilihanmu</span>'); }
+          else if (j === it.w){ x.classList.add('fix'); x.insertAdjacentHTML('beforeend', '<span class="bug-tag">🐞 baris yang salah</span>'); }
+        });
+        beep(ok);
+        $('.qfb', cd).innerHTML = '<div class="fb ' + (ok ? 'ok' : 'bad') + '"><b>' + (ok ? '✓ Tepat, bug ditemukan!' : '✗ Pilihanmu kurang tepat. Baris yang salah ditandai 🐞 kuning.') + '</b> ' + it.e + '</div>';
+        if (answered === a.items.length){ award(pk, id, s, a.items.length); resultBox(u.foot, s, a.items.length, start); }
+        else u.foot.innerHTML = '<div class="muted" style="font-size:.85rem">Terjawab ' + answered + ' dari ' + a.items.length + ' program · lanjutkan ke program berikutnya 👇</div>';
+      }; });
+    });
+  }
+  start();
+};
 function rpPlay(el, rec){
   var ok = true, keep = {beep: beep, confetti: confetti, toast: toast, award: award}, o = Math.random;
   beep = confetti = toast = award = function(){};
@@ -2523,9 +3051,10 @@ function rpBadge(el, a, id, pk){
   var h = $('.act-h', el); if (!h || !rpScored(a)) return;
   var old = $('.rp-x', h); if (old) old.remove();
   var r = (S.res[pk] || {})[id], g = (S.rp[pk] || {})[id], b = document.createElement('span'), pct = r && r.m ? Math.round(r.s / r.m * 100) : 0;
-  var kls = r ? (pct >= 80 ? 'good' : pct >= 65 ? 'mid' : 'low') : (g && g.lg.length ? 'prog' : 'todo');
+  var prog = (g && g.lg.length) || (el._rpProg && el._rpProg());   // _rpProg: aktivitas yang menyimpan isiannya sendiri (mis. Lembar Kerja Excel)
+  var kkm = typeof MIN_KIRIM === 'number' ? MIN_KIRIM : 65, kls = r ? (pct >= 80 ? 'good' : pct >= kkm ? 'mid' : 'low') : (prog ? 'prog' : 'todo');
   b.className = 'rp-x ' + kls;
-  b.textContent = r ? '✓ Sudah dikerjakan · skor ' + r.s + '/' + r.m + (pct < 65 ? ' · ayo ulangi' : '') : g && g.lg.length ? '✏️ Belum selesai · lanjutkan' : '○ Belum dikerjakan';
+  b.textContent = r ? '✓ Sudah dikerjakan · skor ' + r.s + '/' + r.m + (pct < kkm ? ' · ayo ulangi' : '') : prog ? '✏️ Belum selesai · lanjutkan' : '○ Belum dikerjakan';
   h.appendChild(b);
   el.classList.remove('rp-good', 'rp-mid', 'rp-low'); if (r) el.classList.add('rp-' + kls);
 }
@@ -2540,7 +3069,7 @@ function rpSteps(p){
     var ids = []; String(p.c[STEPS[i].k] || '').replace(/data-act="([^"]+)"/g, function(m, id){ if (ids.indexOf(id) < 0) ids.push(id); });
     var c = rpCount(p, ids); if (!c.n) return;
     var e = document.createElement('em');
-    e.className = 'rp-st ' + (c.d < c.n ? (c.d ? 'prog' : 'todo') : c.pct >= 80 ? 'good' : c.pct >= 65 ? 'mid' : 'low');
+    e.className = 'rp-st ' + (c.d < c.n ? (c.d ? 'prog' : 'todo') : c.pct >= 80 ? 'good' : c.pct >= (typeof MIN_KIRIM === 'number' ? MIN_KIRIM : 65) ? 'mid' : 'low');
     e.textContent = c.d < c.n ? c.d + '/' + c.n : '✓ ' + c.pct;
     e.title = c.d < c.n ? c.d + ' dari ' + c.n + ' aktivitas sudah dikerjakan' : 'Semua aktivitas selesai · skor ' + c.pct;
     x.appendChild(e);
@@ -2596,10 +3125,53 @@ function lkpdData(p){
     } else parts.push(nm + ': ' + (r[id] ? 'benar ' + r[id].s + '/' + r[id].m : 'belum'));
   });
   return {n: any ? Math.round(s / m * 100) : '', t: parts.join(' | ')};
-}function sendInfo(p){
+}
+/* Aturan guru: tugas dengan nilai pertemuan di bawah MIN_KIRIM tidak diterima (siswa wajib mengerjakan ulang).
+   cekBagian(p) = aktivitas bernilai yang BELUM dikerjakan dan yang skornya masih di bawah MIN_KIRIM, beserta langkahnya. */
+var MIN_KIRIM = 70;
+function cekBagian(p){
+  var r = S.res[p.key] || {}, out = {belum: [], rendah: []};
+  Object.keys(p.acts).forEach(function(id){
+    var a = p.acts[id]; if (!(maxOf(a) > 0)) return;
+    var si = -1; STEPS.forEach(function(st, i){ if (si < 0 && (p.c[st.k] || '').indexOf('data-act="' + id + '"') >= 0) si = i; });
+    if (si < 0) return;   // aktivitas yang tidak dipasang di langkah mana pun tidak ditagih
+    var x = {id: id, s: si, nama: String(a.title || 'Aktivitas').replace(/<[^>]+>/g, ''), langkah: STEPS[si].l};
+    if (!r[id]) out.belum.push(x);
+    else { x.pct = Math.round(r[id].s / r[id].m * 100); if (x.pct < MIN_KIRIM) out.rendah.push(x); }
+  });
+  return out;
+}
+function daftarBagian(list, label){
+  return list.map(function(x){ return '<li><b>' + esc(x.nama) + '</b> <span class="muted">· langkah ' + (x.s + 1) + ' ' + x.langkah + (x.pct !== undefined ? ' · skor ' + x.pct + '/100' : '') + '</span> <button class="btn ghost" style="padding:4px 10px;font-size:.85rem" data-goa="' + x.id + '" data-gos="' + x.s + '">' + label + ' →</button></li>'; }).join('');
+}
+function notifBagian(p){
+  var sc = pScore(p), c = cekBagian(p), h = '';
+  if (sc.pct < MIN_KIRIM) h += '<div class="kirim-warn bad">⚠️ <b>Nilaimu ' + sc.pct + '/100, masih di bawah ' + MIN_KIRIM + '.</b> Tugas belum bisa dikirim. Baca lagi materinya, lalu kerjakan ulang bagian di bawah ini sampai nilaimu minimal ' + MIN_KIRIM + '.</div>';
+  if (c.belum.length) h += '<div class="kirim-warn">📝 <b>Ada ' + c.belum.length + ' bagian soal yang belum kamu kerjakan:</b><ul>' + daftarBagian(c.belum, 'Kerjakan') + '</ul></div>';
+  if (c.rendah.length) h += '<div class="kirim-warn">🔁 <b>Bagian dengan skor di bawah ' + MIN_KIRIM + ' (ketuk Ulangi di bagian itu):</b><ul>' + daftarBagian(c.rendah, 'Ulangi') + '</ul></div>';
+  return h;
+}
+function bindGoAct(root){
+  $$('[data-goa]', root).forEach(function(b){ b.onclick = function(){
+    var id = b.dataset.goa, m = b.closest('.modal'); if (m) m.remove();
+    go(+b.dataset.gos);
+    setTimeout(function(){ var el = $('[data-act="' + id + '"]'); if (el && el.scrollIntoView) el.scrollIntoView({block:'start'}); }, 200);
+  }; });
+}
+function sendInfo(p){
   var el = $('#sendInfo'); if (!el) return;
   var sc = pScore(p), lk = lkpdData(p);
-  el.innerHTML = tbl(['Data yang dikirim',''], [['Identitas', profOk() ? '<b>' + profLabel() + '</b>' : '<span style="color:#dc2626">belum lengkap</span>'], ['Nilai pertemuan', sc.pct + ' / 100'], ['Nilai percobaan pertama', (pScoreFirst(p) === '' ? '-' : pScoreFirst(p) + ' / 100')], ['Nilai LKPD', lk.n === '' ? 'belum dikerjakan' : lk.n + ' / 100']]);
+  el.innerHTML = notifBagian(p) + tbl(['Data yang dikirim',''], [['Identitas', profOk() ? '<b>' + profLabel() + '</b>' : '<span style="color:#dc2626">belum lengkap</span>'], ['Nilai pertemuan', sc.pct + ' / 100'], ['Nilai percobaan pertama', (pScoreFirst(p) === '' ? '-' : pScoreFirst(p) + ' / 100')], ['Nilai LKPD', lk.n === '' ? 'belum dikerjakan' : lk.n + ' / 100'], ['Syarat kirim', sc.pct >= MIN_KIRIM ? '✅ nilai minimal ' + MIN_KIRIM + ' terpenuhi' : '<span style="color:#dc2626">❌ nilai minimal ' + MIN_KIRIM + ' (sekarang ' + sc.pct + ')</span>']]);
+  bindGoAct(el);
+}
+function modalBagian(p, judul, isi, tombol){
+  var m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = '<div class="modal-box" style="max-width:600px"><div class="modal-h"><h3>' + judul + '</h3><button class="ib" data-x>✕</button></div>' + isi + '<div class="row" style="justify-content:center;margin-top:10px">' + (tombol || '') + '<button class="btn or" data-x>Mengerti 👍</button></div></div>';
+  document.body.appendChild(m);
+  $$('[data-x]', m).forEach(function(x){ x.onclick = function(){ m.remove(); }; });
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+  bindGoAct(m);
+  return m;
 }
 function profModal(done){
   var m = document.createElement('div'); m.className = 'modal';
@@ -2612,19 +3184,30 @@ function profModal(done){
 function postNilai(d){
   return fetch(SEND_URL, {method:'POST', body: JSON.stringify(d)}).then(function(r){ return r.json(); }).then(function(j){ if (!j.ok) throw new Error(j.pesan || 'gagal'); return j; });
 }
-function kirimNilai(p){
+function kirimNilai(p, paksa){
   if (!SEND_URL){ toast('Alamat penerima nilai belum dipasang guru'); return; }
   if (!profOk()){ profModal(function(){ sendInfo(p); kirimNilai(p); }); return; }
-  var b = B(), sc = pScore(p), lk = lkpdData(p), st = $('#sendSt');
+  var b = B(), sc = pScore(p), lk = lkpdData(p), st = $('#sendSt'), c = cekBagian(p);
+  if (sc.pct < MIN_KIRIM){   // aturan guru: tidak menerima nilai di bawah MIN_KIRIM
+    if (st) st.innerHTML = '<span style="color:#dc2626">❌ Belum dikirim: nilaimu ' + sc.pct + '/100, minimal ' + MIN_KIRIM + '. Kerjakan ulang dulu.</span>';
+    modalBagian(p, '⚠️ Nilai belum mencapai ' + MIN_KIRIM, notifBagian(p) + '<p class="muted">Guru hanya menerima tugas dengan nilai minimal ' + MIN_KIRIM + '. Baca soal dan materinya dengan teliti, jangan asal menjawab. 💪</p>');
+    beep(false); return;
+  }
+  if (c.belum.length && !paksa){
+    var m = modalBagian(p, '📝 Masih ada bagian yang belum dikerjakan', notifBagian(p) + '<p class="muted">Sebaiknya kerjakan semua bagian dulu agar nilaimu maksimal.</p>', '<button class="btn ghost" data-paksa>Tetap kirim</button>');
+    $('[data-paksa]', m).onclick = function(){ m.remove(); kirimNilai(p, true); };
+    return;
+  }
   var d = {sheet: String(b.send).replace(/\{kelas\}/g, S.prof.kelas).replace(/\{sem\}/g, String(semOf(b))), nama: S.prof.nama, kelas: S.prof.kelas, absen: S.prof.absen, bab: b.label, pertemuan: p.no, judul: p.title.replace(/<[^>]+>/g, ''), nilai: sc.pct, nilaiPertama: pScoreFirst(p), nilaiLkpd: lk.n, jawabanLkpd: lk.t, perangkat: S.dev, semester: semOf(b)};
   if (st) st.textContent = '⏳ Mengirim…';
-  postNilai(d).then(function(j){ if (st) st.innerHTML = '✅ Terkirim ' + new Date().toLocaleString('id-ID') + ' (kiriman ke-' + j.jumlah + ')'; beep(true); toast('✅ Nilai terkirim ke guru'); }).catch(function(){
+  postNilai(d).then(function(j){ if (st) st.innerHTML = '✅ Nilai ' + sc.pct + '/100 terkirim ke guru · ' + new Date().toLocaleString('id-ID') + (j.jumlah ? ' (kiriman ke-' + j.jumlah + ')' : ''); beep(true); toast('✅ Nilai terkirim ke guru'); }).catch(function(){
     S.outbox = S.outbox.filter(function(x){ return !(x.sheet === d.sheet && x.pertemuan === d.pertemuan); }); S.outbox.push(d); save();
     if (st) st.innerHTML = '⚠️ Belum terkirim (internet bermasalah). Nilai disimpan dan akan dikirim otomatis saat online.';
     toast('⚠️ Belum terkirim, akan dicoba lagi otomatis');
   });
 }
 function kirimAntrean(){
+  var n0 = S.outbox.length; S.outbox = S.outbox.filter(function(x){ return !(Number(x.nilai) < MIN_KIRIM); }); if (S.outbox.length !== n0) save();   // kiriman lama di bawah nilai minimal dibuang
   if (!SEND_URL || !S.outbox.length || !navigator.onLine) return;
   var d = S.outbox[0];
   postNilai(d).then(function(){ S.outbox.shift(); save(); toast('✅ Nilai tertunda berhasil dikirim'); kirimAntrean(); }).catch(function(){});
