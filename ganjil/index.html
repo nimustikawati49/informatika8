@@ -4215,9 +4215,30 @@ function profModal(done){
   $('#nmSave', m).onclick = function(){ if (readProf()){ m.remove(); toast('Identitas tersimpan ✅'); if (done) done(); } else toast('Lengkapi nama lengkap, kelas, dan nomor absen'); };
   $('[data-x]', m).onclick = function(){ m.remove(); };
 }
-function postNilai(d){
-  return fetch(SEND_URL, {method:'POST', body: JSON.stringify(d)}).then(function(r){ return r.json(); }).then(function(j){ if (!j.ok) throw new Error(j.pesan || 'gagal'); return j; });
+/* Saat satu kelas mengirim bersamaan, server memproses kiriman satu per satu sehingga sebagian HP harus menunggu lama.
+   Kegagalan dibedakan: e.tolak = server menolak data (pesan ditampilkan, tidak diulang); selain itu (internet putus,
+   server ramai/sibuk, jawaban bukan JSON) dicoba ulang otomatis dengan jeda acak agar HP siswa tidak mengirim serentak lagi. */
+function postSekali(d){
+  var ctl = window.AbortController ? new AbortController() : null, tm = ctl ? setTimeout(function(){ ctl.abort(); }, 75000) : 0;
+  return fetch(SEND_URL, {method:'POST', body: JSON.stringify(d), signal: ctl ? ctl.signal : undefined})
+    .then(function(r){ return r.text(); })
+    .then(function(t){ clearTimeout(tm); var j; try { j = JSON.parse(t); } catch (er) { throw new Error('sibuk'); }
+      if (!j.ok){ var e = new Error(j.pesan || 'gagal'); e.tolak = !j.sibuk; throw e; } return j; },
+      function(er){ clearTimeout(tm); throw new Error(navigator.onLine === false ? 'offline' : 'sibuk'); });
 }
+function postNilai(d, info){
+  var maks = 4;
+  function coba(n){
+    return postSekali(d).catch(function(e){
+      if (e.tolak || n >= maks || navigator.onLine === false) throw e;
+      var jeda = 3000 + Math.floor(Math.random() * 6000) * n;   // 3–9 dtk, 3–15 dtk, 3–21 dtk
+      if (info) info(n + 1, maks);
+      return new Promise(function(ok){ setTimeout(ok, jeda); }).then(function(){ return coba(n + 1); });
+    });
+  }
+  return coba(1);
+}
+function samaKiriman(a, b){ return a.sheet === b.sheet && a.bab === b.bab && String(a.pertemuan) === String(b.pertemuan); }
 function kirimNilai(p, paksa){
   if (!SEND_URL){ toast('Alamat penerima nilai belum dipasang guru'); return; }
   if (!profOk()){ profModal(function(){ sendInfo(p); kirimNilai(p); }); return; }
@@ -4233,19 +4254,34 @@ function kirimNilai(p, paksa){
     return;
   }
   var d = {sheet: String(b.send).replace(/\{kelas\}/g, S.prof.kelas).replace(/\{sem\}/g, String(semOf(b))), nama: S.prof.nama, kelas: S.prof.kelas, absen: S.prof.absen, bab: b.label, pertemuan: p.no, judul: p.title.replace(/<[^>]+>/g, ''), nilai: sc.pct, nilaiPertama: pScoreFirst(p), nilaiLkpd: lk.n, jawabanLkpd: lk.t, perangkat: S.dev, semester: semOf(b)};
-  if (st) st.textContent = '⏳ Mengirim…';
-  postNilai(d).then(function(j){ if (st) st.innerHTML = '✅ Nilai ' + sc.pct + '/100 terkirim ke guru · ' + new Date().toLocaleString('id-ID') + (j.jumlah ? ' (kiriman ke-' + j.jumlah + ')' : ''); beep(true); toast('✅ Nilai terkirim ke guru'); }).catch(function(){
-    S.outbox = S.outbox.filter(function(x){ return !(x.sheet === d.sheet && x.pertemuan === d.pertemuan); }); S.outbox.push(d); save();
-    if (st) st.innerHTML = '⚠️ Belum terkirim (internet bermasalah). Nilai disimpan dan akan dikirim otomatis saat online.';
-    toast('⚠️ Belum terkirim, akan dicoba lagi otomatis');
+  var sd = $('[data-send]'); if (sd) sd.disabled = true;   // cegah ketuk berkali-kali yang menambah antrean server
+  if (st) st.textContent = '⏳ Mengirim… (bisa sampai 1 menit bila teman sekelas mengirim bersamaan, jangan tutup halaman)';
+  postNilai(d, function(n, maks){ if (st) st.textContent = '⏳ Server sedang ramai, mencoba lagi otomatis (' + n + '/' + maks + ')… jangan tutup halaman'; }).then(function(j){
+    if (sd) sd.disabled = false;
+    S.outbox = S.outbox.filter(function(x){ return !samaKiriman(x, d); }); save();
+    if (st) st.innerHTML = '✅ Nilai ' + sc.pct + '/100 terkirim ke guru · ' + new Date().toLocaleString('id-ID') + (j.jumlah ? ' (kiriman ke-' + j.jumlah + ')' : ''); beep(true); toast('✅ Nilai terkirim ke guru');
+  }).catch(function(e){
+    if (sd) sd.disabled = false;
+    if (e.tolak){   // data ditolak server (mis. kelas tidak sesuai): beri tahu alasannya, tidak dimasukkan antrean
+      if (st) st.innerHTML = '<span style="color:#dc2626">❌ Belum terkirim: ' + esc(e.message) + '</span>';
+      modalBagian(p, '❌ Nilai belum terkirim', '<div class="kirim-warn bad">' + esc(e.message) + '</div><p class="muted">Periksa identitasmu (nama, kelas, nomor absen) dengan tombol Ubah Identitas, lalu kirim lagi.</p>');
+      beep(false); return;
+    }
+    S.outbox = S.outbox.filter(function(x){ return !samaKiriman(x, d); }); S.outbox.push(d); save();
+    var why = e.message === 'offline' ? 'HP sedang tidak tersambung ke internet' : 'server sedang ramai karena banyak teman mengirim bersamaan';
+    if (st) st.innerHTML = '⚠️ Belum terkirim: ' + why + '. <b>Nilaimu sudah disimpan di HP ini</b> dan akan dikirim otomatis setiap 1 menit selama halaman web terbuka. Boleh juga ketuk Kirim Nilai lagi beberapa saat kemudian.';
+    toast('⚠️ Belum terkirim, dicoba lagi otomatis');
   });
 }
 function kirimAntrean(){
   var n0 = S.outbox.length; S.outbox = S.outbox.filter(function(x){ return !(Number(x.nilai) < MIN_KIRIM); }); if (S.outbox.length !== n0) save();   // kiriman lama di bawah nilai minimal dibuang
   if (!SEND_URL || !S.outbox.length || !navigator.onLine) return;
+  if (kirimAntrean.jalan) return; kirimAntrean.jalan = true;
   var d = S.outbox[0];
-  postNilai(d).then(function(){ S.outbox.shift(); save(); toast('✅ Nilai tertunda berhasil dikirim'); kirimAntrean(); }).catch(function(){});
+  postSekali(d).then(function(){ kirimAntrean.jalan = false; S.outbox = S.outbox.filter(function(x){ return !samaKiriman(x, d); }); save(); toast('✅ Nilai tertunda berhasil dikirim'); kirimAntrean(); })
+    .catch(function(e){ kirimAntrean.jalan = false; if (e.tolak){ S.outbox = S.outbox.filter(function(x){ return x !== d; }); save(); kirimAntrean(); } });   // ditolak server: buang agar antrean tidak macet
 }
+setInterval(kirimAntrean, 60000 + Math.floor(Math.random() * 20000));   // coba kirim antrean tiap ±1 menit (jeda acak per HP)
 window.addEventListener('online', kirimAntrean);
 setTimeout(kirimAntrean, 3000);
 route();
