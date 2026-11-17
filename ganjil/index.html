@@ -3736,8 +3736,27 @@ function ptsUlangan(b){
     '</div></main><button class="restore" data-restore>☰ Menu</button>';
   bindTop(); bindName(); bindLast(); bindRestore();
   $$('[data-b]').forEach(function(b){ b.onclick = function(){ keepName(); nav('b' + b.dataset.b); }; });
-  $('#reset').onclick = function(){ if (confirm('Hapus semua skor dan progres di perangkat ini?')){ S.res = {}; S.rp = {};S.seen = {}; S.last = null; S.refl = {}; S.chk = {}; S.draft = {}; save(); renderHome(); toast('Progres dihapus'); } };
+  $('#reset').onclick = hapusProgres;
   window.scrollTo(0, 0);
+}
+/* Hapus progres (mis. siswa meminjam HP teman): identitas, skor, jawaban, catatan, dan nilai tertunda dihapus.
+   Memakai popup sendiri karena confirm() tidak muncul di browser dalam aplikasi (WhatsApp/Instagram) dan sebagian HP.
+   Semua halaman web ini di perangkat yang sama (kunci bk7-… / inf8-…) ikut dibersihkan; ukuran huruf & suara tetap. */
+function hapusProgres(){
+  var nm = profOk() ? '<b>' + esc(profLabel()) + '</b>' : 'pengguna sebelumnya', nb = (S.outbox || []).length;
+  var m = modalBagian(null, '🗑️ Hapus progres di perangkat ini?',
+    '<p>Semua data milik ' + nm + ' di HP ini akan dihapus: <b>identitas</b> (nama, kelas, absen), <b>skor & jawaban</b> semua pertemuan, dan catatan.</p>' +
+    (nb ? '<div class="kirim-warn bad">⚠️ Masih ada <b>' + nb + ' nilai yang belum terkirim</b>. Jika dihapus, nilai itu hilang dan pemiliknya harus mengirim ulang dari HP lain.</div>' : '') +
+    '<p class="muted">Nilai yang sudah terkirim ke guru tetap aman di daftar guru.</p>',
+    '<button class="btn" style="background:#dc2626;color:#fff" data-hapus>Ya, hapus semua</button>');
+  var x = $('.row [data-x]', m); if (x) x.textContent = 'Batal';
+  $('[data-hapus]', m).onclick = function(){
+    var simpan = {z: S.z, sound: S.sound};
+    try { Object.keys(localStorage).forEach(function(k){ if (/^(bk7-|inf8-)/.test(k)) localStorage.removeItem(k); }); } catch (e) {}
+    Object.keys(S).forEach(function(k){ delete S[k]; }); Object.assign(S, simpan); save();
+    m.remove(); toast('✅ Progres dihapus. Isi identitasmu sendiri.');
+    setTimeout(function(){ location.href = location.pathname + location.search; }, 700);   // muat ulang bersih dari beranda
+  };
 }
 function keepName(){ readProf(); }
 function bindRestore(){ var r = $('[data-restore]'); if (r) r.onclick = function(){ document.body.classList.remove('mini'); }; }
