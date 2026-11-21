@@ -171,6 +171,37 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
 .pd.p1{background:#fef3c7;order:2;padding-top:18px}.pd.p2{order:1}.pd.p3{order:3}
 .ring.pop{animation:pop .6s ease-out}@keyframes pop{0%{transform:scale(.6)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:200}
+/* ---------- LIHAT ULANGAN (refleksi) ---------- */
+.lv-info{border-radius:14px;padding:10px 14px;font-size:.93rem}
+.lv-info.ok{background:var(--green-l);border:2px solid #9bd8b0}.lv-info.no{background:var(--yellow-l);border:2px solid var(--yellow)}
+.lv-tabs{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lv-tabs button{border:2px solid var(--line);background:#fff;border-radius:20px;padding:4px 12px;font-weight:700;font-size:.85rem;min-height:36px}
+.lv-tabs button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.lv-sum{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
+.lv-sum span{border-radius:20px;padding:3px 12px;font-weight:800;font-size:.85rem}
+.lv-q{border-left:6px solid var(--line)}
+.lv-q.benar{border-left-color:var(--green)}.lv-q.salah,.lv-q.kosong{border-left-color:var(--red)}.lv-q.sebagian{border-left-color:var(--yellow)}
+.lv-st{border-radius:20px;padding:3px 12px;font-size:.8rem;font-weight:800;margin-left:auto}
+.lv-st.benar{background:var(--green-l);color:var(--green)}.lv-st.salah,.lv-st.kosong{background:var(--red-l);color:var(--red)}.lv-st.sebagian{background:var(--yellow-l);color:#b45309}
+.lv-o{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:12px;padding:8px 10px;margin:6px 0;background:#fff}
+.lv-o .L{flex:0 0 30px;height:30px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--muted)}
+.lv-o.multi .L{border-radius:8px}
+.lv-o .T{flex:1;overflow-wrap:anywhere}.lv-o .T img{display:block;max-width:100%;max-height:26vh;margin-top:6px;border-radius:8px}
+.lv-o em{font-style:normal;font-size:.78rem;font-weight:800;border-radius:20px;padding:2px 10px;white-space:nowrap;align-self:center}
+.lv-o.pilih{border-color:var(--blue);background:var(--blue-l)}.lv-o.pilih .L{background:var(--blue);border-color:var(--blue);color:#fff}.lv-o.pilih em{background:var(--blue);color:#fff}
+.lv-o.pilih.ok{border-color:var(--green);background:var(--green-l)}.lv-o.pilih.ok .L,.lv-o.pilih.ok em{background:var(--green);border-color:var(--green);color:#fff}
+.lv-o.pilih.no{border-color:var(--red);background:var(--red-l)}.lv-o.pilih.no .L,.lv-o.pilih.no em{background:var(--red);border-color:var(--red);color:#fff}
+.lv-o.kunci{border-color:var(--green);border-style:dashed}.lv-o.kunci em{background:var(--green-l);color:var(--green)}
+.lv-a{border-radius:12px;padding:8px 12px;margin:6px 0;background:#f8fafc;border:1px solid var(--line)}
+.lv-a.ok{background:var(--green-l);border-color:#bbe5c9}.lv-a.no{background:var(--red-l);border-color:#f5c2c2}
+.lv-a b{color:var(--navy)}
+.lv-k{color:var(--green);font-weight:700}
+.lv-bl{display:inline-block;border-bottom:3px solid var(--blue);background:var(--blue-l);border-radius:6px 6px 0 0;padding:0 8px;font-weight:700;margin:0 2px}
+.lv-bl.ok{border-color:var(--green);background:var(--green-l)}.lv-bl.no{border-color:var(--red);background:var(--red-l)}
+.lv-bl small{color:var(--green);font-weight:700}
+.lv-bh{background:#f1f5ff;border:1px solid #c7d7f5;border-radius:12px;padding:8px 12px;margin-top:10px;font-size:.93rem}
+.lv-bh .bm{margin-right:6px}
+.uc .btn.gh{min-height:40px;padding:8px 14px}
 .fbi small+small{margin-top:2px}.dtw{overflow-x:auto;margin:6px 0 12px}.dt{border-collapse:collapse;font-size:.95rem;min-width:60%}.dt th,.dt td{border:1px solid #cbd5e1;padding:6px 10px;text-align:center;white-space:nowrap}.dt th{background:var(--blue-l);color:var(--navy)}.dt tr:nth-child(even) td{background:#f8fafc}
 </style>
 </head>
@@ -283,9 +314,11 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
         else if (punyaLokal || u.sedang) { b = '<span class="badge on">⏳ Sedang dikerjakan</span>'; tombol = '<button class="btn or" data-k="' + u.kode + '">▶ Lanjutkan</button>'; }
         else if (u.percobaan) { b = '<span class="badge rm">🔁 Wajib remedial · nilai terakhir ' + u.nilaiTerakhir + '</span>'; tombol = u.dibuka ? '<button class="btn rd" data-k="' + u.kode + '">🔁 Kerjakan Remedial</button>' : '<span class="muted">Remedial belum dibuka untuk kelasmu.</span>'; }
         else { b = '<span class="badge nw">Belum dikerjakan</span>'; tombol = u.dibuka ? '<button class="btn" data-k="' + u.kode + '">▶ Mulai Ulangan</button>' : '<span class="muted">Belum dibuka untuk kelasmu.</span>'; }
+        if (!u.latihan && u.percobaan && bisaLihat(u.kode) && !punyaLokal && !u.sedang) tombol += '<button class="btn gh" data-lv="' + u.kode + '">🔍 Lihat Ulangan &amp; Pembahasan</button>';
         return '<div class="uc"><h3>' + esc(u.judul) + '</h3><div class="meta">' + esc(u.kode) + (u.latihan ? ' · tanpa token & tanpa batas waktu' : ' · ⏱ ' + u.waktu + ' menit') + (u.jumlah ? ' · ' + u.jumlah + ' soal' : '') + (u.percobaan ? ' · sudah ' + u.percobaan + '× dikerjakan' : '') + '</div>' + b + tombol + '</div>';
       }).join('') + '</div><p class="muted" style="margin:12px 0 0">Nilai tuntas minimal ' + d.kkm + ' (di atas 64). Jika di bawahnya, kamu wajib mengerjakan remedial sampai tuntas.</p>';
       $$('[data-k]', ul).forEach(function (x) { x.onclick = function () { mulai(x.getAttribute('data-k')); }; });
+      $$('[data-lv]', ul).forEach(function (x) { x.onclick = function () { lihat(x.getAttribute('data-lv')); }; });
     }).catch(function (e) {
       ul.innerHTML = '<div class="msg">😕 ' + esc(e.message) + '<br><br><button class="btn gh" id="ulg">Coba lagi</button></div>';
       $('#ulg').onclick = muatDaftar;
@@ -663,7 +696,98 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
       if (Date.now() - t0 < 4500) requestAnimationFrame(f); else { c.remove(); removeEventListener('resize', uk); }
     })();
   }
-  function hasil(p, d) {
+  /* ---------- LIHAT ULANGAN: soal + jawaban siswa + pembahasan (refleksi). Kunci hanya dikirim server jika siswa sudah tuntas. ---------- */
+  function bisaLihat(kode) { return /^UH-/.test(kode || ''); }
+  function lihat(kode, coba, kembali) {
+    var p = profil();
+    if (!profOk(p)) { alert('Isi dan simpan identitasmu dulu (nama lengkap, kelas, nomor absen).'); return; }
+    kembali = kembali || daftar;
+    stopUjian(); document.body.className = '';
+    app.innerHTML = '<nav class="topnav"><a href="#" id="lk">◀ Kembali</a><span>🔍 Lihat Ulangan</span></nav><div class="page" style="margin-top:16px"><section class="card" id="lvc"><div class="msg"><div class="spin"></div>Memuat soal dan jawabanmu…</div></section></div>';
+    $('#lk').onclick = function (e) { e.preventDefault(); kembali(); };
+    api('lihat', {kode: kode, nama: p.nama, kelas: p.kelas, absen: p.absen, coba: coba || 0}).then(function (d) {
+      if (!d.ok) throw new Error(/tidak dikenal/i.test(d.pesan || '') ? 'Fitur Lihat Ulangan belum diaktifkan guru. Coba lagi nanti ya.' : d.pesan);
+      tampilLihat(d, kembali);
+    }).catch(function (e) {
+      $('#lvc').innerHTML = '<div class="msg">😕 ' + esc(e.message) + '<br><br><button class="btn gh" id="lb">◀ Kembali</button></div>';
+      $('#lb').onclick = kembali;
+    });
+  }
+  function tampilLihat(d, kembali) {
+    var lbl = {benar: '✅ Benar', salah: '❌ Belum tepat', sebagian: '◐ Sebagian benar', kosong: '⭕ Tidak dijawab'};
+    var hit = {benar: 0, sebagian: 0, salah: 0, kosong: 0}; d.soal.forEach(function (q) { hit[q.status] = (hit[q.status] || 0) + 1; });
+    var pk = {soal: d.soal}, salah = d.soal.length - hit.benar;   // pk: untuk tautan materi (hash teks soal)
+    function opsiHtml(q) {
+      var multi = q.jenis === 'PGK', pilih = multi ? [].concat(q.jawab || []) : [q.jawab], kunci = q.kunci || null;
+      return q.opsi.map(function (o, k) {
+        var dipilih = pilih.indexOf(o.id) >= 0, benarO = !!kunci && kunci.indexOf(o.id) >= 0, cls = '', tag = '';
+        if (dipilih) {
+          var ok = kunci ? benarO : q.status === 'benar', no = kunci ? !benarO : (!multi && q.status === 'salah');
+          cls = ' pilih' + (ok ? ' ok' : no ? ' no' : ''); tag = 'Jawabanmu' + (ok ? ' ✓' : no ? ' ✗' : '');
+        } else if (benarO) { cls = ' kunci'; tag = '✓ Jawaban benar'; }
+        return '<div class="lv-o' + (multi ? ' multi' : '') + cls + '"><span class="L">' + 'ABCDE'.charAt(k) + '</span><span class="T">' + br(o.teks) + (o.gambar ? '<img src="' + o.gambar + '" alt="">' : '') + '</span>' + (tag ? '<em>' + tag + '</em>' : '') + '</div>';
+      }).join('');
+    }
+    function jawabHtml(q) {
+      var j = q.jawab, kosongJ = q.status === 'kosong';
+      if (q.jenis === 'PG' || q.jenis === 'PGK') return (kosongJ ? '<div class="lv-a no">Kamu <b>tidak menjawab</b> soal ini.</div>' : '') + opsiHtml(q);
+      if (q.jenis === 'ISIAN') return '<div class="lv-a ' + (q.status === 'benar' ? 'ok' : 'no') + '"><b>Jawabanmu:</b> ' + (kosongJ ? '<i>(tidak dijawab)</i>' : esc(j)) + '</div>' +
+        (q.kunci ? '<div class="lv-a"><span class="lv-k">✓ Jawaban benar:</span> ' + esc(q.kunci) + '</div>' : '');
+      if (q.jenis === 'JODOH') {
+        j = j || {}; var teks = {}; (q.kanan || []).forEach(function (o) { teks[o.id] = o.teks; });
+        return q.kiri.map(function (k, i) {
+          var t = q.tepat ? (q.tepat[i] ? ' ok' : ' no') : '';
+          return '<div class="lv-a' + t + '"><b>' + (i + 1) + '. ' + br(k) + '</b> → ' + (j[i] ? esc(teks[j[i]] || '?') : '<i>(belum dipasangkan)</i>') +
+            (q.tepat ? (q.tepat[i] ? ' ✓' : ' ✗ · <span class="lv-k">benar: ' + esc(q.kunci[i].teks) + '</span>') : '') + '</div>';
+        }).join('');
+      }
+      if (q.jenis === 'LENGKAPI') {
+        j = [].concat(j || []);
+        return '<div class="lengkap">' + q.bagian.map(function (b, i) {
+          if (i === q.bagian.length - 1) return teksHtml(b);
+          var t = q.tepat ? (q.tepat[i] ? ' ok' : ' no') : '';
+          return teksHtml(b) + '<span class="lv-bl' + t + '">' + (j[i] ? esc(j[i]) : '…') + (q.tepat && !q.tepat[i] ? ' <small>→ ' + esc(q.kunci[i]) + '</small>' : '') + '</span>';
+        }).join('') + '</div>';
+      }
+      return '';
+    }
+    function kartu(q) {
+      var ada = tautan(pk, q.n), pikir = q.status !== 'benar' && !d.tuntas;
+      return '<section class="card lv-q ' + q.status + '" data-st="' + q.status + '"><div class="qhead"><span class="qno">Soal ' + q.n + '</span><span class="qtype">' + (JENIS[q.jenis] || 'Soal') + '</span><span class="lv-st ' + q.status + '">' + lbl[q.status] + '</span></div>' +
+        (q.jenis !== 'LENGKAPI' ? '<div class="qtext">' + teksHtml(q.teks) + '</div>' : '') + gbr(q.gambar) + jawabHtml(q) +
+        (q.pembahasan || q.materi || ada ? '<div class="lv-bh">' +
+          (pikir ? '<div style="margin-bottom:4px">🤔 <b>Coba pikirkan:</b> kenapa jawabanmu belum tepat? Baca pembahasan, lalu temukan jawaban yang benar di materinya.</div>' : '') +
+          (q.pembahasan ? '💡 <b>Pembahasan:</b> ' + br(q.pembahasan) : '') + (q.materi ? '<br><small class="muted">📖 Materi: ' + esc(q.materi) + '</small>' : '') +
+          (ada ? '<br><button class="bm" data-m="' + q.n + '">📖 Pelajari materinya</button>' : '') + '</div>' : '') + '</section>';
+    }
+    var tabs = d.percobaan.length > 1 ? '<div class="lv-tabs" style="margin-top:10px"><span class="muted">Pilih percobaan:</span>' + d.percobaan.map(function (x) {
+      return '<button data-c="' + x.coba + '" class="' + (x.coba === d.coba ? 'on' : '') + '">' + (x.coba === 1 ? 'Ulangan' : 'Remedial ' + (x.coba - 1)) + ' · ' + x.nilai + '</button>'; }).join('') + '</div>' : '';
+    var info = d.tuntas ? '<div class="lv-info ok">✅ Kamu sudah <b>tuntas</b> (nilai akhir ' + d.nilaiAkhir + '). <b>Kunci jawaban</b> dan pembahasan semua soal ditampilkan supaya kamu bisa belajar dari kesalahan.</div>'
+      : '<div class="lv-info no">🔒 <b>Kunci jawaban belum ditampilkan</b> karena kamu belum tuntas. Lihat soal yang belum tepat, baca pembahasannya, pelajari materinya, lalu kerjakan remedial. Kunci jawaban terbuka setelah kamu tuntas.</div>';
+    var ref = '<section class="card"><h2>📝 Refleksi</h2><div class="lv-sum"><span style="background:var(--green-l);color:var(--green)">✅ Benar ' + hit.benar + '</span>' +
+      (hit.sebagian ? '<span style="background:var(--yellow-l);color:#b45309">◐ Sebagian ' + hit.sebagian + '</span>' : '') + (hit.salah ? '<span style="background:var(--red-l);color:var(--red)">❌ Belum tepat ' + hit.salah + '</span>' : '') +
+      (hit.kosong ? '<span style="background:var(--red-l);color:var(--red)">⭕ Tidak dijawab ' + hit.kosong + '</span>' : '') + '</div>' +
+      '<p class="muted" style="margin:8px 0 0">' + (salah ? 'Tanyakan pada dirimu: soal mana yang paling sulit? Apakah karena belum paham materinya, kurang teliti membaca soal, atau terburu-buru? Pelajari lagi materi di bawah ini.' : 'Hebat, semua jawabanmu benar! Pertahankan cara belajarmu.') + '</p></section>';
+    app.innerHTML = '<nav class="topnav"><a href="#" id="lk">◀ Kembali</a><span>🔍 Lihat Ulangan</span></nav>' +
+      '<header class="hero"><span class="pill">LIHAT ULANGAN</span><h1>' + esc(d.judul) + '</h1><p>' + (d.coba === 1 ? 'Ulangan' : 'Remedial ke-' + (d.coba - 1)) + ' · nilai ' + d.nilai + '</p></header>' +
+      '<div class="page"><section class="card">' + info + tabs +
+      (salah ? '<div class="lv-tabs" style="margin-top:10px"><span class="muted">Tampilkan:</span><button data-f="semua" class="on">Semua soal (' + d.soal.length + ')</button><button data-f="perlu">Belum tepat (' + salah + ')</button></div>' : '') + '</section>' +
+      ref + materiHtml(pk, {umpan: d.soal}) + d.soal.map(kartu).join('') +
+      '<div style="display:flex;justify-content:center"><button class="btn gh" id="lk2">◀ Kembali</button></div></div>' +
+      '<footer>Gunakan halaman ini untuk belajar. Jangan dibagikan kepada teman yang belum ulangan.</footer>';
+    $('#lk').onclick = $('#lk2').onclick = function (e) { e.preventDefault(); kembali(); };
+    $$('[data-c]').forEach(function (b) { b.onclick = function () { lihat(d.kode, +b.getAttribute('data-c'), kembali); }; });
+    $$('[data-f]').forEach(function (b) { b.onclick = function () {
+      var f = b.getAttribute('data-f');
+      $$('[data-f]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      $$('.lv-q').forEach(function (c) { c.classList.toggle('hide', f === 'perlu' && c.getAttribute('data-st') === 'benar'); });
+    }; });
+    var mt = {}; d.soal.forEach(function (q) { mt[q.n] = q.materi; });
+    $$('[data-m]').forEach(function (b) { b.onclick = function (e) { e.stopPropagation(); var n = +b.getAttribute('data-m'); bukaMateri(pk, n, mt[n]); }; });
+    $$('.qimg, .lv-o img').forEach(function (im) { im.onclick = function () { modal('<img src="' + im.src + '" alt="">', 'zoom'); ov.firstChild.onclick = tutup; }; });
+    window.scrollTo(0, 0);
+  }
+  function hasil(p, d, diam) {
     document.body.className = '';
     var lat = !!d.latihan, ok = lat ? d.nilai >= d.kkm : d.tuntas, tuntasAkhir = !lat && d.tuntasAkhir;
     var benar = d.umpan.filter(function (u) { return u.status === 'benar'; }).length, salah = d.umpan.length - benar;
@@ -680,14 +804,15 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
       '<p>Benar penuh: <b>' + benar + '</b> dari ' + d.umpan.length + ' soal' + (salah ? ' · belum tepat: <b>' + salah + '</b>' : '') + '.<br>' +
       (lat ? 'Nilai terbaikmu: <b>' + d.nilaiAkhir + '</b>' : 'Nilai akhir yang tercatat: <b>' + d.nilaiAkhir + '</b> (' + (d.tuntasAkhir ? 'Tuntas' : 'Belum tuntas') + ')' +
         (d.tuntasAkhir && d.percobaan > 1 ? '<br><small class="muted">Nilai akhir remedial yang tuntas dicatat ' + d.nilaiAkhir + '.</small>' : '')) + '</p>' +
-      asal + '<div style="display:flex;flex-wrap:wrap;gap:10px">' + tombol + '<button class="btn gh" id="kd">📝 Kembali ke daftar</button></div></div></div></section>' +
+      asal + '<div style="display:flex;flex-wrap:wrap;gap:10px">' + tombol + (!lat && bisaLihat(p.kode) ? '<button class="btn" id="lv">🔍 Lihat Ulangan &amp; Pembahasan</button>' : '') + '<button class="btn gh" id="kd">📝 Kembali ke daftar</button></div></div></div></section>' +
       peringkatHtml(d) + materiHtml(p, d) +
       '<section class="card"><h2>🔎 Pembahasan per soal</h2><p class="muted" style="margin-top:-4px">Kunci jawaban tidak ditampilkan. Ketuk soal yang belum tepat untuk membuka materinya.</p><div class="fgrid">' + umpanHtml(p, d) + '</div></section></div>' +
       '<footer>' + (lat ? 'Nilai terbaik latihanmu tercatat untuk guru.' : 'Hasil ini sudah tercatat di rekap guru.') + '</footer>';
     // angka skor berjalan naik
     var el = $('#angka'), n = 0, step = Math.max(1, Math.round(d.nilai / 40)), iv = setInterval(function () { n = Math.min(d.nilai, n + step); el.textContent = n; if (n >= d.nilai) clearInterval(iv); }, 25);
-    if (ok) setTimeout(function () { confetti(d.nilai >= 90 ? 220 : 120); }, 300);
+    if (ok && !diam) setTimeout(function () { confetti(d.nilai >= 90 ? 220 : 120); }, 300);
     $('#kd').onclick = $('#kb2').onclick = function (e) { e.preventDefault(); daftar(); };
+    var lv = $('#lv'); if (lv) lv.onclick = function () { lihat(p.kode, d.percobaan, function () { hasil(p, d, true); }); };
     var mt = {}; d.umpan.forEach(function (u) { mt[u.n] = u.materi; });
     $$('[data-m]').forEach(function (b) { b.onclick = function (e) { e.stopPropagation(); var n = +b.getAttribute('data-m'); bukaMateri(p, n, mt[n]); }; });
     var rm = $('#rm');
