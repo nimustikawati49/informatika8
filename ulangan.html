@@ -104,6 +104,16 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
 .grid button.ans{background:var(--green);border-color:var(--green);color:#fff}
 .grid button.rg{background:var(--yellow);border-color:var(--yellow);color:#fff}
 .grid button.cur{outline:3px solid var(--navy);outline-offset:1px}
+.grid button.rg sup{font-size:.7em;margin-left:1px}
+/* daftar soal ragu-ragu di atas tombol navigasi (ikut menempel di bawah layar) */
+.qnav{flex-wrap:wrap}
+.ragubar{flex:1 1 100%;order:-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px;background:var(--yellow-l);border:2px solid var(--yellow);border-radius:12px;padding:6px 10px;font-size:.9rem;font-weight:700;color:#92400e}
+.ragubar:empty{display:none}
+.ragubar button,.nolist button{border:2px solid var(--yellow);background:#fff;color:#92400e;border-radius:9px;min-width:40px;min-height:34px;padding:2px 8px;font-weight:800;cursor:pointer}
+.ragubar button.cur{background:var(--yellow);color:#fff}
+.ragubar button small,.nolist button small{display:block;font-size:.65rem;font-weight:700;line-height:1}
+.nolist{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.nolist.kosong button{border-color:var(--red);color:var(--red)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.78rem;color:var(--muted);margin:10px 0}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:4px;border:2px solid var(--line)}
 .side .btn{width:100%;margin-top:6px}
@@ -373,7 +383,7 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
     app.innerHTML = '<div class="exbar"><div class="ttl"><b>' + esc(S.p.judul) + '</b><small>' + esc(p.nama) + ' · ' + esc(p.kelas) + ' · No. ' + esc(p.absen) + (S.p.percobaan > 1 ? ' · Remedial ke-' + (S.p.percobaan - 1) : '') + '</small></div>' +
       '<button class="navbtn" id="nb">☰ <span id="nbt"></span></button><div class="timer" id="tm">⏱ --:--</div></div>' +
       '<div class="exbody"><div class="qwrap"><div class="qcard" id="q"></div>' +
-      '<div class="qnav"><button class="btn gh" id="pv">◀<span class="tx"> Sebelumnya</span></button><span class="sp"></span><label class="ragu"><input type="checkbox" id="rg"> Ragu-ragu</label><span class="sp"></span><button class="btn" id="nx">Lanjutkan ▶</button></div></div>' +
+      '<div class="qnav"><div class="ragubar" id="rb"></div><button class="btn gh" id="pv">◀<span class="tx"> Sebelumnya</span></button><span class="sp"></span><label class="ragu"><input type="checkbox" id="rg"> Ragu-ragu</label><span class="sp"></span><button class="btn" id="nx">Lanjutkan ▶</button></div></div>' +
       '<aside class="side" id="sd"><h4>Daftar Soal</h4><div class="grid" id="gr"></div><div class="legend"><span><i style="background:var(--green);border-color:var(--green)"></i>Dijawab</span><span><i style="background:var(--yellow);border-color:var(--yellow)"></i>Ragu-ragu</span><span><i></i>Belum</span></div>' +
       '<button class="btn gr" id="fin">✅ Selesai &amp; Kirim</button></aside><div class="shade" id="sh"></div></div>';
     $('#nb').onclick = function () { document.body.classList.toggle('side-open'); };
@@ -396,8 +406,11 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
   function grid() {
     $('#gr').innerHTML = S.p.soal.map(function (q, i) {
       var n = i + 1;
-      return '<button data-g="' + i + '" class="' + (S.r[n] ? 'rg' : terisi(S.j[n]) ? 'ans' : '') + (i === S.i ? ' cur' : '') + '">' + n + '</button>';
+      return '<button data-g="' + i + '" class="' + (S.r[n] ? 'rg' : terisi(S.j[n]) ? 'ans' : '') + (i === S.i ? ' cur' : '') + '">' + n + (S.r[n] && terisi(S.j[n]) ? '<sup>✓</sup>' : '') + '</button>';
     }).join('');
+    // daftar soal ragu-ragu: ketuk nomor untuk langsung ke soal itu
+    var rg = []; for (var k = 1; k <= S.p.soal.length; k++) if (S.r[k]) rg.push(k);
+    $('#rb').innerHTML = rg.length ? '🟡 Ragu-ragu (' + rg.length + '):' + rg.map(function (n) { return '<button data-g="' + (n - 1) + '" class="' + (n - 1 === S.i ? 'cur' : '') + '" title="Buka soal ' + n + '">' + n + '<small>' + (terisi(S.j[n]) ? '✓ dijawab' : 'kosong') + '</small></button>'; }).join('') : '';
     $$('[data-g]').forEach(function (b) { b.onclick = function () { ke(+b.getAttribute('data-g')); }; });
     var sudah = S.p.soal.filter(function (q, i) { return terisi(S.j[i + 1]); }).length;
     $('#nbt').textContent = 'Soal ' + (S.i + 1) + '/' + S.p.soal.length + ' · ' + sudah + ' dijawab';
@@ -545,11 +558,14 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
 
   /* ---------- KIRIM ---------- */
   function konfirmasi() {
-    var n = S.p.soal.length, kosong = 0, ragu = 0;
-    for (var i = 1; i <= n; i++) { if (!terisi(S.j[i])) kosong++; if (S.r[i]) ragu++; }
-    modal('<h2>✅ Selesai mengerjakan?</h2><p>Kamu sudah menjawab <b>' + (n - kosong) + ' dari ' + n + '</b> soal.' +
-      (kosong ? '<br>Belum dijawab: <b style="color:var(--red)">' + kosong + ' soal</b>.' : '') + (ragu ? '<br>Masih ragu-ragu: <b style="color:#b45309">' + ragu + ' soal</b>.' : '') +
-      '</p><p class="muted">Setelah dikirim, jawaban tidak bisa diubah lagi.</p><div class="acts"><button class="btn gh" data-x>Periksa lagi</button><button class="btn gr" id="ya">Ya, kirim jawaban</button></div>', '', function () {});
+    var n = S.p.soal.length, kosong = [], ragu = [];
+    for (var i = 1; i <= n; i++) { if (!terisi(S.j[i])) kosong.push(i); if (S.r[i]) ragu.push(i); }
+    var tombol = function (list, kls) { return '<div class="nolist ' + kls + '">' + list.map(function (x) { return '<button data-ke="' + (x - 1) + '">' + x + (kls === 'rgl' ? '<small>' + (terisi(S.j[x]) ? '✓ dijawab' : 'kosong') + '</small>' : '') + '</button>'; }).join('') + '</div>'; };
+    modal('<h2>✅ Selesai mengerjakan?</h2><p>Kamu sudah menjawab <b>' + (n - kosong.length) + ' dari ' + n + '</b> soal.</p>' +
+      (kosong.length ? '<p style="margin-bottom:0">Belum dijawab: <b style="color:var(--red)">' + kosong.length + ' soal</b> · ketuk nomornya untuk mengerjakan:</p>' + tombol(kosong, 'kosong') : '') +
+      (ragu.length ? '<p style="margin-bottom:0">Masih ragu-ragu: <b style="color:#b45309">' + ragu.length + ' soal</b> · ketuk nomornya untuk memeriksa:</p>' + tombol(ragu, 'rgl') : '') +
+      '<p class="muted">Setelah dikirim, jawaban tidak bisa diubah lagi.</p><div class="acts"><button class="btn gh" data-x>Periksa lagi</button><button class="btn gr" id="ya">Ya, kirim jawaban</button></div>', '', function () {});
+    $$('[data-ke]').forEach(function (b) { b.onclick = function () { tutup(); ke(+b.getAttribute('data-ke')); }; });
     $('#ya').onclick = function () { tutup(); kirim('manual'); };
   }
   function kirim(cara, ulang) {
