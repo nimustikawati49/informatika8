@@ -202,6 +202,12 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
 .lv-bh{background:#f1f5ff;border:1px solid #c7d7f5;border-radius:12px;padding:8px 12px;margin-top:10px;font-size:.93rem}
 .lv-bh .bm{margin-right:6px}
 .uc .btn.gh{min-height:40px;padding:8px 14px}
+.susbox{margin-top:18px;border-top:2px dashed var(--line);padding-top:14px}.uc.sus{border-color:#c4b5fd;background:#faf7ff}
+.livebar{background:#ede9fe;color:#5b21b6;font-size:.75rem;font-weight:700;text-align:center;padding:3px 8px}
+.kb{font-size:1.6rem;font-weight:900;letter-spacing:4px;background:#fff;color:var(--red);border:3px solid var(--red);border-radius:12px;padding:2px 12px;display:inline-block}
+.pt{width:100%;border-collapse:collapse;font-size:.88rem}.pt th,.pt td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}.pt th{background:var(--blue-l);color:var(--navy)}
+.pt tr.lock td{background:var(--red-l)}.pt tr.off td{color:var(--muted)}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.ptw{overflow-x:auto}
 .fbi small+small{margin-top:2px}.dtw{overflow-x:auto;margin:6px 0 12px}.dt{border-collapse:collapse;font-size:.95rem;min-width:60%}.dt th,.dt td{border:1px solid #cbd5e1;padding:6px 10px;text-align:center;white-space:nowrap}.dt th{background:var(--blue-l);color:var(--navy)}.dt tr:nth-child(even) td{background:#f8fafc}
 </style>
 </head>
@@ -301,12 +307,13 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
         /* Tombol "Ulangan Online" di beranda: hanya asesmen utama dengan urutan tetap (yang belum dibuka tetap tampil, terkunci).
            Latihan (LAT-…) dan PTS dibuka dari halaman bab / halaman PTS. */
         var awal = function (u, k) { return u.kode.indexOf(k + '-') === 0; };
-        var lain = d.ulangan.filter(function (u) { return !/^(LAT|PTS)-/.test(u.kode) && !UTAMA.some(function (x) { return awal(u, x[0]); }); });
+        var lain = d.ulangan.filter(function (u) { return !/^(LAT|PTS|SUS)-/.test(u.kode) && !UTAMA.some(function (x) { return awal(u, x[0]); }); });
+        var susulan = d.ulangan.filter(function (u) { return /^SUS-/.test(u.kode); });
         d.ulangan = UTAMA.map(function (x) { return d.ulangan.filter(function (u) { return awal(u, x[0]); })[0] || {kode: x[0] + '-' + ANGKA, judul: x[1], kosong: true}; }).concat(lain);
       }
-      UL = {}; d.ulangan.forEach(function (u) { UL[u.kode] = u; });
+      UL = {}; d.ulangan.concat(susulan || []).forEach(function (u) { UL[u.kode] = u; });
       if (!d.ulangan.length) { ul.innerHTML = '<div class="msg">' + (/^(PTS-|UH-)/.test(PILIH) ? (/^PTS-/.test(PILIH) ? 'PTS Online' : 'Ulangan ini') + ' belum dibuka. Guru membukanya sesuai jadwal; siapkan token dari guru.' : /^LAT-/.test(PILIH) ? 'Latihan ini belum tersedia.' : 'Belum ada ulangan yang dibuka untuk kelas ' + TG + '. Tunggu informasi dari guru ya.') + '</div>'; return; }
-      ul.innerHTML = '<div class="ulist">' + d.ulangan.map(function (u) {
+      var kartuUl = function (u) {
         var punyaLokal = lokal && lokal.p && lokal.p.kode === u.kode, b, tombol;
         if (u.kosong) return '<div class="uc"><h3>' + esc(u.judul) + '</h3><div class="meta">' + esc(u.kode) + '</div><span class="badge nw">🔒 Belum dibuka</span><span class="muted">Guru membukanya sesuai jadwal.</span></div>';
         if (u.latihan) { b = '<span class="badge on">🏋️ Latihan' + (u.percobaan ? ' · nilai terbaik ' + u.nilaiAkhir : '') + '</span>'; tombol = '<button class="btn gr" data-k="' + u.kode + '">' + (punyaLokal ? '▶ Lanjutkan Latihan' : u.percobaan ? '🔁 Ulangi Latihan' : '▶ Mulai Latihan') + '</button>'; }
@@ -315,8 +322,11 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
         else if (u.percobaan) { b = '<span class="badge rm">🔁 Wajib remedial · nilai terakhir ' + u.nilaiTerakhir + '</span>'; tombol = u.dibuka ? '<button class="btn rd" data-k="' + u.kode + '">🔁 Kerjakan Remedial</button>' : '<span class="muted">Remedial belum dibuka untuk kelasmu.</span>'; }
         else { b = '<span class="badge nw">Belum dikerjakan</span>'; tombol = u.dibuka ? '<button class="btn" data-k="' + u.kode + '">▶ Mulai Ulangan</button>' : '<span class="muted">Belum dibuka untuk kelasmu.</span>'; }
         if (!u.latihan && u.percobaan && bisaLihat(u.kode) && !punyaLokal && !u.sedang) tombol += '<button class="btn gh" data-lv="' + u.kode + '">🔍 Lihat Ulangan &amp; Pembahasan</button>';
-        return '<div class="uc"><h3>' + esc(u.judul) + '</h3><div class="meta">' + esc(u.kode) + (u.latihan ? ' · tanpa token & tanpa batas waktu' : ' · ⏱ ' + u.waktu + ' menit') + (u.jumlah ? ' · ' + u.jumlah + ' soal' : '') + (u.percobaan ? ' · sudah ' + u.percobaan + '× dikerjakan' : '') + '</div>' + b + tombol + '</div>';
-      }).join('') + '</div><p class="muted" style="margin:12px 0 0">Nilai tuntas minimal ' + d.kkm + ' (di atas 64). Jika di bawahnya, kamu wajib mengerjakan remedial sampai tuntas.</p>';
+        return '<div class="uc' + (/^SUS-/.test(u.kode) ? ' sus' : '') + '"><h3>' + esc(u.judul) + '</h3><div class="meta">' + esc(u.kode) + (u.latihan ? ' · tanpa token & tanpa batas waktu' : ' · ⏱ ' + u.waktu + ' menit') + (u.jumlah ? ' · ' + u.jumlah + ' soal' : '') + (u.percobaan ? ' · sudah ' + u.percobaan + '× dikerjakan' : '') + '</div>' + b + tombol + '</div>';
+      };
+      ul.innerHTML = '<div class="ulist">' + d.ulangan.map(kartuUl).join('') + '</div><p class="muted" style="margin:12px 0 0">Nilai tuntas minimal ' + d.kkm + ' (di atas 64). Jika di bawahnya, kamu wajib mengerjakan remedial sampai tuntas.</p>' +
+        (susulan ? '<div class="susbox"><h2>🏠 Ulangan Susulan (dikerjakan di rumah)</h2><p class="muted" style="margin:-4px 0 10px">Hanya untuk siswa yang <b>tidak mengikuti</b> ulangan harian di sekolah. Token diberikan guru lewat WA. Selama mengerjakan, kamu <b>dipantau langsung</b> oleh guru: soal yang dikerjakan, keluar layar, dan waktu tercatat.</p>' +
+          (susulan.length ? '<div class="ulist">' + susulan.map(kartuUl).join('') + '</div>' : '<div class="msg" style="padding:10px">Belum ada ulangan susulan yang dibuka. Hubungi guru jika kamu belum mengikuti ulangan harian.</div>') + '</div>' : '');
       $$('[data-k]', ul).forEach(function (x) { x.onclick = function () { mulai(x.getAttribute('data-k')); }; });
       $$('[data-lv]', ul).forEach(function (x) { x.onclick = function () { lihat(x.getAttribute('data-lv')); }; });
     }).catch(function (e) {
@@ -334,7 +344,7 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
     if (UL[kode] && !UL[kode].perluToken) return kirimMulai(kode, '', true);
     var tok = tokenSimpan || (get(KT) || {})[kode];
     if (tok) return kirimMulai(kode, tok, true);
-    var m = modal('<h2>🔑 Token Ulangan</h2><p class="muted">Masukkan token yang diumumkan guru di kelas.</p><input class="inp tok" id="tk" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false"><p class="err" id="te"></p><div class="acts"><button class="btn gh" data-x>Batal</button><button class="btn" id="tg">Masuk</button></div>', '', function () {});
+    var m = modal('<h2>🔑 Token Ulangan</h2><p class="muted">' + (/^SUS-/.test(kode) ? 'Masukkan token <b>ulangan susulan</b> yang dikirim guru lewat WA.' : 'Masukkan token yang diumumkan guru di kelas.') + '</p><input class="inp tok" id="tk" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false"><p class="err" id="te"></p><div class="acts"><button class="btn gh" data-x>Batal</button><button class="btn" id="tg">Masuk</button></div>', '', function () {});
     var tk = $('#tk', m); tk.focus();
     tk.onkeydown = function (e) { if (e.key === 'Enter') $('#tg', m).click(); };
     $('#tg', m).onclick = function () {
@@ -373,12 +383,15 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
       '<li>Jawaban tersimpan otomatis. Tekan <b>Selesai &amp; Kirim</b> untuk melihat nilai dan petunjuk.</li>' +
       '<li>Boleh diulang sesuka hati. <b>Nilai terbaikmu</b> tercatat untuk guru.</li></ol>' +
       '<div class="acts"><button class="btn gr" data-x>Mulai latihan</button></div>', '', function () { siap(); });
-    modal('<h2>📋 Tata Tertib Ulangan Online</h2>' +
+    var sus = /^SUS-/.test(S.p.kode);
+    modal('<h2>📋 Tata Tertib ' + (sus ? 'Ulangan Susulan (di rumah)' : 'Ulangan Online') + '</h2>' +
       '<p class="muted" style="margin:0">' + esc(S.p.judul) + ' · ' + esc(p.nama) + ' · ' + esc(p.kelas) + ' · No. ' + esc(p.absen) + (S.p.percobaan > 1 ? ' · <b>Remedial (percobaan ke-' + S.p.percobaan + ')</b>' : '') + '</p><ol>' +
       '<li>Pastikan nama, kelas, dan nomor absen di atas sudah benar. Jika salah, segera lapor guru.</li>' +
       '<li>Waktu mengerjakan <b>' + S.p.waktu + ' menit</b>, mulai dihitung setelah tata tertib ini ditutup. Sisa waktu tampil di <b>pojok kanan atas</b>. Saat waktu habis, jawaban <b>terkirim otomatis</b>.</li>' +
       '<li><b>Jangan keluar dari layar ulangan</b> (pindah aplikasi, membuka notifikasi, pindah tab, atau menutup layar). Keluar selama <b>' + minK() + ' detik atau lebih</b> dalam sekali keluar <b>dihitung 1 kali keluar</b> dan dilaporkan ke guru. Keluar lebih singkat dari itu tidak dihitung.</li>' +
-      '<li>Keluar lebih dari <b>' + a.batasKeluar + ' detik</b> → ulangan <b>terkunci</b> dan hanya bisa dibuka guru/pengawas.</li>' +
+      (sus ? '<li class="wsus"><b>Kamu dipantau langsung oleh guru</b> selama mengerjakan: nomor soal yang sedang dikerjakan, jumlah jawaban, keluar layar, dan sisa waktu terlihat di layar guru.</li>' +
+        '<li class="wsus">Kerjakan <b>sendiri</b> di tempat yang tenang. Jangan membuka buku, internet, aplikasi lain, atau bertanya kepada orang lain. Aktifkan <b>mode senyap / jangan ganggu</b> agar telepon dan notifikasi tidak membuatmu keluar layar.</li>' : '') +
+      '<li>Keluar lebih dari <b>' + a.batasKeluar + ' detik</b> → ulangan <b>terkunci</b> dan hanya bisa dibuka ' + (sus ? 'dengan <b>kode buka dari guru</b> (kirim pesan WA ke guru)' : 'guru/pengawas') + '.</li>' +
       '<li>Dihitung keluar sampai <b>' + a.maksKeluar + ' kali</b> → ulangan <b>terkunci</b>, dan sesudahnya setiap kali keluar lagi akan langsung terkunci. Jawabanmu tetap aman.</li>' +
       '<li>Jawaban tersimpan otomatis di perangkat. Jika HP mati atau halaman tertutup, buka lagi halaman ini lalu pilih <b>Lanjutkan</b>. Waktu tetap berjalan.</li>' +
       '<li>Tandai <b>Ragu-ragu</b> bila belum yakin, lalu periksa kembali lewat <b>Daftar Soal</b> sebelum menekan <b>Selesai &amp; Kirim</b>.</li>' +
@@ -419,6 +432,7 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
       '<div class="qnav"><div class="ragubar" id="rb"></div><button class="btn gh" id="pv">◀<span class="tx"> Sebelumnya</span></button><span class="sp"></span><label class="ragu"><input type="checkbox" id="rg"> Ragu-ragu</label><span class="sp"></span><button class="btn" id="nx">Lanjutkan ▶</button></div></div>' +
       '<aside class="side" id="sd"><h4>Daftar Soal</h4><div class="grid" id="gr"></div><div class="legend"><span><i style="background:var(--green);border-color:var(--green)"></i>Dijawab</span><span><i style="background:var(--yellow);border-color:var(--yellow)"></i>Ragu-ragu</span><span><i></i>Belum</span></div>' +
       '<button class="btn gr" id="fin">✅ Selesai &amp; Kirim</button></aside><div class="shade" id="sh"></div></div>';
+    if (/^SUS-/.test(S.p.kode)) $('.exbar').insertAdjacentHTML('afterend', '<div class="livebar">📡 Ulangan susulan · kamu dipantau langsung oleh guru</div>');
     $('#nb').onclick = function () { document.body.classList.toggle('side-open'); };
     $('#sh').onclick = function () { document.body.classList.remove('side-open'); };
     $('#pv').onclick = function () { ke(S.i - 1); };
@@ -427,9 +441,22 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
     $('#fin').onclick = konfirmasi;
     ke(S.i);
     clearInterval(tick); tick = setInterval(waktu, 1000); waktu();
+    clearInterval(laporT); laporT = null;
+    if (/^SUS-/.test(S.p.kode)) { lapor(); laporT = setInterval(lapor, 20000); }
     if (S.kunci) kunciLayar();
   }
-  function stopUjian() { clearInterval(tick); tick = null; clearTimeout(retryT); }
+  function stopUjian() { clearInterval(tick); tick = null; clearTimeout(retryT); clearInterval(laporT); laporT = null; }
+  /* Ulangan susulan (di rumah): perangkat melapor ke guru tiap 20 detik (soal ke-, terjawab, keluar layar, terkunci) untuk halaman Pantau. */
+  var laporT = null;
+  function lapor() {
+    if (!S || !S.p || !/^SUS-/.test(S.p.kode) || S.kirim) return;
+    var sudah = S.p.soal.filter(function (q, i) { return terisi(S.j[i + 1]); }).length;
+    var isi = {aksi: 'lapor', sesi: S.p.sesi, soal: S.i + 1, terjawab: sudah, total: S.p.soal.length, keluar: S.keluar, detik: S.detik, kunci: !!S.kunci, pergi: !!S.away, penuh: !!(document.fullscreenElement || document.webkitFullscreenElement)};
+    // halaman disembunyikan (pindah aplikasi): sendBeacon tetap terkirim walau browser menangguhkan halaman
+    if (document.hidden && navigator.sendBeacon && !/^__URL|^mock/.test(URL_ULANGAN)) { try { if (navigator.sendBeacon(URL_ULANGAN, JSON.stringify(isi))) return; } catch (e) {} }
+    api('lapor', {sesi: S.p.sesi, soal: S.i + 1, terjawab: sudah, total: S.p.soal.length, keluar: S.keluar, detik: S.detik, kunci: !!S.kunci, pergi: !!S.away,
+      penuh: !!(document.fullscreenElement || document.webkitFullscreenElement)}).catch(function () {});
+  }
   function ke(i) {
     if (i < 0 || i >= S.p.soal.length) return;
     S.i = i; simpan(); soal(); grid();
@@ -537,14 +564,15 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
   function aktif() { return S && S.mulai && !S.kirim && document.body.classList.contains('exam'); }
   function minK() { return Number(S.p.aturan.minKeluar) || 5; }   // HITUNG KELUAR (detik) dari pengaturan guru; server lama → 5
   function diawasi() { return aktif() && !S.p.latihan && S.p.aturan.maksKeluar > 0; }
-  function pergi(t) { if (!diawasi() || S.away) return; S.away = t || Date.now(); simpan(); }
+  function pergi(t) { if (!diawasi() || S.away) return; S.away = t || Date.now(); simpan(); lapor(); }
   function kembali() {
     if (!S || !S.away || S.kirim) return;
     var dur = Math.round((Date.now() - S.away) / 1000); S.away = null;
-    if (dur < minK()) { simpan(); return; }   // keluar sebentar (kurang dari HITUNG KELUAR) tidak dihitung
+    if (dur < minK()) { simpan(); lapor(); return; }   // keluar sebentar (kurang dari HITUNG KELUAR) tidak dihitung
     S.keluar++; S.detik += dur; simpan();
     var a = S.p.aturan;
     /* Batas keluar tercapai → DIKUNCI (bukan dikirim otomatis): guru membuka dengan token pengawas, jawaban tetap utuh. */
+    setTimeout(lapor, 0);   // laporkan ke guru (susulan) sesudah status kunci diperbarui
     if (S.keluar >= a.maksKeluar || dur > a.batasKeluar || S.kunci) { S.kunci = true; simpan(); kunciLayar(dur, S.keluar >= a.maksKeluar); }
     else modal('<h2>⚠️ Kamu keluar dari layar ulangan</h2><p>Kamu meninggalkan layar ulangan selama <b>' + dur + ' detik</b>. Sesuai aturan guru, keluar <b>' + minK() + ' detik atau lebih</b> dihitung sebagai keluar layar.</p>' +
       '<p>Ini keluar ke-<b>' + S.keluar + '</b> dari batas <b>' + a.maksKeluar + ' kali</b> dan sudah <b>dicatat</b> untuk guru.</p>' +
@@ -552,16 +580,16 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
   }
   function kunciLayar(dur, batasKali) {
     var m = modal('<h2>🔒 Ulangan Terkunci</h2><p>' + (batasKali ? 'Kamu sudah keluar dari layar ulangan <b>' + S.keluar + ' kali</b> (batas ' + S.p.aturan.maksKeluar + ' kali)' + (dur ? ', terakhir selama <b>' + dur + ' detik</b>' : '') + '. Yang dihitung hanya keluar ' + minK() + ' detik atau lebih. ' : dur ? 'Kamu meninggalkan layar ulangan selama <b>' + dur + ' detik</b> (lebih dari ' + S.p.aturan.batasKeluar + ' detik). ' : '') +
-      'Jawabanmu <b>tetap aman</b>. Panggil guru/pengawas untuk membuka kunci. Waktu ulangan tetap berjalan.</p><p class="lbl">Token pengawas</p>' +
+      'Jawabanmu <b>tetap aman</b>. ' + (/^SUS-/.test(S.p.kode) ? 'Kirim pesan <b>WA ke guru</b>: nama, kelas, dan tulis <i>"ulangan susulan terkunci"</i>. Guru akan memberimu <b>kode buka 4 angka</b>.' : 'Panggil guru/pengawas untuk membuka kunci.') + ' Waktu ulangan tetap berjalan.</p><p class="lbl">' + (/^SUS-/.test(S.p.kode) ? 'Kode buka dari guru' : 'Token pengawas') + '</p>' +
       '<input class="inp tok" id="kp" autocomplete="off" autocapitalize="characters" spellcheck="false"><p class="err" id="ke"></p><div class="acts"><button class="btn" id="kb">Buka kunci</button></div>', 'lock');
     var b = $('#kb', m), k = $('#kp', m);
     k.onkeydown = function (e) { if (e.key === 'Enter') b.click(); };
     b.onclick = function () {
       if (!k.value.trim()) return;
       b.disabled = true; b.textContent = 'Memeriksa…';
-      api('buka', {sesi: S.p.sesi, token: k.value.trim().toUpperCase()}).then(function (d) {
+      api('buka', {sesi: S.p.sesi, token: k.value.trim().toUpperCase(), keluar: S.keluar}).then(function (d) {
         if (!d.ok) throw new Error(d.pesan);
-        S.kunci = false; simpan(); tutup(); layarPenuh();
+        S.kunci = false; simpan(); tutup(); layarPenuh(); lapor();
       }).catch(function (e) { $('#ke').textContent = e.message; b.disabled = false; b.textContent = 'Buka kunci'; });
     };
   }
@@ -697,7 +725,7 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
     })();
   }
   /* ---------- LIHAT ULANGAN: soal + jawaban siswa + pembahasan (refleksi). Kunci hanya dikirim server jika siswa sudah tuntas. ---------- */
-  function bisaLihat(kode) { return /^UH-/.test(kode || ''); }
+  function bisaLihat(kode) { return /^(UH|SUS)-/.test(kode || ''); }
   function lihat(kode, coba, kembali) {
     var p = profil();
     if (!profOk(p)) { alert('Isi dan simpan identitasmu dulu (nama lengkap, kelas, nomor absen).'); return; }
@@ -829,9 +857,63 @@ body.exam input,body.exam select{user-select:text;-webkit-user-select:text}
     }
     window.scrollTo(0, 0);
   }
+  /* ---------- PANTAU GURU (ulangan.html?pantau=1): siswa ulangan susulan secara langsung, kode buka kunci layar ---------- */
+  var KPT = 'uhPantau', pantauT = null;
+  function pantau() {
+    document.body.className = '';
+    app.innerHTML = '<nav class="topnav"><a href="./ulangan.html">📝 Ulangan Online</a><span>📡 Pantau Ulangan Susulan</span></nav>' +
+      '<header class="hero"><span class="pill">KHUSUS GURU</span><h1>Pantau Ulangan Susulan</h1><p>Siswa yang mengerjakan ulangan susulan di rumah · diperbarui otomatis tiap 15 detik</p></header>' +
+      '<div class="page"><section class="card" id="pb"><div class="msg"><div class="spin"></div>Memuat…</div></section></div>';
+    var tok = get(KPT);
+    if (!tok) return pantauMasuk();
+    muatPantau(tok);
+  }
+  function pantauMasuk(pesan) {
+    clearInterval(pantauT);
+    $('#pb').innerHTML = '<h2>🔑 Masuk</h2><p class="muted">Masukkan <b>TOKEN PENGAWAS</b> salah satu baris <b>SUS-…</b> di tab PENGATURAN (sheet BANK SOAL). Token ini jangan diberikan kepada siswa.</p>' +
+      '<input class="inp tok" id="ptk" autocomplete="off" autocapitalize="characters" spellcheck="false"><p class="err" id="pte">' + esc(pesan || '') + '</p><div class="acts"><button class="btn" id="ptg">Masuk</button></div>';
+    var k = $('#ptk'); k.focus();
+    k.onkeydown = function (e) { if (e.key === 'Enter') $('#ptg').click(); };
+    $('#ptg').onclick = function () { if (k.value.trim()) { put(KPT, k.value.trim().toUpperCase()); muatPantau(k.value.trim().toUpperCase()); } };
+  }
+  function jam(ms) { if (!ms) return '–'; var d = new Date(ms); return ('0' + d.getHours()).slice(-2) + '.' + ('0' + d.getMinutes()).slice(-2); }
+  function muatPantau(tok) {
+    clearInterval(pantauT);
+    var muat = function () {
+      api('pantau', {token: tok}).then(function (d) {
+        if (!d.ok) { put(KPT, null); return pantauMasuk(/tidak dikenal/i.test(d.pesan || '') ? 'Server belum diperbarui ke versi 5.' : d.pesan); }
+        var now = d.sekarang, aktif = d.sesi.filter(function (s) { return s.status === 'AKTIF'; }), kunci = aktif.filter(function (s) { return s.kodeBuka; });
+        var baris = d.sesi.map(function (s) {
+          var L = s.live || {}, umur = L.t ? Math.round((now - L.t) / 1000) : null, on = s.status === 'AKTIF' && umur !== null && umur < 60;
+          var st = s.status !== 'AKTIF' ? (s.status === 'SELESAI' ? '✅ Selesai · nilai <b>' + s.nilai + '</b><br><small class="muted">' + esc(s.cara || '') + ' · ' + jam(s.kirim) + '</small>' : '⚪ ' + esc(s.status))
+            : s.kodeBuka ? '🔒 <b style="color:var(--red)">TERKUNCI</b><br>Kode buka: <span class="kb">' + s.kodeBuka + '</span><br><small>Kirim kode ini ke siswa lewat WA</small>'
+            : !s.batas ? '📋 Membaca tata tertib'
+            : '<span class="dot" style="background:' + (on ? (L.pergi ? 'var(--yellow)' : 'var(--green)') : 'var(--muted)') + '"></span>' + (on ? (L.pergi ? '<b style="color:#b45309">Sedang keluar layar!</b>' : 'Mengerjakan') : 'Tidak terhubung' + (umur !== null ? ' (' + Math.round(umur / 60) + ' mnt)' : '')) +
+              (on && L.penuh === false ? '<br><small style="color:#b45309">bukan layar penuh</small>' : '');
+          var sisa = s.status === 'AKTIF' && s.batas ? Math.max(0, Math.round((s.batas - now) / 60000)) + ' mnt' : '–';
+          return '<tr class="' + (s.kodeBuka ? 'lock' : s.status === 'AKTIF' && !on ? 'off' : '') + '"><td><b>' + esc(s.nama) + '</b><br><small class="muted">' + esc(s.kelas) + ' · No. ' + esc(s.absen) + '</small></td>' +
+            '<td>' + esc(s.kode) + (s.coba > 1 ? '<br><small>remedial ' + (s.coba - 1) + '</small>' : '') + '</td><td>' + st + '</td>' +
+            '<td>' + (s.status === 'AKTIF' && L.total ? 'Soal ' + L.soal + '<br><small class="muted">' + L.terjawab + '/' + L.total + ' dijawab</small>' : '–') + '</td>' +
+            '<td>' + (s.keluar ? '<b style="color:var(--red)">' + s.keluar + '×</b> · ' + s.detik + ' dtk' : '0') + '</td><td>' + jam(s.mulai) + '<br><small class="muted">sisa ' + sisa + '</small></td></tr>';
+        }).join('');
+        $('#pb').innerHTML = '<div class="lv-sum" style="margin:0 0 10px"><span style="background:var(--green-l);color:var(--green)">Mengerjakan ' + aktif.length + '</span>' + (kunci.length ? '<span style="background:var(--red-l);color:var(--red)">🔒 Terkunci ' + kunci.length + '</span>' : '') +
+          '<span style="background:var(--blue-l);color:var(--blue)">Selesai ' + d.sesi.filter(function (s) { return s.status === 'SELESAI'; }).length + '</span><span class="muted" style="margin-left:auto">Diperbarui ' + jam(now) + '</span></div>' +
+          (d.sesi.length ? '<div class="ptw"><table class="pt"><tr><th>Siswa</th><th>Ulangan</th><th>Status</th><th>Progres</th><th>Keluar layar</th><th>Mulai</th></tr>' + baris + '</table></div>'
+            : '<div class="msg">Belum ada siswa yang mengerjakan ulangan susulan dalam 24 jam terakhir.</div>') +
+          '<h2 style="margin-top:16px">Ulangan susulan</h2><p class="muted" style="margin-top:-6px">Buka/tutup dengan mencentang AKTIF di tab PENGATURAN. Kirim <b>token</b> ke siswa susulan lewat WA.</p><div class="ptw"><table class="pt"><tr><th>Kode</th><th>Judul</th><th>Status</th><th>Token siswa</th></tr>' +
+          d.ulangan.map(function (u) { return '<tr><td>' + esc(u.kode) + '</td><td>' + esc(u.judul) + '<br><small class="muted">' + u.waktu + ' menit</small></td><td>' + (u.aktif ? '🟢 Dibuka' : '⚪ Ditutup') + '</td><td><b>' + esc(u.token) + '</b></td></tr>'; }).join('') + '</table></div>' +
+          '<div class="acts"><button class="btn gh" id="pkl">Keluar</button><button class="btn" id="pmu">↻ Muat ulang</button></div>';
+        $('#pkl').onclick = function () { put(KPT, null); pantauMasuk(); };
+        $('#pmu').onclick = muat;
+      }).catch(function (e) { var b = $('#pb'); if (b && !b.querySelector('table')) b.innerHTML = '<div class="msg">😕 ' + esc(e.message) + '</div>'; });
+    };
+    muat(); pantauT = setInterval(muat, 15000);
+  }
+
   /* ---------- AWAL ---------- */
   var st = get(KS);
-  if (st && st.p && st.p.sesi) { daftar(); lanjutkan(st); } else daftar();
+  if (/[?&]pantau=1\b/.test(location.search)) pantau();
+  else if (st && st.p && st.p.sesi) { daftar(); lanjutkan(st); } else daftar();
 })();
 </script>
 </body>
